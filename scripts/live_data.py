@@ -161,7 +161,7 @@ def fetch_yahoo(symbol: str) -> tuple[list[dict], list[dict]]:
     import yfinance as yf
     with quiet():
         t = yf.Ticker(symbol)
-        d = t.history(period="1y", interval="1d", auto_adjust=False)
+        d = t.history(period="2y", interval="1d", auto_adjust=False)  # đủ 1 năm trọn cho thay đổi 1 năm và trung bình 200 phiên
         m = t.history(period="1d", interval="15m", auto_adjust=False)
     daily = [{"d": ix.date(), "c": num(c), "h": num(h) or num(c), "l": num(lo) or num(c)}
              for ix, c, h, lo in zip(d.index, d["Close"], d["High"], d["Low"]) if num(c)]
@@ -263,6 +263,7 @@ def build_item(cfg: dict, daily: list[dict], intr: list[dict], now_utc: datetime
         "hist": [round(c, 6) for c in closes[-60:]],
         "dupRemoved": dup,
     }
+    item["pa"] = price_action(before, last, day_hi, day_lo)
     item["gapDays"] = _gap_days(prev["d"], day) if (prev and exch) else []
     item["maxJump"] = round(max(jumps) * 100, 2) if jumps else None
     item["future"] = str(cfg["symbol"]).endswith("=F")
@@ -272,6 +273,81 @@ def build_item(cfg: dict, daily: list[dict], intr: list[dict], now_utc: datetime
 
 def _r100(x):
     return None if x is None else round(x * 100, 2)
+
+
+HOME_INDEX = {"VN": "VNINDEX", "AU": "AXJO", "US": "GSPC"}
+
+
+def price_action(bars: list[dict], last: float, day_hi: float, day_lo: float) -> dict | None:
+    """Thống kê hành vi giá từ nến ngày các phiên trước + phiên hiện tại. Chỉ mô tả, không phải tín hiệu mua bán.
+
+    bars: nến ngày TRƯỚC phiên hiện tại (cũ -> mới), mỗi nến có c/h/l.
+    """
+    closes = [b["c"] for b in bars] + [last]
+    if len(closes) < 30:
+        return None
+    highs = [b["h"] for b in bars] + [day_hi]
+    lows = [b["l"] for b in bars] + [day_lo]
+    out: dict = {"sessions": len(closes)}
+
+    def back(n):
+        return closes[-1 - n] if len(closes) > n else None
+
+    out["chg1w"] = _r100(_pct(last, back(5)))
+    out["chg1y"] = _r100(_pct(last, back(252))) if len(closes) > 252 else None
+
+    # RSI 14 phiên kiểu Wilder
+    ch = [b - a for a, b in zip(closes, closes[1:])]
+    if len(ch) >= 28:
+        gain = sum(max(x, 0) for x in ch[:14]) / 14
+        loss = sum(max(-x, 0) for x in ch[:14]) / 14
+        for x in ch[14:]:
+            gain = (gain * 13 + max(x, 0)) / 14
+            loss = (loss * 13 + max(-x, 0)) / 14
+        out["rsi14"] = round(100.0 if loss == 0 else 100 - 100 / (1 + gain / loss), 1)
+
+    # Độ biến động thực tế 20 phiên, quy ra năm
+    rets = [math.log(b / a) for a, b in zip(closes[-21:], closes[-20:]) if a > 0 and b > 0]
+    if len(rets) >= 15:
+        mu = sum(rets) / len(rets)
+        sd = math.sqrt(sum((r - mu) ** 2 for r in rets) / (len(rets) - 1))
+        out["vol20"] = round(sd * math.sqrt(252) * 100, 1)
+
+    # ATR 14 phiên, tính theo % giá
+    trs = [max(h - lo, abs(h - pc), abs(lo - pc)) for h, lo, pc in zip(highs[1:], lows[1:], closes[:-1])]
+    if len(trs) >= 14:
+        out["atr14pct"] = round(sum(trs[-14:]) / 14 / last * 100, 2)
+
+    # Sụt từ đỉnh 52 tuần và mức sụt lớn nhất trong 1 năm
+    win = closes[-253:]
+    out["fromHi52"] = _r100(last / max(win) - 1)
+    peak, mdd = win[0], 0.0
+    for c in win:
+        peak = max(peak, c)
+        mdd = min(mdd, c / peak - 1)
+    out["maxDd1y"] = _r100(mdd)
+
+    # Biên 20 phiên (cao nhất, thấp nhất) để thấy giá đang ở đâu trong vùng gần đây
+    out["hi20"] = round(max(highs[-20:]), 6)
+    out["lo20"] = round(min(lows[-20:]), 6)
+
+    # Xu hướng: vị trí giá so với trung bình 50 và 200 phiên, và độ dốc của trung bình 50 phiên
+    def sma(n, end=None):
+        seq = closes[:end] if end else closes
+        return sum(seq[-n:]) / n if len(seq) >= n else None
+    m50, m200, m50_old = sma(50), sma(200), sma(50, -20)
+    slope = _r100(_pct(m50, m50_old)) if m50 and m50_old else None
+    out["ma50Slope"] = slope
+    if m50 and m200 and slope is not None:
+        if last > m50 > m200 and slope > 0:
+            out["trend"] = "up"
+        elif last < m50 < m200 and slope < 0:
+            out["trend"] = "down"
+        else:
+            out["trend"] = "mixed"
+    elif m50 and slope is not None:
+        out["trend"] = "up" if last > m50 and slope > 0 else ("down" if last < m50 and slope < 0 else "mixed")
+    return out
 
 
 def _gap_days(d0: date, d1: date) -> list[str]:
@@ -625,6 +701,21 @@ def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None, s
                 apply_cnbc(it, quotes.get(sym))
             it["checks"] = validate(it, now)
             it["level"] = worst(it["checks"])
+
+    # Hợp đồng tương lai vừa đảo: chuỗi giá nối hai hợp đồng khác nhau nên biến động, RSI... không còn đúng
+    for it in items.values():
+        if it.get("rollSuspected") and it.get("pa"):
+            it["pa"] = None
+
+    # Sức mạnh tương đối: chênh lệch % thay đổi của cổ phiếu so với chỉ số chính cùng thị trường
+    for k, v in items.items():
+        ref = items.get(HOME_INDEX.get(v.get("market"), ""))
+        if v.get("index") or not ref or not v.get("pa") or ref.get("held"):
+            continue
+        for f, n in (("chg1m", "rs1m"), ("chg3m", "rs3m")):
+            if v.get(f) is not None and ref.get(f) is not None:
+                v["pa"][n] = round(v[f] - ref[f], 2)
+        v["pa"]["rsVs"] = ref["label"]
 
     for k, v in items.items():  # thông tin quỹ/nhận định luôn theo file đồng bộ mới nhất, kể cả mục giữ số cũ
         if k in meta:

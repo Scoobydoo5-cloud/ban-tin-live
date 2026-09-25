@@ -164,6 +164,9 @@
   .det svg.big text { font-size: 11px; fill: var(--muted); font-family: var(--font); }
   .kv { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; font-size: 13.5px; }
   .kv div span { display: block; font-size: 12px; color: var(--muted); }
+  .pa { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .pa h4 { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+  .pa .why { display: block; font-size: 11.5px; color: var(--muted); margin-top: 1px; }
   .checks { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
   .checks li { display: flex; gap: 8px; align-items: baseline; }
   .lv { flex: 0 0 auto; font-size: 11px; font-weight: 700; padding: 0 7px; border-radius: 999px; border: 1px solid currentColor; }
@@ -513,6 +516,30 @@
         '<span class="m num">' + fmt(it.last, dpOf(it)) + ' ' + esc(unitOf(it)) + '</span></button>';
     }).join('') + '</div><div class="legend"><span>−4%</span><span class="bar" aria-hidden="true"></span><span>+4%</span><span>· màu đậm dần theo mức tăng/giảm trong ngày; bấm ô để xem chi tiết</span></div>';
   }
+  // Hành vi giá: số do máy chủ tính từ nến ngày đã kiểm tra; ở đây chỉ diễn giải cho dễ đọc
+  var TREND = { up: ['Đang tăng', 'giá trên trung bình 50 phiên, trung bình 50 trên 200 và đang dốc lên'],
+    down: ['Đang giảm', 'giá dưới trung bình 50 phiên, trung bình 50 dưới 200 và đang dốc xuống'],
+    mixed: ['Giằng co', 'các đường trung bình chưa cùng một hướng'] };
+  function paHtml(it) {
+    var a = it.pa, dp = dpOf(it);
+    if (!a) { return ''; }
+    var rsiWhy = a.rsi14 == null ? '' : a.rsi14 >= 70 ? 'tăng mạnh liên tục gần đây (vùng thường gọi là quá mua)' :
+      a.rsi14 <= 30 ? 'giảm mạnh liên tục gần đây (vùng thường gọi là quá bán)' : 'không nghiêng hẳn về bên nào';
+    var rows = [
+      a.trend ? ['Xu hướng', TREND[a.trend][0], TREND[a.trend][1] + (a.ma50Slope != null ? ' (trung bình 50 phiên ' + pct(a.ma50Slope, 1) + ' sau 20 phiên)' : '')] : null,
+      a.rsi14 != null ? ['RSI 14 phiên', a.rsi14.toFixed(0), rsiWhy] : null,
+      ['1 tuần / 1 năm', pct(a.chg1w, 1) + ' / ' + (a.chg1y == null ? '-' : pct(a.chg1y, 1)), 'thay đổi giá, chưa gồm cổ tức'],
+      a.rs3m != null ? ['So với ' + a.rsVs + ' (3 tháng)', (a.rs3m > 0 ? '+' : a.rs3m < 0 ? '−' : '') + Math.abs(a.rs3m).toFixed(1).replace('.', ',') + ' điểm %',
+        a.rs3m >= 0 ? 'mạnh hơn chỉ số chung' : 'yếu hơn chỉ số chung'] : null,
+      a.vol20 != null ? ['Độ biến động 20 phiên', a.vol20.toFixed(0) + '%/năm', 'càng cao thì giá càng dao động mạnh'] : null,
+      a.atr14pct != null ? ['Biên độ trung bình mỗi phiên', a.atr14pct.toFixed(1).replace('.', ',') + '%', 'ATR 14 phiên so với giá'] : null,
+      ['Cách đỉnh 52 tuần', pct(a.fromHi52, 1), 'mức sụt lớn nhất trong 1 năm: ' + pct(a.maxDd1y, 1)],
+      ['Vùng giá 20 phiên', fmt(a.lo20, dp) + ' – ' + fmt(a.hi20, dp), 'thấp nhất và cao nhất đã giao dịch']
+    ].filter(Boolean);
+    return '<div class="pa"><h4>Hành vi giá</h4><div class="kv">' + rows.map(function (r) {
+      return '<div><span>' + esc(r[0]) + '</span>' + esc(r[1]) + (r[2] ? '<span class="why">' + esc(r[2]) + '</span>' : '') + '</div>';
+    }).join('') + '</div></div>';
+  }
   function detail(it) {
     var dp = dpOf(it);
     var kv = [
@@ -524,10 +551,11 @@
       ['Nguồn', it.source + (it.lastTime ? ' · giá lúc ' + hm(new Date(it.lastTime), SYD) + ' giờ Sydney' : '')]
     ];
     return '<div class="det"><div>' + bigChart(it) + '</div><div><div class="kv">' + kv.map(function (x) { return '<div><span>' + x[0] + '</span>' + esc(x[1]) + '</div>'; }).join('') + '</div>' +
+      paHtml(it) +
       (it.held ? '<p class="small" style="margin-top:8px;color:var(--down)">' + esc(it.heldReason) + '</p>' : '') +
       (it.note ? '<p class="small muted" style="margin-top:8px">' + esc(it.note) + '</p>' : '') +
       '<ul class="checks">' + (it.checks || []).map(function (c) { return '<li><span class="lv ' + c.level + '">' + ({ ok: 'Đạt', warn: 'Lưu ý', fail: 'Lỗi', na: 'Chưa có' }[c.level] || c.level) + '</span><span><strong>' + esc(c.name) + ':</strong> ' + esc(c.note) + '</span></li>'; }).join('') + '</ul>' +
-      '<p class="small muted" style="margin-top:8px">Số liệu thống kê, không phải khuyến nghị mua bán.</p></div></div>';
+      '<p class="small muted" style="margin-top:8px">Số liệu thống kê mô tả quá khứ, không phải tín hiệu hay khuyến nghị mua bán.</p></div></div>';
   }
   function renderMacro() {
     $('macro').innerHTML = (DATA.groups.macro || []).map(function (k) {

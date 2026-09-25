@@ -260,3 +260,36 @@ def test_cnbc_pre_session_compares_last_close():
     it = ld.build_item(cfg, daily_series(date(2026, 9, 24), 30, 224.58, 0.5), [], now)
     ld.apply_cnbc(it, {"last": 224.58, "change": None, "changePct": None, "prevClose": None, "preSession": True, "time": "2026-09-24"})
     assert it["cnbc"]["level"] == "ok" and "khớp" in it["cnbc"]["note"]
+
+
+def _bars(closes, start=date(2025, 1, 1)):
+    out, d = [], start
+    for c in closes:
+        while d.weekday() >= 5:
+            d += timedelta(days=1)
+        out.append({"d": d, "c": c, "h": c, "l": c})
+        d += timedelta(days=1)
+    return out
+
+
+def test_price_action_steady_uptrend():
+    closes = [100 * 1.002 ** i for i in range(261)]
+    pa = ld.price_action(_bars(closes[:-1]), closes[-1], closes[-1], closes[-1])
+    assert pa["trend"] == "up" and pa["rsi14"] == 100.0
+    assert pa["fromHi52"] == 0 and pa["maxDd1y"] == 0
+    assert pa["vol20"] == 0.0  # lợi suất mỗi phiên như nhau thì không có biến động
+    assert abs(pa["chg1w"] - (1.002 ** 5 - 1) * 100) < 0.01
+
+
+def test_price_action_drawdown_and_downtrend():
+    closes = [100 + i for i in range(101)] + [200 - i * 0.25 for i in range(1, 201)]  # lên 200 rồi xuống 150
+    pa = ld.price_action(_bars(closes[:-1]), closes[-1], closes[-1], closes[-1])
+    assert pa["fromHi52"] == -25.0 and pa["maxDd1y"] == -25.0
+    assert pa["trend"] == "down" and pa["rsi14"] == 0.0
+
+
+def test_price_action_rsi_balanced_and_short_history():
+    closes = [100 + (1 if i % 2 else 0) for i in range(80)]
+    pa = ld.price_action(_bars(closes[:-1]), closes[-1], closes[-1], closes[-1])
+    assert 45 <= pa["rsi14"] <= 55 and pa["trend"] == "mixed"
+    assert ld.price_action(_bars([100] * 10), 100, 100, 100) is None
