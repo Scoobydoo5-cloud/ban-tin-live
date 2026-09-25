@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Bảng giá trực tiếp</title>
-<meta name="description" content="Giá chỉ số, cổ phiếu theo dõi, tỷ giá và hàng hóa Việt Nam, Úc, Mỹ; tự cập nhật 15 phút một lần trong giờ giao dịch, có kiểm tra dữ liệu.">
+<meta name="description" content="Giá chỉ số, cổ phiếu theo dõi, tỷ giá và hàng hóa Việt Nam, Úc, Mỹ; giá lấy trực tiếp khi mở trang, có kiểm tra dữ liệu.">
 <meta name="theme-color" content="#151716">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <link rel="manifest" href="manifest.webmanifest">
@@ -70,8 +70,8 @@
   .brand h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
   .brand small { display: block; font-size: 12.5px; color: var(--muted); }
   .top-r { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .chip { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); white-space: nowrap; }
-  .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--up); }
+  .chip { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); max-width: 100%; }
+  .chip .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--up); }
   .chip.stale .dot { background: var(--warn); }
   .chip.err .dot { background: var(--down); }
   .btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; padding: 7px 14px; border-radius: 10px; border: 1px solid var(--ink); background: var(--ink); color: var(--on-ink); cursor: pointer; text-decoration: none; }
@@ -118,7 +118,8 @@
   .badge.wait { color: var(--muted); }
   .vdot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 5px; vertical-align: 1px; background: var(--muted); }
   .vdot.bullish { background: var(--up); } .vdot.bearish { background: var(--down); }
-  .fund-mk { display: grid; gap: 14px; }
+  .fund-mk { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+  .fund-mk > div { min-width: 0; }
   @media (min-width: 900px) { .fund-mk { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
   .fund-mk h3 { font-size: 14px; margin: 0 0 6px; }
   .fund-mk table td, .fund-mk table th { padding: 8px 6px; }
@@ -130,7 +131,8 @@
   .seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 11px; background: var(--soft); border: 1px solid var(--line); max-width: 100%; overflow-x: auto; }
   .seg button { font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 8px; border: 0; background: none; color: var(--muted); cursor: pointer; white-space: nowrap; }
   .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.1), 0 0 0 1px var(--line); }
-  .tools { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tools { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; max-width: 100%; }
+  @media (max-width: 420px) { .seg button { padding-inline: 9px; } }
 
   /* Bảng theo dõi */
   .tbl { overflow-x: auto; margin-inline: -18px; padding-inline: 18px; }
@@ -214,7 +216,7 @@
   <header class="top">
     <a class="brand" href="./" aria-label="Bảng giá trực tiếp, về đầu trang">
       <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="wk" d="M6 3.5v17M12 6v14M18 2.5v15"/><rect class="bd" x="4" y="7" width="4" height="9" rx="1"/><rect class="bh" x="10" y="9" width="4" height="7" rx="1"/><rect class="bd" x="16" y="5" width="4" height="8" rx="1"/></svg></span>
-      <span><h1>Bảng giá</h1><small>Việt Nam · Úc · Mỹ · tự cập nhật 15 phút/lần</small></span>
+      <span><h1>Bảng giá</h1><small>Việt Nam · Úc · Mỹ · giá trực tiếp khi mở trang</small></span>
     </a>
     <div class="top-r">
       <span class="chip" id="fresh" role="status"><span class="dot" aria-hidden="true"></span><span id="fresh-t">Đang tải…</span></span>
@@ -372,10 +374,10 @@
     $('clocks').innerHTML = ['VN', 'AU', 'US'].map(function (k) {
       var c = marketClock(k, now), S = SESS[k];
       var nextSyd = c.next ? hm(c.next, SYD) : '';
-      var sameDay = c.next && parts(c.next, SYD).d === parts(now, SYD).d;
+      var sameDay = c.next && isoTz(c.next, SYD) === isoTz(now, SYD);
       return '<div class="clock"><div class="r1"><strong>' + S.name + '</strong><span class="st ' + c.st + '">' + ST_TEXT[c.st] + '</span></div>' +
         '<span class="t">' + (k === 'AU' ? 'Giờ Sydney ' : 'Giờ địa phương ') + c.local + '</span>' +
-        (c.next ? '<span class="t">' + c.what.charAt(0).toUpperCase() + c.what.slice(1) + ' sau ' + dur(c.next - now) + ' · ' + nextSyd + (sameDay ? '' : ' ' + ddmm(c.next.toISOString())) + ' giờ Sydney</span>' : '') + '</div>';
+        (c.next ? '<span class="t">' + c.what.charAt(0).toUpperCase() + c.what.slice(1) + ' sau ' + dur(c.next - now) + ' · ' + nextSyd + (sameDay ? '' : ' ' + ddmm(isoTz(c.next, SYD))) + ' giờ Sydney</span>' : '') + '</div>';
     }).join('');
   }
 
@@ -582,10 +584,15 @@
     if (!DATA) { return; }
     var age = (Date.now() - new Date(DATA.generatedAt).getTime()) / 60000;
     var anyOpen = ['VN', 'AU', 'US'].some(function (k) { var st = marketClock(k, new Date()).st; return st === 'open' || st === 'lunch'; });
-    chip.className = 'chip' + (anyOpen && age > 45 ? ' stale' : '');
-    t.textContent = 'Cập nhật ' + (age < 1 ? 'vừa xong' : dur(age * 60000) + ' trước') + (anyOpen && age > 45 ? ' · máy chạy tự động đang trễ' : '') +
-      (liveAt && Object.keys(LIVE).length ? ' · VN trực tiếp ' + hm(new Date(liveAt), SYD) : '') +
-      (live2At && Object.keys(LIVE2).length ? ' · Úc/Mỹ trực tiếp ' + hm(new Date(live2At), SYD) : '');
+    var srv = age < 1 ? 'vừa xong' : dur(age * 60000) + ' trước';
+    var vnOn = liveAt && Object.keys(LIVE).length, wOn = live2At && Object.keys(LIVE2).length;
+    var at = [vnOn ? liveAt : null, wOn ? live2At : null].filter(Boolean).sort().pop();
+    chip.className = 'chip' + (!at && anyOpen && age > 45 ? ' stale' : '');
+    chip.title = (vnOn ? 'Việt Nam: KBS lúc ' + hm(new Date(liveAt), SYD) + '. ' : '') +
+      (wOn ? 'Úc, Mỹ, tỷ giá, hàng hóa: CNBC lúc ' + hm(new Date(live2At), SYD) + '. ' : '') +
+      'Số của máy chủ: ' + (DATA.generatedAtSydney || srv) + ' giờ Sydney.';
+    t.textContent = at ? 'Trực tiếp ' + hm(new Date(at), SYD) + ' · máy chủ ' + srv
+      : 'Cập nhật ' + srv + (anyOpen && age > 45 ? ' · máy chạy tự động đang trễ' : '');
   }
   var MKN = { VN: 'Việt Nam', AU: 'Úc', US: 'Mỹ' };
   function renderFund() {
