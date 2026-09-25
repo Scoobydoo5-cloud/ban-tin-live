@@ -111,6 +111,9 @@
   .badge.fin { color: var(--hero-muted); }
   .badge.h24 { color: var(--muted); }
   .badge.held { color: var(--down); }
+  .badge.live { color: var(--up); }
+  .badge.live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 4px; vertical-align: 1px; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.25; } }
   .badge.fund { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
   .badge.wait { color: var(--muted); }
   .vdot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 5px; vertical-align: 1px; background: var(--muted); }
@@ -420,6 +423,7 @@
   // ---- Trạng thái một con số ----
   function badge(it) {
     if (it.held) { return '<span class="badge held" title="' + esc(it.heldReason) + '">Số cũ</span>'; }
+    if (it.live && it.status === 'provisional') { return '<span class="badge live" title="Lấy thẳng từ KBS trong trình duyệt, đã kiểm tra biên độ và đơn vị">Trực tiếp' + (it.lastTime ? ' ' + hm(new Date(it.lastTime), SYD) : '') + '</span>'; }
     if (it.status === 'provisional') { return '<span class="badge prov">Tạm tính' + (it.lastTime ? ' ' + hm(new Date(it.lastTime), SYD) : '') + '</span>'; }
     if (it.status === 'final') { return '<span class="badge fin">Đóng cửa ' + ddmm(it.day) + '</span>'; }
     return '<span class="badge h24">24 giờ</span>';
@@ -564,6 +568,8 @@
     var lines = ['<strong>' + s.fresh + '/' + s.total + '</strong> con số được lấy mới ở lần cập nhật này; ' + s.warn + ' con số có lưu ý; ' + s.held + ' con số đang giữ giá trị cũ; ' + s.missing + ' con số thiếu.'];
     var errs = Object.keys(DATA.errors || {});
     if (errs.length) { lines.push('Nguồn lỗi: ' + errs.map(function (k) { return esc(k) + ' (' + esc(DATA.errors[k]) + ')'; }).join('; ')); }
+    var nLive = Object.keys(LIVE).length;
+    if (liveAt) { lines.push('Giá Việt Nam: ' + (nLive ? nLive + ' mã lấy thẳng từ KBS trong trình duyệt lúc ' + hm(new Date(liveAt), SYD) + ' giờ Sydney (tự làm mới mỗi phút trong giờ giao dịch)' : 'chưa lấy được trực tiếp, đang dùng số của máy chủ') + (liveErr ? '. Không dùng số trực tiếp cho: ' + esc(liveErr) : '') + '.'); }
     $('qa-list').innerHTML = '<p>' + lines.join('</p><p class="small muted">') + '</p>' +
       (issues.length ? '<ul style="margin-top:8px">' + issues.map(function (x) { return '<li><span class="lv ' + x.c.level + '">' + (x.c.level === 'fail' ? 'Lỗi' : 'Lưu ý') + '</span> <strong>' + esc(x.it.label) + '</strong> · ' + esc(x.c.name) + ': ' + esc(x.c.note) + '</li>'; }).join('') + '</ul>' : '<p class="small muted" style="margin-top:6px">Không có lưu ý nào ở lần cập nhật này.</p>');
     $('qa-src').textContent = 'Lần cập nhật ' + DATA.generatedAtSydney + ' giờ Sydney';
@@ -575,7 +581,8 @@
     var age = (Date.now() - new Date(DATA.generatedAt).getTime()) / 60000;
     var anyOpen = ['VN', 'AU', 'US'].some(function (k) { var st = marketClock(k, new Date()).st; return st === 'open' || st === 'lunch'; });
     chip.className = 'chip' + (anyOpen && age > 45 ? ' stale' : '');
-    t.textContent = 'Cập nhật ' + (age < 1 ? 'vừa xong' : dur(age * 60000) + ' trước') + (anyOpen && age > 45 ? ' · máy chạy tự động đang trễ' : '');
+    t.textContent = 'Cập nhật ' + (age < 1 ? 'vừa xong' : dur(age * 60000) + ' trước') + (anyOpen && age > 45 ? ' · máy chạy tự động đang trễ' : '') +
+      (liveAt && Object.keys(LIVE).length ? ' · VN trực tiếp ' + hm(new Date(liveAt), SYD) : '');
   }
   var MKN = { VN: 'Việt Nam', AU: 'Úc', US: 'Mỹ' };
   function renderFund() {
@@ -613,13 +620,99 @@
       if (!r.ok) { throw new Error('HTTP ' + r.status); }
       return r.json();
     }).then(function (d) {
-      var changed = !DATA || d.generatedAt !== DATA.generatedAt;
-      DATA = d;
-      if (changed) { renderAll(); } else { renderFresh(); }
+      var changed = !DATA || d.generatedAt !== DATA.generatedAt, first = !DATA;
+      if (changed) { DATA = d; applyLive(); renderAll(); } else { renderFresh(); }
+      if (first) { refreshLive(true); }
     }).catch(function (e) {
       $('fresh').className = 'chip err';
       $('fresh-t').textContent = 'Không tải được dữ liệu (' + e.message + ')';
     }).then(function () { loading = false; $('reload').classList.remove('spin'); });
+  }
+
+  // ---- Giá Việt Nam trực tiếp: trình duyệt gọi thẳng KBS (KBS cho phép CORS) ----
+  // Cùng logic với scripts/live_data.py; số nào không qua kiểm tra thì giữ số của máy chủ.
+  var KBS = 'https://kbbuddywts.kbsec.com.vn/iis-server/investment', VNTZ = 'Asia/Ho_Chi_Minh';
+  var VN_LIMIT = { HOSE: 0.07, HNX: 0.10, UPCOM: 0.15 };
+  var LIVE = {}, LIVE_DAYS = {}, liveAt = null, liveErr = '', liveBusy = false;
+  function two(n) { return (n < 10 ? '0' : '') + n; }
+  function vnDay(offsetDays) { var p = parts(new Date(Date.now() + offsetDays * 864e5), VNTZ); return two(p.d) + '-' + two(p.mo) + '-' + p.y; }
+  function isoVN(date) { var p = parts(date, VNTZ); return p.y + '-' + two(p.mo) + '-' + two(p.d); }
+  function numv(v) { var f = parseFloat(v); return isFinite(f) && f > 0 ? f : null; }
+  function kbs(kind, sym, suffix, fromDays) {
+    var url = KBS + '/' + kind + '/' + encodeURIComponent(sym) + '/data_' + suffix + '?sdate=' + vnDay(-fromDays) + '&edate=' + vnDay(1);
+    return fetch(url, { cache: 'no-store' }).then(function (r) { if (!r.ok) { throw new Error('HTTP ' + r.status); } return r.json(); })
+      .then(function (j) { return (j && j['data_' + suffix]) || []; });
+  }
+  function parseDays(rows) {
+    var by = {};
+    rows.forEach(function (r) { var c = numv(r.c); if (c) { by[String(r.t).slice(0, 10)] = { d: String(r.t).slice(0, 10), c: c, h: numv(r.h) || c, l: numv(r.l) || c }; } });
+    return Object.keys(by).sort().map(function (k) { return by[k]; });
+  }
+  function parseBars(rows) {
+    return rows.map(function (r) {
+      var c = numv(r.c), m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/.exec(String(r.t));
+      return c && m ? { t: zoned(+m[1], +m[2], +m[3], +m[4] * 60 + +m[5], VNTZ), c: c, h: numv(r.h) || c, l: numv(r.l) || c } : null;
+    }).filter(Boolean).sort(function (a, b) { return a.t - b.t; });
+  }
+  function vnFinal(day) { var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(day); return Date.now() >= zoned(+m[1], +m[2], +m[3], 15 * 60 + 5, VNTZ).getTime(); }
+  function liveCalc(it, days, bars) {
+    var lastD = days[days.length - 1], lastB = bars[bars.length - 1];
+    if (!lastD && !lastB) { throw new Error('KBS không trả dữ liệu'); }
+    var bDay = lastB ? isoVN(lastB.t) : null, useB = lastB && (!lastD || bDay >= lastD.d);
+    var day = useB ? bDay : lastD.d, today = days.filter(function (d) { return d.d === day; })[0], fin = vnFinal(day);
+    var last, lastTime = null;
+    if (fin && today) { last = today.c; }
+    else if (useB) { last = lastB.c; lastTime = new Date(Math.min(lastB.t.getTime() + 15 * 60000, Date.now())).toISOString(); }
+    else { last = lastD.c; }
+    var before = days.filter(function (d) { return d.d < day; }), prev = before[before.length - 1];
+    var same = bars.filter(function (b) { return isoVN(b.t) === day; });
+    var hs = same.map(function (b) { return b.h; }).concat(today ? [today.h] : [], [last]);
+    var ls = same.map(function (b) { return b.l; }).concat(today ? [today.l] : [], [last]);
+    var chg = prev ? (last / prev.c - 1) * 100 : null;
+    // Kiểm tra: đơn vị đồng và biên độ dao động trong ngày
+    if (!it.index && last < 1000) { throw new Error('giá dưới 1.000 đ, nghi sai đơn vị'); }
+    var lim = it.index ? 0.07 : (VN_LIMIT[String(it.exchange || 'HOSE').toUpperCase()] || 0.07);
+    if (chg != null && Math.abs(chg) / 100 > lim + 0.0015) { throw new Error('thay đổi ' + chg.toFixed(2) + '% vượt biên độ ±' + Math.round(lim * 100) + '%'); }
+    return { last: last, lastTime: lastTime, day: day, status: fin ? 'final' : 'provisional', prevClose: prev ? prev.c : null, prevDate: prev ? prev.d : null,
+      change: prev ? last - prev.c : null, changePct: chg, dayHigh: Math.max.apply(null, hs), dayLow: Math.min.apply(null, ls),
+      spark: same.map(function (b) { return b.c; }).slice(-40) };
+  }
+  function applyLive() {
+    if (!DATA) { return; }
+    Object.keys(LIVE).forEach(function (k) {
+      var it = DATA.items[k], L = LIVE[k];
+      if (!it || !L || it.day > L.day) { return; }  // máy chủ đã có phiên mới hơn thì giữ số máy chủ
+      var hist = (it.hist || []).slice();
+      if (hist.length) { if (it.day === L.day) { hist[hist.length - 1] = L.last; } else { hist.push(L.last); hist = hist.slice(-60); } }
+      Object.keys(L).forEach(function (f) { it[f] = L[f]; });
+      it.hist = hist; it.live = true; it.held = false;
+      it.source = 'KBS, lấy trực tiếp trong trình duyệt';
+      it.checks = [{ name: 'Nguồn trực tiếp', level: 'ok', note: 'Lấy thẳng từ KBS lúc ' + hm(new Date(liveAt), SYD) + ' giờ Sydney; đạt kiểm tra đơn vị và biên độ' }]
+        .concat((it.checks || []).filter(function (c) { return c.name !== 'Nguồn trực tiếp' && c.name !== 'Độ mới'; }));
+    });
+  }
+  function vnWindow() {
+    var p = parts(new Date(), VNTZ), t = p.h * 60 + p.mi;
+    return p.wd < 5 && t >= 8 * 60 + 50 && t <= 15 * 60 + 40;
+  }
+  function refreshLive(force) {
+    if (!DATA || liveBusy || (!force && !vnWindow())) { return; }
+    var vn = Object.keys(DATA.items).filter(function (k) { return DATA.items[k].market === 'VN'; });
+    if (!vn.length) { return; }
+    liveBusy = true;
+    Promise.all(vn.map(function (k) {
+      var it = DATA.items[k], kind = it.index ? 'index' : 'stocks';
+      var daysP = LIVE_DAYS[k] && !force ? Promise.resolve(LIVE_DAYS[k]) : kbs(kind, it.symbol, 'day', 12).then(parseDays);
+      return Promise.all([daysP, kbs(kind, it.symbol, '15P', 4).then(parseBars)]).then(function (r) {
+        LIVE_DAYS[k] = r[0];
+        LIVE[k] = liveCalc(it, r[0], r[1]);
+        return null;
+      }).catch(function (e) { delete LIVE[k]; return k + ': ' + e.message; });
+    })).then(function (errs) {
+      liveErr = errs.filter(Boolean).join('; ');
+      liveAt = new Date().toISOString();
+      applyLive(); renderAll();
+    }).then(function () { liveBusy = false; }, function () { liveBusy = false; });
   }
 
   // ---- Sự kiện ----
@@ -703,7 +796,7 @@
   load();
   setInterval(renderClocks, 30000);
   setInterval(renderFresh, 30000);
-  setInterval(function () { if (!document.hidden) { load(); } }, 60000);
+  setInterval(function () { if (!document.hidden) { load(); refreshLive(false); } }, 60000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) { renderClocks(); load(); } });
 })();
 </script>
