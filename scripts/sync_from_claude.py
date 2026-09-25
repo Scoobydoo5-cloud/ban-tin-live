@@ -139,7 +139,15 @@ def main(argv=None) -> int:
     if len(text.encode("utf-8")) > 50_000:
         print("file quá lớn, dừng", file=sys.stderr)
         return 1
-    Path(a.out).write_text(text, encoding="utf-8")
+    out = Path(a.out)
+    try:
+        old = json.loads(out.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        old = {}
+    if {k: old.get(k) for k in ("items", "funds")} == {k: res.get(k) for k in ("items", "funds")}:
+        print("KHÔNG ĐỔI: danh sách giống bản đang có, không ghi file")
+        return 0
+    out.write_text(text, encoding="utf-8")
     print(f"{len(res['items'])} mã; quỹ: " + ", ".join(f"{m} {len(f['holdings'])} mã" for m, f in res["funds"].items()))
     return 0
 
