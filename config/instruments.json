@@ -1,0 +1,35 @@
+{
+  "_note": "Danh sach ma tren trang Bang gia. Sua muc watchlist de them/bot ma. market: VN (vnstock KBS), AU (Yahoo, tu them .AX), US (Yahoo).",
+  "indices": [
+    {"key": "VNINDEX", "label": "VN-Index", "market": "VN", "symbol": "VNINDEX", "index": true},
+    {"key": "VN30", "label": "VN30", "market": "VN", "symbol": "VN30", "index": true},
+    {"key": "HNXINDEX", "label": "HNX-Index", "market": "VN", "symbol": "HNXINDEX", "index": true},
+    {"key": "AXJO", "label": "S&P/ASX 200", "market": "AU", "symbol": "^AXJO", "index": true},
+    {"key": "GSPC", "label": "S&P 500", "market": "US", "symbol": "^GSPC", "index": true, "fred": "SP500"},
+    {"key": "DJI", "label": "Dow Jones", "market": "US", "symbol": "^DJI", "index": true, "fred": "DJIA"},
+    {"key": "IXIC", "label": "Nasdaq Composite", "market": "US", "symbol": "^IXIC", "index": true, "fred": "NASDAQCOM"}
+  ],
+  "macro": [
+    {"key": "AUDUSD", "label": "AUD/USD", "market": "24H", "symbol": "AUDUSD=X", "dp": 4},
+    {"key": "USDVND", "label": "USD/VND", "market": "24H", "symbol": "VND=X", "dp": 0, "note": "Tỷ giá thị trường quốc tế, không phải tỷ giá trung tâm của Ngân hàng Nhà nước"},
+    {"key": "TNX", "label": "Lợi suất Mỹ 10 năm", "market": "24H", "symbol": "^TNX", "dp": 3, "unit": "%"},
+    {"key": "GOLD", "label": "Vàng", "market": "24H", "symbol": "GC=F", "dp": 1, "unit": "USD/oz", "note": "Hợp đồng tương lai gần nhất"},
+    {"key": "BRENT", "label": "Dầu Brent", "market": "24H", "symbol": "BZ=F", "dp": 2, "unit": "USD/thùng", "note": "Hợp đồng tương lai gần nhất"},
+    {"key": "WTI", "label": "Dầu WTI", "market": "24H", "symbol": "CL=F", "dp": 2, "unit": "USD/thùng", "note": "Hợp đồng tương lai gần nhất"}
+  ],
+  "watchlist": [
+    {"key": "VN-FPT", "label": "FPT", "name": "Tập đoàn FPT", "market": "VN", "symbol": "FPT", "exchange": "HOSE"},
+    {"key": "VN-MWG", "label": "MWG", "name": "Thế Giới Di Động", "market": "VN", "symbol": "MWG", "exchange": "HOSE"},
+    {"key": "VN-GMD", "label": "GMD", "name": "Gemadept", "market": "VN", "symbol": "GMD", "exchange": "HOSE"},
+    {"key": "VN-HPG", "label": "HPG", "name": "Hòa Phát", "market": "VN", "symbol": "HPG", "exchange": "HOSE"},
+    {"key": "AU-PME", "label": "PME", "name": "Pro Medicus", "market": "AU", "symbol": "PME.AX"},
+    {"key": "AU-NXT", "label": "NXT", "name": "NEXTDC", "market": "AU", "symbol": "NXT.AX"},
+    {"key": "AU-XRO", "label": "XRO", "name": "Xero", "market": "AU", "symbol": "XRO.AX"},
+    {"key": "AU-HUB", "label": "HUB24", "name": "HUB24", "market": "AU", "symbol": "HUB.AX"},
+    {"key": "AU-CBA", "label": "CBA", "name": "Commonwealth Bank", "market": "AU", "symbol": "CBA.AX"},
+    {"key": "AU-SHL", "label": "SHL", "name": "Sonic Healthcare", "market": "AU", "symbol": "SHL.AX"},
+    {"key": "US-NVDA", "label": "NVDA", "name": "NVIDIA", "market": "US", "symbol": "NVDA"},
+    {"key": "US-STX", "label": "STX", "name": "Seagate Technology", "market": "US", "symbol": "STX"},
+    {"key": "US-ALAB", "label": "ALAB", "name": "Astera Labs", "market": "US", "symbol": "ALAB"}
+  ]
+}

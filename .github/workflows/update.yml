@@ -1,0 +1,76 @@
+# Lấy giá mới, kiểm tra, rồi đăng lên GitHub Pages.
+# Giờ trong cron là UTC. Sydney: UTC+10 (đến 4/10), UTC+11 (giờ mùa hè). Việt Nam: UTC+7. New York: UTC-4 / UTC-5.
+name: Cap nhat bang gia
+
+on:
+  schedule:
+    - cron: "*/15 23 * * 0-4"   # 10h-11h sáng giờ Sydney mùa hè: ASX mở cửa
+    - cron: "*/15 0-8 * * 1-5"  # ASX (10h-16h Sydney) và Việt Nam (9h-15h giờ VN)
+    - cron: "*/15 13-21 * * 1-5" # Phố Wall (9h30-16h giờ New York)
+    - cron: "30 10 * * 1-5"     # buổi tối giờ Sydney: làm mới tỷ giá, hàng hóa
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["site/**", "scripts/**", "config/**", "tests/**", "requirements.txt", ".github/workflows/update.yml"]
+
+permissions:
+  contents: write   # lưu giá đóng cửa theo ngày vào data/daily
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      VNSTOCK_DISABLE_AGENT_SETUP: "1"
+      VNSTOCK_TELEMETRY: "off"
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Cai thu vien
+        run: pip install -r requirements.txt
+
+      - name: Kiem thu logic (khong can mang)
+        run: python -m pytest -q tests
+
+      - name: Lay gia va kiem tra du lieu
+        id: fetch
+        run: |
+          OWNER="${GITHUB_REPOSITORY%/*}"; REPO="${GITHUB_REPOSITORY#*/}"
+          python scripts/live_data.py --out site/data/latest.json \
+            --prev "https://${OWNER,,}.github.io/${REPO}/data/latest.json" \
+            --snapshot data/daily
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Dang len GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Luu gia dong cua theo ngay
+        run: |
+          if [ -n "$(git status --porcelain data/daily)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/daily
+            git commit -q -m "Gia dong cua $(date -u +%F)"
+            git pull -q --rebase && git push -q
+          fi
