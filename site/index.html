@@ -746,7 +746,9 @@
       if (!opened) { return null; }  // chưa vào phiên mới: giữ số của máy chủ
       change = 0; chgPct = 0;        // đang trong phiên, giá đứng yên
     }
-    var t = String(q.last_time || ''), when = /T/.test(t) ? new Date(t) : null, fz = MKT_FINAL[it.market];
+    // Safari không đọc được múi giờ dạng -0400, phải viết -04:00
+    var t = String(q.last_time || ''), when = /T/.test(t) ? new Date(t.replace(/([+-]\d{2})(\d{2})$/, '$1:$2')) : null, fz = MKT_FINAL[it.market];
+    if (when && isNaN(when.getTime())) { throw new Error('không đọc được giờ của giá'); }
     var day = when ? isoTz(when, fz ? fz[0] : 'UTC') : t.slice(0, 10);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) { throw new Error('không rõ ngày của giá'); }
     if (it.day && day < it.day) { throw new Error('cũ hơn số của máy chủ'); }
