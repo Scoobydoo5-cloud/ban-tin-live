@@ -53,6 +53,12 @@
   "prevClose": 7706.029785,
   "changePct": -0.025
  },
+ "HNXINDEX": {
+  "date": "2026-09-25",
+  "close": 272.21,
+  "prevClose": 272.77,
+  "changePct": -0.205
+ },
  "IXIC": {
   "date": "2026-09-24",
   "close": 26939.369141,
@@ -76,5 +82,41 @@
   "close": 905.919983,
   "prevClose": 923.859985,
   "changePct": -1.942
+ },
+ "VN-FPT": {
+  "date": "2026-09-25",
+  "close": 64700.0,
+  "prevClose": 65300.0,
+  "changePct": -0.919
+ },
+ "VN-GMD": {
+  "date": "2026-09-25",
+  "close": 77400.0,
+  "prevClose": 76300.0,
+  "changePct": 1.442
+ },
+ "VN-HPG": {
+  "date": "2026-09-25",
+  "close": 20650.0,
+  "prevClose": 20800.0,
+  "changePct": -0.721
+ },
+ "VN-MWG": {
+  "date": "2026-09-25",
+  "close": 73400.0,
+  "prevClose": 72900.0,
+  "changePct": 0.686
+ },
+ "VN30": {
+  "date": "2026-09-25",
+  "close": 1938.5,
+  "prevClose": 1932.15,
+  "changePct": 0.329
+ },
+ "VNINDEX": {
+  "date": "2026-09-25",
+  "close": 1785.11,
+  "prevClose": 1775.09,
+  "changePct": 0.564
  }
 }
