@@ -1,0 +1,86 @@
+{
+ "AU-CBA": {
+  "date": "2026-09-25",
+  "close": 150.830002,
+  "prevClose": 149.979996,
+  "changePct": 0.567
+ },
+ "AU-HUB": {
+  "date": "2026-09-25",
+  "close": 64.5,
+  "prevClose": 67.419998,
+  "changePct": -4.331
+ },
+ "AU-NXT": {
+  "date": "2026-09-25",
+  "close": 11.21,
+  "prevClose": 11.41,
+  "changePct": -1.753
+ },
+ "AU-PME": {
+  "date": "2026-09-25",
+  "close": 161.0,
+  "prevClose": 163.669998,
+  "changePct": -1.631
+ },
+ "AU-SHL": {
+  "date": "2026-09-25",
+  "close": 18.790001,
+  "prevClose": 18.91,
+  "changePct": -0.635
+ },
+ "AU-XRO": {
+  "date": "2026-09-25",
+  "close": 57.360001,
+  "prevClose": 59.02,
+  "changePct": -2.813
+ },
+ "AXJO": {
+  "date": "2026-09-25",
+  "close": 8665.0,
+  "prevClose": 8702.0,
+  "changePct": -0.425
+ },
+ "HNXINDEX": {
+  "date": "2026-09-25",
+  "close": 272.21,
+  "prevClose": 272.77,
+  "changePct": -0.205
+ },
+ "VN-FPT": {
+  "date": "2026-09-25",
+  "close": 64700.0,
+  "prevClose": 65300.0,
+  "changePct": -0.919
+ },
+ "VN-GMD": {
+  "date": "2026-09-25",
+  "close": 77400.0,
+  "prevClose": 76300.0,
+  "changePct": 1.442
+ },
+ "VN-HPG": {
+  "date": "2026-09-25",
+  "close": 20650.0,
+  "prevClose": 20800.0,
+  "changePct": -0.721
+ },
+ "VN-MWG": {
+  "date": "2026-09-25",
+  "close": 73400.0,
+  "prevClose": 72900.0,
+  "changePct": 0.686
+ },
+ "VN30": {
+  "date": "2026-09-25",
+  "close": 1938.5,
+  "prevClose": 1932.15,
+  "changePct": 0.329
+ },
+ "VNINDEX": {
+  "date": "2026-09-25",
+  "close": 1785.11,
+  "prevClose": 1775.09,
+  "changePct": 0.564
+ }
+}
