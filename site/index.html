@@ -6,6 +6,7 @@
 <title>Bảng giá trực tiếp</title>
 <meta name="description" content="Giá chỉ số, cổ phiếu theo dõi, tỷ giá và hàng hóa Việt Nam, Úc, Mỹ; tự cập nhật 15 phút một lần trong giờ giao dịch, có kiểm tra dữ liệu.">
 <meta name="theme-color" content="#151716">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -110,6 +111,15 @@
   .badge.fin { color: var(--hero-muted); }
   .badge.h24 { color: var(--muted); }
   .badge.held { color: var(--down); }
+  .badge.fund { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+  .badge.wait { color: var(--muted); }
+  .vdot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 5px; vertical-align: 1px; background: var(--muted); }
+  .vdot.bullish { background: var(--up); } .vdot.bearish { background: var(--down); }
+  .fund-mk { display: grid; gap: 14px; }
+  @media (min-width: 900px) { .fund-mk { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
+  .fund-mk h3 { font-size: 14px; margin: 0 0 6px; }
+  .fund-mk table td, .fund-mk table th { padding: 8px 6px; }
+  .fund-sum { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
 
   /* Khối */
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; min-width: 0; }
@@ -227,6 +237,7 @@
             <button type="button" data-m="VN" aria-pressed="false">Việt Nam</button>
             <button type="button" data-m="AU" aria-pressed="false">Úc</button>
             <button type="button" data-m="US" aria-pressed="false">Mỹ</button>
+            <button type="button" data-m="FUND" aria-pressed="false">Quỹ Buffett</button>
           </div>
           <div class="seg" role="group" aria-label="Kiểu hiển thị" id="view-seg">
             <button type="button" data-v="table" aria-pressed="true">Bảng</button>
@@ -236,6 +247,12 @@
       </div>
       <div class="tbl" id="wl-table"></div>
       <div id="wl-heat" hidden></div>
+  </section>
+
+  <section class="card" aria-labelledby="fd-h" id="fund-card" hidden>
+    <div class="sec-h"><h2 id="fd-h">Quỹ Buffett mô phỏng · hôm nay</h2><span class="small muted" id="fd-src"></span></div>
+    <div class="fund-mk" id="fund-body"></div>
+    <p class="small muted" style="margin-top:10px">Quỹ ảo do routine nghiên cứu điều hành theo quy tắc cố định mỗi sáng. Con số ở đây là <strong>ước tính trong ngày</strong> từ giá mới nhất (có thể là giá tạm tính), không phải giá trị quỹ chính thức; phần tiền mặt coi như không đổi. Không phải lời khuyên đầu tư.</p>
   </section>
 
   <div class="grid2">
@@ -408,6 +425,14 @@
     return '<span class="badge h24">24 giờ</span>';
   }
   function unitOf(it) { return it.unit || (it.currency && !it.index ? it.currency : ''); }
+  var VI = { bullish: 'Tích cực', neutral: 'Trung lập', bearish: 'Tiêu cực' };
+  function tagsHtml(it) {
+    var t = it.tags || [], h = '';
+    if (t.indexOf('fund') >= 0 && it.weight != null) { h += ' <span class="badge fund" title="Đang nằm trong quỹ Buffett mô phỏng">Quỹ ' + Math.round(it.weight * 100) + '%</span>'; }
+    else if (t.indexOf('waiting') >= 0) { h += ' <span class="badge wait" title="Đã được chấm Tích cực, chờ kỳ cân lại đầu tháng">Chờ cân lại</span>'; }
+    if (it.verdict) { h += '<span class="vdot ' + esc(it.verdict) + '" role="img" aria-label="Buffett: ' + esc(VI[it.verdict]) + '" title="Mô phỏng Buffett: ' + esc(VI[it.verdict]) + (it.confidence != null ? ', tin cậy ' + esc(it.confidence) + '/100' : '') + '"></span>'; }
+    return h;
+  }
 
   function renderIndices() {
     var ids = DATA.groups.indices || [];
@@ -423,7 +448,11 @@
   }
 
   function rowsFor() {
-    return (DATA.groups.watchlist || []).map(function (k) { return DATA.items[k]; }).filter(function (it) { return it && (MKT === 'ALL' || it.market === MKT); });
+    return (DATA.groups.watchlist || []).map(function (k) { return DATA.items[k]; }).filter(function (it) {
+      if (!it) { return false; }
+      if (MKT === 'FUND') { return (it.tags || []).some(function (t) { return t === 'fund' || t === 'waiting'; }); }
+      return MKT === 'ALL' || it.market === MKT;
+    });
   }
   var COLS = [
     ['tk', 'Mã', function (it) { return it.label; }],
@@ -452,7 +481,7 @@
       var pos = it.hi52 > it.lo52 ? Math.max(0, Math.min(1, (it.last - it.lo52) / (it.hi52 - it.lo52))) : null;
       var vsMa = it.ma200 ? (it.last / it.ma200 - 1) * 100 : null;
       var tr = '<tr class="row" data-open="' + esc(it.key) + '" tabindex="0" aria-expanded="' + (OPEN[it.key] ? 'true' : 'false') + '">' +
-        '<td><span class="tk">' + esc(it.label) + '</span> ' + badge(it) + '<span class="nm">' + esc(it.name || '') + ' · ' + esc(it.market) + '</span></td>' +
+        '<td><span class="tk">' + esc(it.label) + '</span>' + tagsHtml(it) + ' ' + badge(it) + '<span class="nm">' + esc(it.name || '') + ' · ' + esc(it.market) + '</span></td>' +
         '<td class="r num">' + fmt(it.last, dpOf(it)) + '</td>' +
         '<td class="r num ' + cls(it.changePct) + '">' + pct(it.changePct) + '</td>' +
         '<td class="r num ' + cls(it.chg1m) + '">' + pct(it.chg1m, 1) + '</td>' +
@@ -474,7 +503,7 @@
     var rows = rowsFor().slice().sort(function (a, b) { return (b.changePct || 0) - (a.changePct || 0); });
     $('wl-heat').innerHTML = '<div class="heat">' + rows.map(function (it) {
       return '<button type="button" class="tile" data-open="' + esc(it.key) + '" style="background:' + heatColor(it.changePct) + '">' +
-        '<span class="tk">' + esc(it.label) + '</span><span class="p num">' + arrow(it.changePct) + pct(it.changePct) + '</span>' +
+        '<span class="tk">' + esc(it.label) + tagsHtml(it) + '</span><span class="p num">' + arrow(it.changePct) + pct(it.changePct) + '</span>' +
         '<span class="m num">' + fmt(it.last, dpOf(it)) + ' ' + esc(unitOf(it)) + '</span></button>';
     }).join('') + '</div><div class="legend"><span>−4%</span><span class="bar" aria-hidden="true"></span><span>+4%</span><span>· màu đậm dần theo mức tăng/giảm trong ngày; bấm ô để xem chi tiết</span></div>';
   }
@@ -548,8 +577,31 @@
     chip.className = 'chip' + (anyOpen && age > 45 ? ' stale' : '');
     t.textContent = 'Cập nhật ' + (age < 1 ? 'vừa xong' : dur(age * 60000) + ' trước') + (anyOpen && age > 45 ? ' · máy chạy tự động đang trễ' : '');
   }
+  var MKN = { VN: 'Việt Nam', AU: 'Úc', US: 'Mỹ' };
+  function renderFund() {
+    var f = DATA.sync && DATA.sync.funds, card = $('fund-card');
+    var mk = f ? Object.keys(f).filter(function (m) { return f[m] && ((f[m].holdings || []).length || (f[m].waiting || []).length); }) : [];
+    card.hidden = !mk.length;
+    if (!mk.length) { return; }
+    $('fd-src').textContent = 'Danh sách quỹ đồng bộ ngày ' + ddmm(DATA.sync.updatedAt || '');
+    $('fund-body').innerHTML = mk.map(function (m) {
+      var fm = f[m], total = 0, have = 0;
+      var rows = (fm.holdings || []).map(function (h) {
+        var it = DATA.items[h.id], chg = it ? it.changePct : null, c = chg == null ? null : h.weight * chg;
+        if (c != null) { total += c; have++; }
+        return '<tr><td><span class="tk">' + esc(it ? it.label : h.id.split('-')[1]) + '</span> ' + (it ? badge(it) : '') + '</td><td class="r num">' + Math.round(h.weight * 100) + '%</td>' +
+          '<td class="r num ' + cls(chg) + '">' + pct(chg) + '</td><td class="r num ' + cls(c) + '">' + (c == null ? '-' : pct(c)) + '</td></tr>';
+      }).join('');
+      var waiting = (fm.waiting || []).map(function (id) { var it = DATA.items[id]; return esc(it ? it.label : id.split('-')[1]); });
+      return '<div><h3>' + esc(MKN[m] || m) + ' <span class="small muted">· tiền mặt ' + (fm.cashWeight != null ? Math.round(fm.cashWeight * 100) + '%' : '-') + '</span></h3>' +
+        (rows ? '<p class="small muted">Ước tính thay đổi hôm nay của quỹ</p><p class="fund-sum num ' + cls(have ? total : null) + '">' + (have ? arrow(total) + pct(total) : '-') + '</p>' +
+          '<div class="tbl" style="margin-inline:0;padding-inline:0"><table><thead><tr><th>Mã</th><th class="r">Tỷ trọng</th><th class="r">% ngày</th><th class="r">Đóng góp</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+          : '<p class="small muted">Chưa nắm mã nào.</p>') +
+        (waiting.length ? '<p class="small" style="margin-top:6px">Chờ cân lại đầu tháng: ' + waiting.join(', ') + '</p>' : '') + '</div>';
+    }).join('');
+  }
   function renderAll() {
-    renderIndices(); renderMacro(); renderConv(); renderQA(); renderFresh();
+    renderIndices(); renderMacro(); renderConv(); renderQA(); renderFresh(); renderFund();
     if (VIEW === 'table') { renderTable(); } else { renderHeat(); }
   }
 

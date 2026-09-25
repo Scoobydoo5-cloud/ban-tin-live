@@ -1,0 +1,194 @@
+{
+ "version": 1,
+ "updatedAt": "2026-09-25",
+ "generatedAt": "2026-09-25T08:35:45+00:00",
+ "source": "routine Đồng bộ Bảng giá (kho dữ liệu trang Claude)",
+ "funds": {
+  "VN": {
+   "asOf": "2026-09-25",
+   "nav": 100.0,
+   "cashWeight": 0.75,
+   "holdings": [
+    {
+     "id": "VN-FPT",
+     "weight": 0.25
+    }
+   ],
+   "waiting": [
+    "VN-GMD"
+   ]
+  }
+ },
+ "items": [
+  {
+   "id": "VN-FPT",
+   "market": "VN",
+   "ticker": "FPT",
+   "name": "Tập đoàn FPT",
+   "exchange": "HOSE",
+   "tags": [
+    "fund",
+    "suggest"
+   ],
+   "weight": 0.25,
+   "verdict": "bullish",
+   "confidence": 74,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "VN-GMD",
+   "market": "VN",
+   "ticker": "GMD",
+   "name": "CTCP Tập đoàn Gemadept",
+   "exchange": "HOSE",
+   "tags": [
+    "waiting",
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "bullish",
+   "confidence": 62,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "AU-SHL",
+   "market": "AU",
+   "ticker": "SHL",
+   "name": "Sonic Healthcare Limited",
+   "exchange": null,
+   "tags": [
+    "watch"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 55,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "AU-HUB",
+   "market": "AU",
+   "ticker": "HUB",
+   "name": "HUB24 Limited",
+   "exchange": null,
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 60,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "AU-NXT",
+   "market": "AU",
+   "ticker": "NXT",
+   "name": "NEXTDC",
+   "exchange": null,
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "bearish",
+   "confidence": 65,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "AU-PME",
+   "market": "AU",
+   "ticker": "PME",
+   "name": "Pro Medicus",
+   "exchange": null,
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 65,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "AU-XRO",
+   "market": "AU",
+   "ticker": "XRO",
+   "name": "Xero",
+   "exchange": null,
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 50,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "US-ALAB",
+   "market": "US",
+   "ticker": "ALAB",
+   "name": "Astera Labs, Inc.",
+   "exchange": null,
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "bearish",
+   "confidence": 58,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "US-NVDA",
+   "market": "US",
+   "ticker": "NVDA",
+   "name": "NVIDIA",
+   "exchange": null,
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 62,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "US-STX",
+   "market": "US",
+   "ticker": "STX",
+   "name": "Seagate Technology",
+   "exchange": null,
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "bearish",
+   "confidence": 58,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "VN-HPG",
+   "market": "VN",
+   "ticker": "HPG",
+   "name": "CTCP Tập đoàn Hòa Phát",
+   "exchange": "HOSE",
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 52,
+   "verdictAsOf": "2026-09-25"
+  },
+  {
+   "id": "VN-MWG",
+   "market": "VN",
+   "ticker": "MWG",
+   "name": "CTCP Đầu tư Thế Giới Di Động",
+   "exchange": "HOSE",
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 55,
+   "verdictAsOf": "2026-09-25"
+  }
+ ]
+}

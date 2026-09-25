@@ -168,3 +168,47 @@ def test_cross_check_with_second_source():
     assert it["cross"]["level"] == "warn"
     ld.cross_check(it, {}, "Yahoo Finance")
     assert it["cross"]["level"] == "na"
+
+
+def test_merge_sync_adds_new_tickers_and_tags_existing():
+    cfg = {"watchlist": [dict(CFG_VN)]}
+    sync = {"items": [
+        {"id": "VN-FPT", "tags": ["fund"], "weight": 0.25, "verdict": "bullish", "confidence": 74},
+        {"id": "VN-VCB", "name": "Vietcombank", "exchange": "HOSE", "tags": ["suggest"]},
+        {"id": "AU-BHP", "tags": ["watch"]}, {"id": "US-AAPL", "tags": ["watch"]},
+        {"id": "bad id; rm -rf", "tags": ["watch"]}, {"id": "XX-ABC", "tags": ["watch"]}]}
+    meta = ld.merge_sync(cfg, sync)
+    keys = [c["key"] for c in cfg["watchlist"]]
+    assert keys == ["VN-FPT", "VN-VCB", "AU-BHP", "US-AAPL"]
+    vcb = cfg["watchlist"][1]
+    assert vcb["symbol"] == "VCB" and vcb["check"] == "VCB.VN" and vcb["exchange"] == "HOSE"
+    assert cfg["watchlist"][2]["symbol"] == "BHP.AX" and cfg["watchlist"][3]["symbol"] == "AAPL"
+    assert meta["VN-FPT"]["weight"] == 0.25 and meta["VN-FPT"]["tags"] == ["fund"]
+
+
+def test_load_sync_picks_newest(tmp_path):
+    a = tmp_path / "a.json"; b = tmp_path / "b.json"
+    a.write_text(json.dumps({"generatedAt": "2026-09-25T00:10:00+00:00", "items": [{"id": "VN-FPT"}]}), encoding="utf-8")
+    b.write_text(json.dumps({"generatedAt": "2026-09-26T00:10:00+00:00", "items": [{"id": "VN-HPG"}]}), encoding="utf-8")
+    assert ld.load_sync([str(a), str(b), str(tmp_path / "missing.json")])["items"][0]["id"] == "VN-HPG"
+
+
+def test_sync_builder_keeps_only_safe_fields(tmp_path):
+    import sync_from_claude as sc
+    for sub, name, data in [
+        ("portfolio", "VN", {"asOf": "2026-09-25", "nav": 100, "cashWeight": 0.75,
+                             "holdings": [{"id": "VN-FPT", "ticker": "FPT", "weight": 0.25}], "waiting": ["GMD"]}),
+        ("watchlist", "AU-SHL", {"status": "active", "note": "ghi chú riêng <script>"}),
+        ("suggestions", "US-NVDA", {"status": "active", "reason": "lý do dài"}),
+        ("suggestions", "US-OLD", {"status": "removed"}),
+        ("companies", "VN-FPT", {"name": "Tập đoàn FPT<script>", "exchange": "HOSE",
+                                  "buffett": {"verdict": "bullish", "confidence": 74, "asOf": "2026-09-25"}})]:
+        (tmp_path / sub).mkdir(exist_ok=True)
+        (tmp_path / sub / f"{name}.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    res = sc.build(tmp_path, "2026-09-25")
+    ids = [x["id"] for x in res["items"]]
+    assert ids == ["VN-FPT", "VN-GMD", "AU-SHL", "US-NVDA"]
+    fpt = res["items"][0]
+    assert fpt["name"] == "Tập đoàn FPTscript" and fpt["weight"] == 0.25 and fpt["verdict"] == "bullish"
+    assert res["funds"]["VN"]["waiting"] == ["VN-GMD"]
+    assert "note" not in json.dumps(res) and "reason" not in json.dumps(res)

@@ -18,6 +18,7 @@ import json
 import logging
 import math
 import os
+import re
 import sys
 import time as _time
 import urllib.request
@@ -402,9 +403,57 @@ def load_prev(src: str | None) -> dict:
         return {}
 
 
-def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None) -> dict:
+def load_sync(paths: list[str] | None) -> dict:
+    """File đồng bộ từ trang Claude (quỹ Buffett, watchlist, gợi ý); lấy bản mới nhất nếu có nhiều."""
+    best = {}
+    for p in paths or []:
+        try:
+            d = json.loads(Path(p).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if isinstance(d, dict) and isinstance(d.get("items"), list) and str(d.get("generatedAt", "")) > str(best.get("generatedAt", "")):
+            best = d
+    return best
+
+
+_SYNC_ID = re.compile(r"^(VN|AU|US)-[A-Z0-9.]{1,10}$")
+
+
+def merge_sync(cfg: dict, sync: dict, limit: int = 40) -> dict[str, dict]:
+    """Thêm mã từ file đồng bộ vào watchlist của cấu hình; trả về thông tin gắn thêm theo key."""
+    meta: dict[str, dict] = {}
+    if not sync:
+        return meta
+    watch = cfg.setdefault("watchlist", [])
+    have = {c["key"] for c in watch}
+    for x in sync.get("items", []):
+        key = str(x.get("id", "")).upper()
+        if not _SYNC_ID.match(key):
+            continue
+        mkt, _, t = key.partition("-")
+        tags = [str(v) for v in (x.get("tags") or []) if v in ("fund", "waiting", "watch", "suggest")]
+        meta[key] = {"tags": tags, "weight": x.get("weight") if isinstance(x.get("weight"), (int, float)) else None,
+                     "verdict": x.get("verdict") if x.get("verdict") in ("bullish", "neutral", "bearish") else None,
+                     "confidence": x.get("confidence") if isinstance(x.get("confidence"), int) else None}
+        if key in have or len(watch) >= limit:
+            continue
+        entry = {"key": key, "label": t, "name": (x.get("name") or None), "market": mkt, "auto": True}
+        if mkt == "VN":
+            entry.update(symbol=t, exchange=(x.get("exchange") or "UPCOM"), check=f"{t}.VN")
+        elif mkt == "AU":
+            entry.update(symbol=f"{t}.AX")
+        else:
+            entry.update(symbol=t)
+        watch.append(entry)
+        have.add(key)
+    return meta
+
+
+def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None, sync_paths: list[str] | None = None) -> dict:
     now = now_utc or datetime.now(timezone.utc)
     cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+    sync = load_sync(sync_paths)
+    meta = merge_sync(cfg, sync)
     prev = load_prev(prev_src)
     prev_items = prev.get("items", {})
     items, errors = {}, {}
@@ -433,6 +482,8 @@ def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None) -
                         it["cross"] = {"level": "na", "note": f"Không đọc được nguồn đối chiếu ({type(exc).__name__})"}
                 it["checks"] = validate(it, now)
                 it["level"] = worst(it["checks"])
+                if key in meta:
+                    it.update(meta[key])
                 if it["level"] == "fail":
                     held = hold_previous(it, prev_items.get(key), "Số mới không qua kiểm tra: " +
                                          "; ".join(x["note"] for x in it["checks"] if x["level"] == "fail"))
@@ -445,8 +496,12 @@ def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None) -
                 if held:
                     held["checks"] = [{"name": "Nguồn", "level": "fail", "note": msg}]
                     held["level"] = "fail"
+                    held.update(meta.get(key, {}))
                     items[key] = held
 
+    for k, v in items.items():  # thông tin quỹ/nhận định luôn theo file đồng bộ mới nhất, kể cả mục giữ số cũ
+        if k in meta:
+            v.update(meta[k])
     fresh = [k for k, v in items.items() if not v.get("held")]
     total = sum(len(v) for v in groups.values())
     summary = {
@@ -462,6 +517,7 @@ def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None) -
         "markets": {m: market_state(m, now) for m in MARKETS},
         "groups": groups, "items": items, "errors": errors, "summary": summary,
         "critical": len(fresh) < total / 2,
+        "sync": {"updatedAt": sync.get("updatedAt"), "funds": sync.get("funds") or {}} if sync else None,
     }
 
 
@@ -487,8 +543,9 @@ def main(argv=None) -> int:
     ap.add_argument("--out", required=True)
     ap.add_argument("--prev", help="latest.json của lần trước (URL hoặc file) để giữ số khi nguồn lỗi")
     ap.add_argument("--snapshot", help="thư mục lưu giá đóng cửa theo ngày")
+    ap.add_argument("--sync", action="append", help="file đồng bộ từ trang Claude (có thể truyền nhiều lần)")
     a = ap.parse_args(argv)
-    res = run(Path(a.config), a.prev)
+    res = run(Path(a.config), a.prev, sync_paths=a.sync)
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(res, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
