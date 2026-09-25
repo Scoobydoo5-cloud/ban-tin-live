@@ -168,12 +168,21 @@ def fetch_yahoo(symbol: str) -> tuple[list[dict], list[dict]]:
     return daily, intr
 
 
+_FRED_DOWN: list[str] = []  # FRED hay không phản hồi từ máy chủ đám mây: lỗi một lần thì bỏ qua cả lượt
+
+
 def fetch_fred(series: str, days: int = 20) -> dict[str, float]:
+    if _FRED_DOWN:
+        raise TimeoutError(f"FRED không phản hồi ở lượt này ({_FRED_DOWN[0]})")
     start = (date.today() - timedelta(days=days)).isoformat()
     url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}&cosd={start}"
     req = urllib.request.Request(url, headers={"User-Agent": "ban-tin-live/1.0"})  # FRED chặn UA giả trình duyệt
-    with urllib.request.urlopen(req, timeout=20) as resp:
-        text = resp.read().decode("utf-8")
+    try:
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            text = resp.read().decode("utf-8")
+    except Exception as exc:
+        _FRED_DOWN.append(type(exc).__name__)
+        raise
     out = {}
     for line in text.splitlines()[1:]:
         d, _, v = line.partition(",")
@@ -413,9 +422,10 @@ def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None) -
                 it = build_item(c, daily, intr, now, dup)
                 if c.get("fred"):
                     try:
-                        apply_fred(it, retry(lambda c=c: fetch_fred(c["fred"]), tries=2))
+                        apply_fred(it, fetch_fred(c["fred"]))
                     except Exception as exc:
-                        it["cross"] = {"level": "na", "note": f"Không đọc được FRED ({type(exc).__name__})"}
+                        it["cross"] = {"level": "na", "note": f"Chưa đối chiếu được: {exc}" if isinstance(exc, TimeoutError) and _FRED_DOWN
+                                       else f"Không đọc được FRED ({type(exc).__name__})"}
                 elif c.get("check") and it.get("prevClose"):
                     try:
                         cross_check(it, retry(lambda c=c: yahoo_closes(c["check"]), tries=2), "Yahoo Finance")
