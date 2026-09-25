@@ -41,11 +41,47 @@
   "prevClose": 8702.0,
   "changePct": -0.425
  },
+ "DJI": {
+  "date": "2026-09-25",
+  "close": 51828.621094,
+  "prevClose": 51349.980469,
+  "changePct": 0.932
+ },
+ "GSPC": {
+  "date": "2026-09-25",
+  "close": 7743.410156,
+  "prevClose": 7704.129883,
+  "changePct": 0.51
+ },
  "HNXINDEX": {
   "date": "2026-09-25",
   "close": 272.21,
   "prevClose": 272.77,
   "changePct": -0.205
+ },
+ "IXIC": {
+  "date": "2026-09-25",
+  "close": 27068.716797,
+  "prevClose": 26939.369141,
+  "changePct": 0.48
+ },
+ "US-ALAB": {
+  "date": "2026-09-25",
+  "close": 364.619995,
+  "prevClose": 360.51001,
+  "changePct": 1.14
+ },
+ "US-NVDA": {
+  "date": "2026-09-25",
+  "close": 225.070007,
+  "prevClose": 224.580002,
+  "changePct": 0.218
+ },
+ "US-STX": {
+  "date": "2026-09-25",
+  "close": 916.830017,
+  "prevClose": 905.919983,
+  "changePct": 1.204
  },
  "VN-FPT": {
   "date": "2026-09-25",
