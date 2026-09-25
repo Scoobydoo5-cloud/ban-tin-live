@@ -26,23 +26,21 @@ from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-# vnai (đi kèm vnstock) tự ghi file quy tắc AI và gửi số liệu đo lường nếu không tắt.
-os.environ.setdefault("VNSTOCK_DISABLE_AGENT_SETUP", "1")
-os.environ.setdefault("VNSTOCK_TELEMETRY", "off")
-
 SYD = ZoneInfo("Australia/Sydney")
 ROOT = Path(__file__).resolve().parent.parent
 
 # Giờ giao dịch (giờ địa phương của sàn). VN nghỉ trưa 11:30-13:00; phiên ATC kết thúc 14:45.
 MARKETS = {
     "VN": {"name": "Việt Nam", "tz": "Asia/Ho_Chi_Minh", "sessions": [(time(9, 0), time(11, 30)), (time(13, 0), time(14, 45))],
-           "final": time(15, 5), "currency": "VND", "source": "vnstock (KBS)"},
+           "final": time(15, 5), "currency": "VND", "source": "KBS (Chứng khoán KB Việt Nam)"},
     "AU": {"name": "Úc", "tz": "Australia/Sydney", "sessions": [(time(10, 0), time(16, 12))],
            "final": time(16, 30), "currency": "AUD", "source": "Yahoo Finance"},
     "US": {"name": "Mỹ", "tz": "America/New_York", "sessions": [(time(9, 30), time(16, 0))],
            "final": time(16, 15), "currency": "USD", "source": "Yahoo Finance"},
 }
 LIMITS = {"HOSE": 0.07, "HNX": 0.10, "UPCOM": 0.15}  # biên độ dao động giá trong ngày
+KBS = "https://kbbuddywts.kbsec.com.vn/iis-server/investment"  # dữ liệu công khai của KBS (vnstock cũng gọi địa chỉ này)
+UA = "Mozilla/5.0 (compatible; ban-tin-live/1.0; +https://github.com/Scoobydoo5-cloud/ban-tin-live)"
 BAR_MINUTES = 15
 
 
@@ -56,7 +54,7 @@ def num(v) -> float | None:
 
 @contextlib.contextmanager
 def quiet():
-    """vnstock/vnai/yfinance in quảng cáo và cảnh báo; nuốt lại. Lỗi thật vẫn ném ra."""
+    """yfinance in cảnh báo; nuốt lại. Lỗi thật vẫn ném ra."""
     logging.disable(logging.WARNING)
     try:
         with warnings.catch_warnings():
@@ -131,26 +129,30 @@ def dedupe_daily(bars: list[dict]) -> tuple[list[dict], int]:
     return out, len(bars) - len(out)
 
 
+def _kbs(kind: str, symbol: str, suffix: str, start: date, end: date) -> list[dict]:
+    url = f"{KBS}/{kind}/{symbol}/data_{suffix}?sdate={start:%d-%m-%Y}&edate={end:%d-%m-%Y}"
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=25) as r:
+        data = json.loads(r.read().decode("utf-8"))
+    return data.get(f"data_{suffix}") or []
+
+
 def fetch_vn(symbol: str, is_index: bool) -> tuple[list[dict], list[dict]]:
-    """(nến ngày, nến 15 phút) từ vnstock KBS. Cổ phiếu tính bằng nghìn đồng, chỉ số bằng điểm."""
-    k = 1.0 if is_index else 1000.0
+    """(nến ngày, nến 15 phút) từ KBS. Giá cổ phiếu tính bằng đồng, chỉ số bằng điểm; mới nhất đứng đầu."""
     tz = ZoneInfo(MARKETS["VN"]["tz"])
+    kind = "index" if is_index else "stocks"
     today = datetime.now(tz).date()
-    with quiet():
-        from vnstock import Quote
-        q = Quote(source="KBS", symbol=symbol)
-        d = q.history(start=(today - timedelta(days=400)).isoformat(), end=(today + timedelta(days=1)).isoformat(), interval="1D")
-        m = q.history(start=(today - timedelta(days=6)).isoformat(), end=(today + timedelta(days=1)).isoformat(), interval="15m")
-    daily = [{"d": date.fromisoformat(str(t)[:10]), "c": num(c) * k, "h": (num(h) or num(c)) * k, "l": (num(lo) or num(c)) * k}
-             for t, c, h, lo in zip(d["time"], d["close"], d["high"], d["low"]) if num(c)]
-    intr = []
-    for t, c, h, lo in zip(m["time"], m["close"], m["high"], m["low"]):
-        if not num(c):
-            continue
-        ts = datetime.fromisoformat(str(t)[:19])
-        ts = (ts if ts.tzinfo else ts.replace(tzinfo=tz)).astimezone(timezone.utc)
-        intr.append({"t": ts, "c": num(c) * k, "h": (num(h) or num(c)) * k, "l": (num(lo) or num(c)) * k})
-    return daily, intr
+    day_rows = _kbs(kind, symbol, "day", today - timedelta(days=400), today + timedelta(days=1))
+    m_rows = _kbs(kind, symbol, "15P", today - timedelta(days=6), today + timedelta(days=1))
+
+    def bar(r):
+        c = num(r.get("c"))
+        return None if not c else (c, num(r.get("h")) or c, num(r.get("l")) or c)
+
+    daily = [{"d": date.fromisoformat(str(r["t"])[:10]), "c": b[0], "h": b[1], "l": b[2]} for r in day_rows if (b := bar(r))]
+    intr = [{"t": datetime.strptime(str(r["t"])[:16], "%Y-%m-%d %H:%M").replace(tzinfo=tz).astimezone(timezone.utc),
+             "c": b[0], "h": b[1], "l": b[2]} for r in m_rows if (b := bar(r))]
+    return daily, sorted(intr, key=lambda x: x["t"])
 
 
 def fetch_yahoo(symbol: str) -> tuple[list[dict], list[dict]]:
@@ -280,6 +282,25 @@ def apply_fred(item: dict, fred: dict[str, float]) -> None:
                          else f"Giá đóng cửa {item['prevDate']} lệch FRED {diff:.2%} (FRED: {ref:,.2f})"}
 
 
+def cross_check(item: dict, ref: dict[str, float], source: str, tol: float = 0.005) -> None:
+    """So giá đóng cửa phiên trước với nguồn thứ hai (cùng ngày)."""
+    r = ref.get(item.get("prevDate") or "")
+    if r is None:
+        item["cross"] = {"level": "na", "note": f"{source} chưa có phiên {item.get('prevDate')} để đối chiếu"}
+        return
+    diff = abs(item["prevClose"] / r - 1)
+    item["cross"] = {"level": "ok" if diff <= tol else "warn",
+                     "note": f"Giá đóng cửa {item['prevDate']} khớp {source}" if diff <= tol
+                     else f"Giá đóng cửa {item['prevDate']} lệch {source} {diff:.2%} ({source}: {r:,.2f})"}
+
+
+def yahoo_closes(symbol: str) -> dict[str, float]:
+    import yfinance as yf
+    with quiet():
+        h = yf.Ticker(symbol).history(period="1mo", interval="1d", auto_adjust=False)
+    return {ix.date().isoformat(): num(c) for ix, c in zip(h.index, h["Close"]) if num(c)}
+
+
 def validate(item: dict, now_utc: datetime) -> list[dict]:
     """Các phép kiểm tra cho một mục. level: ok / warn / fail."""
     checks = []
@@ -395,6 +416,11 @@ def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None) -
                         apply_fred(it, retry(lambda c=c: fetch_fred(c["fred"]), tries=2))
                     except Exception as exc:
                         it["cross"] = {"level": "na", "note": f"Không đọc được FRED ({type(exc).__name__})"}
+                elif c.get("check") and it.get("prevClose"):
+                    try:
+                        cross_check(it, retry(lambda c=c: yahoo_closes(c["check"]), tries=2), "Yahoo Finance")
+                    except Exception as exc:
+                        it["cross"] = {"level": "na", "note": f"Không đọc được nguồn đối chiếu ({type(exc).__name__})"}
                 it["checks"] = validate(it, now)
                 it["level"] = worst(it["checks"])
                 if it["level"] == "fail":

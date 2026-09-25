@@ -30,8 +30,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     env:
-      VNSTOCK_DISABLE_AGENT_SETUP: "1"
-      VNSTOCK_TELEMETRY: "off"
       PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v4

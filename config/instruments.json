@@ -1,5 +1,5 @@
 {
-  "_note": "Danh sach ma tren trang Bang gia. Sua muc watchlist de them/bot ma. market: VN (vnstock KBS), AU (Yahoo, tu them .AX), US (Yahoo).",
+  "_note": "Danh sach ma tren trang Bang gia. Sua muc watchlist de them/bot ma. market: VN (KBS, doi chieu Yahoo qua truong check), AU (Yahoo, tu them .AX), US (Yahoo).",
   "indices": [
     {"key": "VNINDEX", "label": "VN-Index", "market": "VN", "symbol": "VNINDEX", "index": true},
     {"key": "VN30", "label": "VN30", "market": "VN", "symbol": "VN30", "index": true},
@@ -18,10 +18,10 @@
     {"key": "WTI", "label": "Dầu WTI", "market": "24H", "symbol": "CL=F", "dp": 2, "unit": "USD/thùng", "note": "Hợp đồng tương lai gần nhất"}
   ],
   "watchlist": [
-    {"key": "VN-FPT", "label": "FPT", "name": "Tập đoàn FPT", "market": "VN", "symbol": "FPT", "exchange": "HOSE"},
-    {"key": "VN-MWG", "label": "MWG", "name": "Thế Giới Di Động", "market": "VN", "symbol": "MWG", "exchange": "HOSE"},
-    {"key": "VN-GMD", "label": "GMD", "name": "Gemadept", "market": "VN", "symbol": "GMD", "exchange": "HOSE"},
-    {"key": "VN-HPG", "label": "HPG", "name": "Hòa Phát", "market": "VN", "symbol": "HPG", "exchange": "HOSE"},
+    {"key": "VN-FPT", "label": "FPT", "name": "Tập đoàn FPT", "market": "VN", "symbol": "FPT", "exchange": "HOSE", "check": "FPT.VN"},
+    {"key": "VN-MWG", "label": "MWG", "name": "Thế Giới Di Động", "market": "VN", "symbol": "MWG", "exchange": "HOSE", "check": "MWG.VN"},
+    {"key": "VN-GMD", "label": "GMD", "name": "Gemadept", "market": "VN", "symbol": "GMD", "exchange": "HOSE", "check": "GMD.VN"},
+    {"key": "VN-HPG", "label": "HPG", "name": "Hòa Phát", "market": "VN", "symbol": "HPG", "exchange": "HOSE", "check": "HPG.VN"},
     {"key": "AU-PME", "label": "PME", "name": "Pro Medicus", "market": "AU", "symbol": "PME.AX"},
     {"key": "AU-NXT", "label": "NXT", "name": "NEXTDC", "market": "AU", "symbol": "NXT.AX"},
     {"key": "AU-XRO", "label": "XRO", "name": "Xero", "market": "AU", "symbol": "XRO.AX"},

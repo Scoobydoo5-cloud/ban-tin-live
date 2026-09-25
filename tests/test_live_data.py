@@ -142,3 +142,29 @@ def test_snapshot_keeps_only_final_prices(tmp_path):
     path = ld.snapshot(res, tmp_path)
     data = json.loads(path.read_text(encoding="utf-8"))
     assert list(data) == ["A"] and path.name == "2026-09-25.json"
+
+
+def test_kbs_rows_are_parsed_newest_first_and_strings_accepted(monkeypatch):
+    rows = {
+        "day": [{"t": "2026-09-25 07:00", "o": "65500", "h": "65900", "l": "64700", "c": "64700"},
+                {"t": "2026-09-24 07:00", "o": 66000, "h": 66200, "l": 65100, "c": 65300}],
+        "15P": [{"t": "2026-09-25 14:00", "c": 64700, "h": 64900, "l": 64700},
+                {"t": "2026-09-25 13:45", "c": 64800, "h": 64900, "l": 64800}],
+    }
+    monkeypatch.setattr(ld, "_kbs", lambda kind, sym, suffix, a, b: rows[suffix])
+    daily, intr = ld.fetch_vn("FPT", False)
+    daily, _ = ld.dedupe_daily(daily)
+    assert [b["c"] for b in daily] == [65300, 64700]
+    assert intr[-1]["c"] == 64700 and intr[0]["t"] < intr[-1]["t"]
+    assert intr[-1]["t"] == utc(2026, 9, 25, 14, 0, VN)
+
+
+def test_cross_check_with_second_source():
+    now = utc(2026, 9, 25, 16, 0, VN)
+    it = ld.build_item(CFG_VN, daily_series(date(2026, 9, 25), 30, 65000, 10), [], now)
+    ld.cross_check(it, {it["prevDate"]: it["prevClose"]}, "Yahoo Finance")
+    assert it["cross"]["level"] == "ok"
+    ld.cross_check(it, {it["prevDate"]: it["prevClose"] * 1.02}, "Yahoo Finance")
+    assert it["cross"]["level"] == "warn"
+    ld.cross_check(it, {}, "Yahoo Finance")
+    assert it["cross"]["level"] == "na"

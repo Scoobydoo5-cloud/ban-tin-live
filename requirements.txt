@@ -1,3 +1,2 @@
-vnstock==4.0.8
 yfinance==1.7.0
 pytest==8.3.5

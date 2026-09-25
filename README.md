@@ -12,7 +12,7 @@ Phần phân tích (bản tin hằng ngày, hồ sơ công ty, quỹ Buffett mô
    - ASX và Việt Nam: mỗi 15 phút từ 10h sáng đến khoảng 19h giờ Sydney.
    - Phố Wall: mỗi 15 phút từ khoảng 23h đến 8h sáng giờ Sydney.
 2. `scripts/live_data.py` lấy giá:
-   - Việt Nam: vnstock (nguồn KBS), nến 15 phút.
+   - Việt Nam: dữ liệu công khai của KBS (Chứng khoán KB Việt Nam), nến 15 phút; đối chiếu thêm với Yahoo (FPT.VN…).
    - Úc, Mỹ, tỷ giá, hàng hóa: Yahoo Finance (yfinance).
    - Chỉ số Mỹ: đối chiếu thêm với FRED.
 3. Mỗi con số qua các phép kiểm tra:
@@ -37,7 +37,7 @@ Trạng thái trên trang:
 Sửa `config/instruments.json` ngay trên GitHub (bấm biểu tượng bút chì), ở mục `watchlist`:
 
 ```json
-{"key": "VN-VCB", "label": "VCB", "name": "Vietcombank", "market": "VN", "symbol": "VCB", "exchange": "HOSE"}
+{"key": "VN-VCB", "label": "VCB", "name": "Vietcombank", "market": "VN", "symbol": "VCB", "exchange": "HOSE", "check": "VCB.VN"}
 {"key": "AU-BHP", "label": "BHP", "name": "BHP Group", "market": "AU", "symbol": "BHP.AX"}
 {"key": "US-AAPL", "label": "AAPL", "name": "Apple", "market": "US", "symbol": "AAPL"}
 ```
