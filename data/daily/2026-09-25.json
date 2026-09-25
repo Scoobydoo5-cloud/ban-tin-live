@@ -1,0 +1,80 @@
+{
+ "AU-CBA": {
+  "date": "2026-09-25",
+  "close": 150.830002,
+  "prevClose": 149.979996,
+  "changePct": 0.567
+ },
+ "AU-HUB": {
+  "date": "2026-09-25",
+  "close": 64.5,
+  "prevClose": 67.419998,
+  "changePct": -4.331
+ },
+ "AU-NXT": {
+  "date": "2026-09-25",
+  "close": 11.21,
+  "prevClose": 11.41,
+  "changePct": -1.753
+ },
+ "AU-PME": {
+  "date": "2026-09-25",
+  "close": 161.0,
+  "prevClose": 163.669998,
+  "changePct": -1.631
+ },
+ "AU-SHL": {
+  "date": "2026-09-25",
+  "close": 18.790001,
+  "prevClose": 18.91,
+  "changePct": -0.635
+ },
+ "AU-XRO": {
+  "date": "2026-09-25",
+  "close": 57.360001,
+  "prevClose": 59.02,
+  "changePct": -2.813
+ },
+ "AXJO": {
+  "date": "2026-09-25",
+  "close": 8665.0,
+  "prevClose": 8702.0,
+  "changePct": -0.425
+ },
+ "DJI": {
+  "date": "2026-09-24",
+  "close": 51349.980469,
+  "prevClose": 51511.589844,
+  "changePct": -0.314
+ },
+ "GSPC": {
+  "date": "2026-09-24",
+  "close": 7704.129883,
+  "prevClose": 7706.029785,
+  "changePct": -0.025
+ },
+ "IXIC": {
+  "date": "2026-09-24",
+  "close": 26939.369141,
+  "prevClose": 26936.039062,
+  "changePct": 0.012
+ },
+ "US-ALAB": {
+  "date": "2026-09-24",
+  "close": 360.51001,
+  "prevClose": 360.459991,
+  "changePct": 0.014
+ },
+ "US-NVDA": {
+  "date": "2026-09-24",
+  "close": 224.580002,
+  "prevClose": 225.509995,
+  "changePct": -0.412
+ },
+ "US-STX": {
+  "date": "2026-09-24",
+  "close": 905.919983,
+  "prevClose": 923.859985,
+  "changePct": -1.942
+ }
+}
