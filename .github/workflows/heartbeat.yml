@@ -1,0 +1,18 @@
+# Chẩn đoán tạm thời: kiểm tra lịch chạy (schedule) của GitHub có hoạt động trên kho này không.
+# Không dùng action ngoài, không quyền ghi. Sẽ xóa khi đã xác định xong.
+name: Nhip tim lich chay
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  beat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: echo "schedule fired at $(date -u +%FT%TZ) event=${{ github.event_name }}"
