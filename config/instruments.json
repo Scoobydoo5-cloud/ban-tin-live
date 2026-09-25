@@ -4,18 +4,18 @@
     {"key": "VNINDEX", "label": "VN-Index", "market": "VN", "symbol": "VNINDEX", "index": true},
     {"key": "VN30", "label": "VN30", "market": "VN", "symbol": "VN30", "index": true},
     {"key": "HNXINDEX", "label": "HNX-Index", "market": "VN", "symbol": "HNXINDEX", "index": true},
-    {"key": "AXJO", "label": "S&P/ASX 200", "market": "AU", "symbol": "^AXJO", "index": true},
-    {"key": "GSPC", "label": "S&P 500", "market": "US", "symbol": "^GSPC", "index": true, "fred": "SP500"},
-    {"key": "DJI", "label": "Dow Jones", "market": "US", "symbol": "^DJI", "index": true, "fred": "DJIA"},
-    {"key": "IXIC", "label": "Nasdaq Composite", "market": "US", "symbol": "^IXIC", "index": true, "fred": "NASDAQCOM"}
+    {"key": "AXJO", "cnbc": ".AXJO", "label": "S&P/ASX 200", "market": "AU", "symbol": "^AXJO", "index": true},
+    {"key": "GSPC", "cnbc": ".SPX", "label": "S&P 500", "market": "US", "symbol": "^GSPC", "index": true, "fred": "SP500"},
+    {"key": "DJI", "cnbc": ".DJI", "label": "Dow Jones", "market": "US", "symbol": "^DJI", "index": true, "fred": "DJIA"},
+    {"key": "IXIC", "cnbc": ".IXIC", "label": "Nasdaq Composite", "market": "US", "symbol": "^IXIC", "index": true, "fred": "NASDAQCOM"}
   ],
   "macro": [
-    {"key": "AUDUSD", "label": "AUD/USD", "market": "24H", "symbol": "AUDUSD=X", "dp": 4},
-    {"key": "USDVND", "label": "USD/VND", "market": "24H", "symbol": "VND=X", "dp": 0, "note": "Tỷ giá thị trường quốc tế, không phải tỷ giá trung tâm của Ngân hàng Nhà nước"},
-    {"key": "TNX", "label": "Lợi suất Mỹ 10 năm", "market": "24H", "symbol": "^TNX", "dp": 3, "unit": "%"},
-    {"key": "GOLD", "label": "Vàng", "market": "24H", "symbol": "GC=F", "dp": 1, "unit": "USD/oz", "note": "Hợp đồng tương lai gần nhất"},
-    {"key": "BRENT", "label": "Dầu Brent", "market": "24H", "symbol": "BZ=F", "dp": 2, "unit": "USD/thùng", "note": "Hợp đồng tương lai gần nhất"},
-    {"key": "WTI", "label": "Dầu WTI", "market": "24H", "symbol": "CL=F", "dp": 2, "unit": "USD/thùng", "note": "Hợp đồng tương lai gần nhất"}
+    {"key": "AUDUSD", "cnbc": "AUD=", "label": "AUD/USD", "market": "24H", "symbol": "AUDUSD=X", "dp": 4},
+    {"key": "USDVND", "cnbc": "VND=", "label": "USD/VND", "market": "24H", "symbol": "VND=X", "dp": 0, "note": "Tỷ giá thị trường quốc tế, không phải tỷ giá trung tâm của Ngân hàng Nhà nước"},
+    {"key": "TNX", "cnbc": "US10Y", "label": "Lợi suất Mỹ 10 năm", "market": "24H", "symbol": "^TNX", "dp": 3, "unit": "%"},
+    {"key": "GOLD", "cnbc": "@GC.1", "label": "Vàng", "market": "24H", "symbol": "GC=F", "dp": 1, "unit": "USD/oz", "note": "Hợp đồng tương lai gần nhất"},
+    {"key": "BRENT", "cnbc": "@LCO.1", "label": "Dầu Brent", "market": "24H", "symbol": "BZ=F", "dp": 2, "unit": "USD/thùng", "note": "Hợp đồng tương lai gần nhất"},
+    {"key": "WTI", "cnbc": "@CL.1", "label": "Dầu WTI", "market": "24H", "symbol": "CL=F", "dp": 2, "unit": "USD/thùng", "note": "Hợp đồng tương lai gần nhất"}
   ],
   "watchlist": [
     {"key": "VN-FPT", "label": "FPT", "name": "Tập đoàn FPT", "market": "VN", "symbol": "FPT", "exchange": "HOSE", "check": "FPT.VN"},

@@ -212,3 +212,51 @@ def test_sync_builder_keeps_only_safe_fields(tmp_path):
     assert fpt["name"] == "Tập đoàn FPTscript" and fpt["weight"] == 0.25 and fpt["verdict"] == "bullish"
     assert res["funds"]["VN"]["waiting"] == ["VN-GMD"]
     assert "note" not in json.dumps(res) and "reason" not in json.dumps(res)
+
+
+CFG_BRENT = {"key": "BRENT", "label": "Dầu Brent", "market": "24H", "symbol": "BZ=F", "cnbc": "@LCO.1"}
+
+
+def _brent_rolled(now):
+    daily = daily_series(date(2026, 9, 24), 30, 106.6, 0.1)
+    intr = [{"t": now - timedelta(minutes=45), "c": 105.7, "h": 105.8, "l": 105.6},
+            {"t": now - timedelta(minutes=30), "c": 98.3, "h": 98.5, "l": 98.1},   # nhảy -7%: đổi hợp đồng
+            {"t": now - timedelta(minutes=15), "c": 98.16, "h": 98.3, "l": 98.1}]
+    return ld.build_item(CFG_BRENT, daily, intr, now)
+
+
+def test_futures_roll_is_detected_and_fixed_with_cnbc_front_month():
+    now = datetime(2026, 9, 25, 13, 15, tzinfo=timezone.utc)
+    it = _brent_rolled(now)
+    assert it["rollSuspected"] and round(it["changePct"], 1) == -7.9
+    ld.apply_cnbc(it, {"last": 104.69, "change": -1.91, "changePct": -1.79, "prevClose": 106.6, "time": "2026-09-25T14:12:55+01:00", "name": "ICE Brent Crude (Nov'26)"})
+    assert it["last"] == 104.69 and it["changePct"] == -1.79 and it["prevClose"] == 106.6
+    checks = {c["name"]: c["level"] for c in ld.validate(it, now)}
+    assert checks["Đảo hợp đồng"] == "warn"
+
+
+def test_futures_roll_without_second_source_drops_the_wrong_change():
+    now = datetime(2026, 9, 25, 13, 15, tzinfo=timezone.utc)
+    it = _brent_rolled(now)
+    ld.apply_cnbc(it, None)
+    assert it["changePct"] is None
+
+
+def test_cnbc_prev_close_mismatch_is_a_warning_for_stocks():
+    now = utc(2026, 9, 25, 18, 0, NY)
+    cfg = {"key": "US-NVDA", "label": "NVDA", "market": "US", "symbol": "NVDA"}
+    it = ld.build_item(cfg, daily_series(date(2026, 9, 25), 30, 224.58, 0.5), [], now)
+    ok = {"last": it["last"], "change": it["change"], "changePct": it["changePct"], "prevClose": it["prevClose"], "time": "2026-09-25"}
+    ld.apply_cnbc(it, dict(ok))
+    assert it["cnbc"]["level"] == "ok"
+    ld.apply_cnbc(it, dict(ok, prevClose=it["prevClose"] * 1.02))
+    assert it["cnbc"]["level"] == "warn"
+    assert ld.cnbc_symbol({"market": "AU", "symbol": "HUB.AX"}) == "HUB-AU" and ld.cnbc_symbol({"market": "US", "symbol": "NVDA"}) == "NVDA"
+
+
+def test_cnbc_pre_session_compares_last_close():
+    now = utc(2026, 9, 25, 9, 26, NY)
+    cfg = {"key": "US-NVDA", "label": "NVDA", "market": "US", "symbol": "NVDA"}
+    it = ld.build_item(cfg, daily_series(date(2026, 9, 24), 30, 224.58, 0.5), [], now)
+    ld.apply_cnbc(it, {"last": 224.58, "change": None, "changePct": None, "prevClose": None, "preSession": True, "time": "2026-09-24"})
+    assert it["cnbc"]["level"] == "ok" and "khớp" in it["cnbc"]["note"]

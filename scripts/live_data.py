@@ -21,6 +21,7 @@ import os
 import re
 import sys
 import time as _time
+import urllib.parse
 import urllib.request
 import warnings
 from datetime import date, datetime, time, timedelta, timezone
@@ -226,6 +227,7 @@ def build_item(cfg: dict, daily: list[dict], intr: list[dict], now_utc: datetime
         last, last_ts = last_daily["c"], None
 
     same_day = [b for b in intr if _local_date(b["t"], mkt) == day]
+    jumps = [abs(b["c"] / a["c"] - 1) for a, b in zip(same_day, same_day[1:]) if a["c"]]
     highs = [b["h"] for b in same_day] + ([daily_today["h"]] if daily_today else [])
     lows = [b["l"] for b in same_day] + ([daily_today["l"]] if daily_today else [])
     day_hi = max(highs + [last]) if highs else last
@@ -262,6 +264,9 @@ def build_item(cfg: dict, daily: list[dict], intr: list[dict], now_utc: datetime
         "dupRemoved": dup,
     }
     item["gapDays"] = _gap_days(prev["d"], day) if (prev and exch) else []
+    item["maxJump"] = round(max(jumps) * 100, 2) if jumps else None
+    item["future"] = str(cfg["symbol"]).endswith("=F")
+    item["rollSuspected"] = bool(item["future"] and jumps and max(jumps) >= 0.03)
     return item
 
 
@@ -309,6 +314,99 @@ def yahoo_closes(symbol: str) -> dict[str, float]:
     with quiet():
         h = yf.Ticker(symbol).history(period="1mo", interval="1d", auto_adjust=False)
     return {ix.date().isoformat(): num(c) for ix, c in zip(h.index, h["Close"]) if num(c)}
+
+
+CNBC_URL = ("https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol"
+            "?requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json&symbols=")
+CNBC_TZ = {"AU": "Australia/Sydney", "US": "America/New_York", "24H": "UTC"}
+
+
+def cnbc_symbol(cfg: dict) -> str | None:
+    if cfg.get("cnbc"):
+        return cfg["cnbc"]
+    sym = str(cfg.get("symbol", ""))
+    if cfg.get("market") == "AU" and sym.endswith(".AX") and not cfg.get("index"):
+        return sym[:-3] + "-AU"
+    if cfg.get("market") == "US" and not cfg.get("index"):
+        return sym
+    return None
+
+
+def _cnum(v):
+    return num(str(v if v is not None else "").replace(",", "").replace("%", "").replace("+", ""))
+
+
+def fetch_cnbc(symbols: list[str]) -> dict[str, dict]:
+    """Báo giá công khai của CNBC (một lần gọi). Dùng nhận dạng thật của đoạn mã, không giả trình duyệt."""
+    if not symbols:
+        return {}
+    url = CNBC_URL + urllib.parse.quote("|".join(symbols), safe="")
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        data = json.loads(r.read().decode("utf-8"))
+    out = {}
+    for q in ((data or {}).get("FormattedQuoteResult") or {}).get("FormattedQuote") or []:
+        last, change = _cnum(q.get("last")), _cnum(q.get("change"))
+        if not last:
+            continue
+        opened = bool(_cnum(q.get("open")))
+        if change is None and str(q.get("change", "")).upper() == "UNCH" and opened:
+            change = 0.0  # đang trong phiên và giá đứng yên
+        out[q.get("symbol")] = {"last": last, "change": change,
+                                "changePct": 0.0 if change == 0.0 else _cnum(q.get("change_pct")),
+                                "prevClose": (last - change) if change is not None else None,
+                                "preSession": change is None and not opened,  # chưa vào phiên mới: last là giá đóng cửa phiên trước
+                                "time": str(q.get("last_time") or ""), "name": q.get("name")}
+    return out
+
+
+def _cnbc_day(q: dict, mkt: str) -> str | None:
+    t = q.get("time") or ""
+    if "T" in t:
+        try:
+            return datetime.fromisoformat(t.replace("Z", "+00:00")).astimezone(ZoneInfo(CNBC_TZ.get(mkt, "UTC"))).date().isoformat()
+        except ValueError:
+            return None
+    return t[:10] if re.match(r"^\d{4}-\d{2}-\d{2}$", t[:10]) else None
+
+
+def apply_cnbc(item: dict, q: dict | None) -> None:
+    """Đối chiếu một mục (Yahoo) với CNBC; sửa % thay đổi khi Yahoo vừa đảo hợp đồng tương lai."""
+    if not q:
+        item["cnbc"] = {"level": "na", "note": "CNBC không có mã này ở lượt này"}
+        if item.get("rollSuspected"):
+            item["change"] = item["changePct"] = None
+        return
+    fut = item.get("future")
+    y_chg, c_chg = item.get("changePct"), q.get("changePct")
+    rolled = fut and (item.get("rollSuspected") or (y_chg is not None and c_chg is not None and abs(y_chg - c_chg) > 2.0))
+    if rolled and c_chg is not None:
+        # Yahoo so giá hợp đồng mới với giá đóng cửa của hợp đồng cũ: dùng hợp đồng gần nhất của CNBC (cùng một hợp đồng)
+        item.update(last=q["last"], change=q["change"], changePct=c_chg, prevClose=q["prevClose"],
+                    source="CNBC (hợp đồng gần nhất)", rollSuspected=True)
+        if item.get("hist"):
+            item["hist"][-1] = q["last"]
+        item["rollFixed"] = (f"Yahoo vừa chuyển sang hợp đồng kỳ hạn sau ({y_chg:+.2f}% là so hai hợp đồng khác nhau); "
+                             f"dùng hợp đồng gần nhất theo CNBC: {c_chg:+.2f}%")
+        item["cnbc"] = {"level": "ok", "note": f"Đã thay bằng số CNBC ({q.get('name') or 'hợp đồng gần nhất'})"}
+        return
+    day = _cnbc_day(q, item["market"])
+    tol = 0.01 if item["market"] == "24H" else 0.005
+    if day and day == item["day"] and q.get("prevClose") and item.get("prevClose"):
+        a, b = item["prevClose"], q["prevClose"]
+        what = f"Giá đóng cửa phiên trước ({item.get('prevDate')})"
+    elif day and day > (item["day"] or "") and q.get("prevClose"):
+        a, b = item["last"], q["prevClose"]
+        what = f"Giá đóng cửa {item['day']}"
+    elif day and day == item["day"] and q.get("preSession"):
+        a, b = item["last"], q["last"]
+        what = f"Giá đóng cửa {item['day']}"
+    else:
+        item["cnbc"] = {"level": "na", "note": f"CNBC chưa có cùng phiên để đối chiếu (CNBC: {day or 'không rõ ngày'})"}
+        return
+    diff = abs(a / b - 1)
+    item["cnbc"] = {"level": "ok" if diff <= tol else "warn",
+                    "note": f"{what} khớp CNBC" if diff <= tol else f"{what} lệch CNBC {diff:.2%} (Yahoo {a:,.2f}, CNBC {b:,.2f})"}
 
 
 def validate(item: dict, now_utc: datetime) -> list[dict]:
@@ -365,6 +463,14 @@ def validate(item: dict, now_utc: datetime) -> list[dict]:
     if item.get("cross"):
         c = item["cross"]
         add("Đối chiếu nguồn thứ hai", c["level"], c["note"])
+    if item.get("rollFixed"):
+        add("Đảo hợp đồng", "warn", item["rollFixed"])
+    elif item.get("rollSuspected"):
+        add("Đảo hợp đồng", "warn", f"Giá nhảy {item.get('maxJump')}% trong 15 phút: nguồn có thể vừa chuyển sang hợp đồng kỳ hạn sau; "
+                                    "đã bỏ % thay đổi vì so hai hợp đồng khác nhau")
+    if item.get("cnbc"):
+        c = item["cnbc"]
+        add("Đối chiếu CNBC", c["level"], c["note"])
     return checks
 
 
@@ -498,6 +604,27 @@ def run(cfg_path: Path, prev_src: str | None, now_utc: datetime | None = None, s
                     held["level"] = "fail"
                     held.update(meta.get(key, {}))
                     items[key] = held
+
+    # Nguồn thứ hai cho Úc, Mỹ, tỷ giá, hàng hóa: CNBC (một lần gọi cho mọi mã)
+    cfg_by_key = {c["key"]: c for g in groups for c in cfg.get(g, [])}
+    targets = {k: cnbc_symbol(cfg_by_key[k]) for k, v in items.items()
+               if v.get("market") != "VN" and not v.get("held") and k in cfg_by_key and cnbc_symbol(cfg_by_key[k])}
+    if targets:
+        try:
+            quotes = retry(lambda: fetch_cnbc(sorted(set(targets.values()))), tries=2)
+            cnbc_err = None
+        except Exception as exc:
+            quotes, cnbc_err = {}, f"{type(exc).__name__}"
+        for k, sym in targets.items():
+            it = items[k]
+            if cnbc_err:
+                it["cnbc"] = {"level": "na", "note": f"Không gọi được CNBC ({cnbc_err})"}
+                if it.get("rollSuspected"):
+                    it["change"] = it["changePct"] = None
+            else:
+                apply_cnbc(it, quotes.get(sym))
+            it["checks"] = validate(it, now)
+            it["level"] = worst(it["checks"])
 
     for k, v in items.items():  # thông tin quỹ/nhận định luôn theo file đồng bộ mới nhất, kể cả mục giữ số cũ
         if k in meta:

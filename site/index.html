@@ -292,7 +292,7 @@
   </section>
 
   <footer>
-    <p>Chỉ để tham khảo và học tập, không phải lời khuyên đầu tư; không có vùng mua, cắt lỗ hay chốt lời. Dữ liệu: KBS (Chứng khoán KB Việt Nam) cho Việt Nam, Yahoo Finance cho Úc, Mỹ, tỷ giá và hàng hóa; đối chiếu bằng Yahoo (cổ phiếu VN) và FRED (chỉ số Mỹ). Giờ sàn chưa tính ngày lễ.</p>
+    <p>Chỉ để tham khảo và học tập, không phải lời khuyên đầu tư; không có vùng mua, cắt lỗ hay chốt lời. Dữ liệu: KBS (Chứng khoán KB Việt Nam) cho Việt Nam; Yahoo Finance cho Úc, Mỹ, tỷ giá và hàng hóa ở phía máy chủ; khi mở trang, trình duyệt lấy thêm giá mới nhất trực tiếp từ KBS và CNBC rồi đối chiếu với số máy chủ. Giờ sàn chưa tính ngày lễ.</p>
     <p><a id="repo-link" href="#" target="_blank" rel="noopener">Mã nguồn và lịch cập nhật trên GitHub</a> · <a href="https://claude.ai/artifact/1ivWHfw7vfybPnV2a4QpZV" target="_blank" rel="noopener">Bản tin, nghiên cứu và Quỹ Buffett mô phỏng</a></p>
   </footer>
 </div>
@@ -423,7 +423,7 @@
   // ---- Trạng thái một con số ----
   function badge(it) {
     if (it.held) { return '<span class="badge held" title="' + esc(it.heldReason) + '">Số cũ</span>'; }
-    if (it.live && it.status === 'provisional') { return '<span class="badge live" title="Lấy thẳng từ KBS trong trình duyệt, đã kiểm tra biên độ và đơn vị">Trực tiếp' + (it.lastTime ? ' ' + hm(new Date(it.lastTime), SYD) : '') + '</span>'; }
+    if (it.live && (it.status === 'provisional' || it.status === '24h')) { return '<span class="badge live" title="Lấy thẳng từ KBS trong trình duyệt, đã kiểm tra biên độ và đơn vị">Trực tiếp' + (it.lastTime ? ' ' + hm(new Date(it.lastTime), SYD) : '') + '</span>'; }
     if (it.status === 'provisional') { return '<span class="badge prov">Tạm tính' + (it.lastTime ? ' ' + hm(new Date(it.lastTime), SYD) : '') + '</span>'; }
     if (it.status === 'final') { return '<span class="badge fin">Đóng cửa ' + ddmm(it.day) + '</span>'; }
     return '<span class="badge h24">24 giờ</span>';
@@ -569,6 +569,8 @@
     var errs = Object.keys(DATA.errors || {});
     if (errs.length) { lines.push('Nguồn lỗi: ' + errs.map(function (k) { return esc(k) + ' (' + esc(DATA.errors[k]) + ')'; }).join('; ')); }
     var nLive = Object.keys(LIVE).length;
+    var nLive2 = Object.keys(LIVE2).length;
+    if (live2At || live2Err) { lines.push('Úc, Mỹ, tỷ giá, hàng hóa: ' + (nLive2 ? nLive2 + ' mã lấy trực tiếp từ CNBC lúc ' + hm(new Date(live2At), SYD) + ' giờ Sydney, đối chiếu với số của máy chủ (Yahoo)' : 'chưa lấy được trực tiếp, đang dùng số của máy chủ') + (live2Err ? '. Không dùng số trực tiếp cho: ' + esc(live2Err) : '') + '.'); }
     if (liveAt) { lines.push('Giá Việt Nam: ' + (nLive ? nLive + ' mã lấy thẳng từ KBS trong trình duyệt lúc ' + hm(new Date(liveAt), SYD) + ' giờ Sydney (tự làm mới mỗi phút trong giờ giao dịch)' : 'chưa lấy được trực tiếp, đang dùng số của máy chủ') + (liveErr ? '. Không dùng số trực tiếp cho: ' + esc(liveErr) : '') + '.'); }
     $('qa-list').innerHTML = '<p>' + lines.join('</p><p class="small muted">') + '</p>' +
       (issues.length ? '<ul style="margin-top:8px">' + issues.map(function (x) { return '<li><span class="lv ' + x.c.level + '">' + (x.c.level === 'fail' ? 'Lỗi' : 'Lưu ý') + '</span> <strong>' + esc(x.it.label) + '</strong> · ' + esc(x.c.name) + ': ' + esc(x.c.note) + '</li>'; }).join('') + '</ul>' : '<p class="small muted" style="margin-top:6px">Không có lưu ý nào ở lần cập nhật này.</p>');
@@ -582,7 +584,8 @@
     var anyOpen = ['VN', 'AU', 'US'].some(function (k) { var st = marketClock(k, new Date()).st; return st === 'open' || st === 'lunch'; });
     chip.className = 'chip' + (anyOpen && age > 45 ? ' stale' : '');
     t.textContent = 'Cập nhật ' + (age < 1 ? 'vừa xong' : dur(age * 60000) + ' trước') + (anyOpen && age > 45 ? ' · máy chạy tự động đang trễ' : '') +
-      (liveAt && Object.keys(LIVE).length ? ' · VN trực tiếp ' + hm(new Date(liveAt), SYD) : '');
+      (liveAt && Object.keys(LIVE).length ? ' · VN trực tiếp ' + hm(new Date(liveAt), SYD) : '') +
+      (live2At && Object.keys(LIVE2).length ? ' · Úc/Mỹ trực tiếp ' + hm(new Date(live2At), SYD) : '');
   }
   var MKN = { VN: 'Việt Nam', AU: 'Úc', US: 'Mỹ' };
   function renderFund() {
@@ -621,8 +624,8 @@
       return r.json();
     }).then(function (d) {
       var changed = !DATA || d.generatedAt !== DATA.generatedAt, first = !DATA;
-      if (changed) { DATA = d; applyLive(); renderAll(); } else { renderFresh(); }
-      if (first) { refreshLive(true); }
+      if (changed) { DATA = d; applyLive(); applyLive2(); renderAll(); } else { renderFresh(); }
+      if (first) { refreshLive(true); refreshLive2(); }
     }).catch(function (e) {
       $('fresh').className = 'chip err';
       $('fresh-t').textContent = 'Không tải được dữ liệu (' + e.message + ')';
@@ -715,6 +718,90 @@
     }).then(function () { liveBusy = false; }, function () { liveBusy = false; });
   }
 
+  // ---- Úc, Mỹ, tỷ giá, hàng hóa trực tiếp: báo giá công khai của CNBC (cho phép CORS), một lần gọi cho mọi mã ----
+  // Mỗi số được đối chiếu với số của máy chủ (Yahoo); lệch quá ngưỡng thì giữ số máy chủ.
+  var CNBC = 'https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json&symbols=';
+  var CNBC_MAP = { GSPC: '.SPX', DJI: '.DJI', IXIC: '.IXIC', AXJO: '.AXJO', AUDUSD: 'AUD=', USDVND: 'VND=', TNX: 'US10Y', GOLD: '@GC.1', BRENT: '@LCO.1', WTI: '@CL.1' };
+  var MKT_FINAL = { AU: ['Australia/Sydney', 16 * 60 + 30], US: ['America/New_York', 16 * 60 + 15] };
+  var LIVE2 = {}, live2At = null, live2Err = '', live2Busy = false;
+  function cnbcSym(it) {
+    if (CNBC_MAP[it.key]) { return CNBC_MAP[it.key]; }
+    if (it.market === 'AU' && /\.AX$/.test(it.symbol || '')) { return it.symbol.replace(/\.AX$/, '') + '-AU'; }
+    if (it.market === 'US' && !it.index) { return it.symbol; }
+    return null;
+  }
+  function cnum(v) { var f = parseFloat(String(v == null ? '' : v).replace(/[,%+]/g, '')); return isFinite(f) ? f : null; }
+  function isoTz(date, tz) { var p = parts(date, tz); return p.y + '-' + two(p.mo) + '-' + two(p.d); }
+  function cnbcCalc(it, q) {
+    var last = cnum(q.last), chgPct = cnum(q.change_pct), change = cnum(q.change), opened = !!cnum(q.open);
+    if (!last || last <= 0) { throw new Error('không có giá'); }
+    if (change == null && String(q.change || '').toUpperCase() === 'UNCH') {
+      if (!opened) { return null; }  // chưa vào phiên mới: giữ số của máy chủ
+      change = 0; chgPct = 0;        // đang trong phiên, giá đứng yên
+    }
+    var t = String(q.last_time || ''), when = /T/.test(t) ? new Date(t) : null, fz = MKT_FINAL[it.market];
+    var day = when ? isoTz(when, fz ? fz[0] : 'UTC') : t.slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) { throw new Error('không rõ ngày của giá'); }
+    if (it.day && day < it.day) { throw new Error('cũ hơn số của máy chủ'); }
+    var status = '24h';
+    if (fz) { var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(day); status = Date.now() >= zoned(+m[1], +m[2], +m[3], fz[1], fz[0]).getTime() ? 'final' : 'provisional'; }
+    var prevClose = change != null ? last - change : (chgPct != null ? last / (1 + chgPct / 100) : null);
+    // Biên độ hợp lý
+    var lim = fz ? 25 : 10;
+    if (chgPct != null && Math.abs(chgPct) > lim) { throw new Error('thay đổi ' + chgPct + '% bất thường'); }
+    // Đối chiếu với máy chủ: cùng phiên thì so giá; phiên mới hơn thì so giá đóng cửa phiên trước
+    // so giá đóng cửa phiên trước của hai nguồn (không so giá đang chạy, vì nó đổi từng phút)
+    var ref = null, cmp = null, tol = fz ? 0.005 : 0.01;
+    if (it.day === day && it.prevClose && prevClose) { ref = it.prevClose; cmp = prevClose; }
+    else if (day > (it.day || '') && prevClose) { ref = it.last; cmp = prevClose; }
+    if (ref && cmp && Math.abs(cmp / ref - 1) > tol) { throw new Error('lệch số máy chủ ' + (Math.abs(cmp / ref - 1) * 100).toFixed(2) + '%'); }
+    var out = { last: last, day: day, status: status, changePct: chgPct, change: change, prevClose: prevClose,
+      prevDate: day === it.day ? it.prevDate : (it.day || null), lastTime: when ? when.toISOString() : null,
+      _checked: ref ? 'khớp số máy chủ (Yahoo) trong ngưỡng ' + (tol * 100).toFixed(1) + '%' : 'chưa có số máy chủ cùng phiên để đối chiếu' };
+    var hi = cnum(q.high), lo = cnum(q.low);
+    if (hi && lo && hi >= lo && day !== it.day) { out.dayHigh = hi; out.dayLow = lo; }
+    else if (hi && lo && hi >= lo) { out.dayHigh = Math.max(hi, last); out.dayLow = Math.min(lo, last); }
+    return out;
+  }
+  function applyLive2() {
+    if (!DATA) { return; }
+    Object.keys(LIVE2).forEach(function (k) {
+      var it = DATA.items[k], L = LIVE2[k];
+      if (!it || !L || (it.day && it.day > L.day)) { return; }
+      var hist = (it.hist || []).slice();
+      if (hist.length) { if (it.day === L.day) { hist[hist.length - 1] = L.last; } else { hist.push(L.last); hist = hist.slice(-60); } }
+      Object.keys(L).forEach(function (f) { if (f.charAt(0) !== '_') { it[f] = L[f]; } });
+      it.hist = hist; it.live = true; it.held = false;
+      it.source = 'CNBC, lấy trực tiếp trong trình duyệt (đối chiếu Yahoo)';
+      it.checks = [{ name: 'Nguồn trực tiếp', level: 'ok', note: 'Lấy từ CNBC lúc ' + hm(new Date(live2At), SYD) + ' giờ Sydney; ' + L._checked }]
+        .concat((it.checks || []).filter(function (c) { return c.name !== 'Nguồn trực tiếp' && c.name !== 'Độ mới'; }));
+    });
+  }
+  function refreshLive2() {
+    if (!DATA || live2Busy) { return; }
+    var keys = Object.keys(DATA.items).filter(function (k) { return DATA.items[k].market !== 'VN' && cnbcSym(DATA.items[k]); });
+    if (!keys.length) { return; }
+    var syms = {}; keys.forEach(function (k) { syms[cnbcSym(DATA.items[k])] = k; });
+    live2Busy = true;
+    fetch(CNBC + encodeURIComponent(Object.keys(syms).join('|')), { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) { throw new Error('HTTP ' + r.status); }
+      return r.json();
+    }).then(function (d) {
+      var qs = (((d || {}).FormattedQuoteResult || {}).FormattedQuote) || [], errs = [], seen = {};
+      qs.forEach(function (q) {
+        var k = syms[q.symbol];
+        if (!k) { return; }
+        seen[k] = 1;
+        try { var L = cnbcCalc(DATA.items[k], q); if (L) { LIVE2[k] = L; } else { delete LIVE2[k]; } } catch (e) { delete LIVE2[k]; errs.push(DATA.items[k].label + ': ' + e.message); }
+      });
+      keys.forEach(function (k) { if (!seen[k]) { delete LIVE2[k]; } });
+      live2Err = errs.join('; ');
+      live2At = new Date().toISOString();
+      applyLive2(); renderAll();
+    }).catch(function (e) { live2Err = 'không gọi được CNBC (' + e.message + ')'; renderAll(); })
+      .then(function () { live2Busy = false; });
+  }
+
   // ---- Sự kiện ----
   function toggleOpen(k) {
     OPEN[k] = !OPEN[k];
@@ -796,7 +883,7 @@
   load();
   setInterval(renderClocks, 30000);
   setInterval(renderFresh, 30000);
-  setInterval(function () { if (!document.hidden) { load(); refreshLive(false); } }, 60000);
+  setInterval(function () { if (!document.hidden) { load(); refreshLive(false); refreshLive2(); } }, 60000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) { renderClocks(); load(); } });
 })();
 </script>
