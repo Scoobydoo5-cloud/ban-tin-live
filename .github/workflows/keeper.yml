@@ -1,0 +1,57 @@
+# Giữ nhịp cập nhật: lịch "mỗi 15 phút" của GitHub hay bị trễ hoặc bỏ qua (repo này có ngày chỉ chạy 3 lần).
+# Workflow này chỉ cần GitHub kích hoạt MỘT lần mỗi phiên giao dịch: nó ở lại tối đa khoảng 5 giờ 40 phút
+# và tự gọi update.yml mỗi 15 phút khi đang trong giờ giao dịch (workflow_dispatch luôn được GitHub chạy).
+# Nhiều mốc lịch để dự phòng; concurrency bảo đảm chỉ một bản chạy tại một thời điểm, bản sau xếp hàng nối tiếp.
+name: Giu nhip cap nhat
+
+on:
+  schedule:
+    - cron: "52 22 * * 0-4"   # trước 09h Sydney: phiên ASX và Việt Nam
+    - cron: "22 2 * * 1-5"
+    - cron: "52 4 * * 1-5"
+    - cron: "52 12 * * 1-5"   # trước giờ mở cửa Phố Wall
+    - cron: "22 16 * * 1-5"
+    - cron: "52 18 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      once:
+        description: "Chỉ gọi cập nhật một lần rồi dừng (để kiểm tra)"
+        type: boolean
+        default: false
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: keeper
+  cancel-in-progress: false
+
+jobs:
+  keep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - name: Goi cap nhat moi 15 phut trong gio giao dich
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ONCE: ${{ inputs.once }}
+        run: |
+          # Giờ giao dịch theo UTC: CN–T5 23h (ASX mở cửa giờ mùa hè), T2–T6 0h–8h (ASX, Việt Nam), T2–T6 13h–21h (Phố Wall)
+          in_window() {
+            h=$((10#$(date -u +%H))); d=$(date -u +%u)
+            if [ "$h" -eq 23 ] && { [ "$d" -eq 7 ] || [ "$d" -le 4 ]; }; then return 0; fi
+            if [ "$d" -le 5 ] && [ "$h" -le 8 ]; then return 0; fi
+            if [ "$d" -le 5 ] && [ "$h" -ge 13 ] && [ "$h" -le 21 ]; then return 0; fi
+            return 1
+          }
+          if [ "$ONCE" = "true" ]; then gh workflow run update.yml --ref main; echo "Đã gọi update.yml một lần"; exit 0; fi
+          end=$(( $(date +%s) + 340 * 60 ))
+          n=0
+          while [ "$(date +%s)" -lt "$end" ] && in_window; do
+            gh workflow run update.yml --ref main && n=$((n + 1))
+            echo "$(date -u +%H:%M) UTC: đã gọi cập nhật lần $n"
+            sleep 900
+          done
+          echo "Kết thúc: $n lần gọi (ngoài giờ giao dịch hoặc hết thời gian)"
