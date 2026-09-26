@@ -57,6 +57,7 @@ for (const s of SUBJECTS) {
       else if (x.type === 'mcq') { if (!Array.isArray(x.options) || !(x.answer >= 0 && x.answer < x.options.length)) { err(id, `bài tập ${j + 1}: mcq sai`); } }
       else if (x.type === 'long') { if (!x.answer) { err(id, `bài tập ${j + 1}: thiếu đáp án mẫu`); } }
       else { err(id, `bài tập ${j + 1}: loại lạ ${x.type}`); }
+      if (/\.\.\.|recheck|correction to|let us be precise/i.test(String(x.solution || '') + String(x.answer || ''))) { err(id, `bài tập ${j + 1}: lời giải còn dấu vết nháp`); }
       w += words(x.q) + words(x.solution) + words(x.answer && x.type === 'long' ? x.answer : '');
     });
     (L.resources || []).forEach((r) => { const k2 = r.startsWith('book:') ? r.slice(5) : r; if (!(r.startsWith('book:') ? BOOKS[k2] : RES[k2])) { err(id, 'nguồn không có: ' + r); } });

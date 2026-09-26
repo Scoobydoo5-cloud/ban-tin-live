@@ -1,0 +1,150 @@
+const R = String.raw;
+export default {
+  id: '22108-06', subject: '22108', title: 'The statement of cash flows', mins: 75, level: 'Intermediate',
+  summary: 'Where the cash actually went: operating, investing and financing activities, the direct and indirect methods (both worked for Mekong Roasters), the reconciliation of profit to operating cash flow, free cash flow, cash conversion and the life-cycle pattern of cash flows, and the red flags analysts look for when profit and cash diverge.',
+  objectives: [
+    'Explain the purpose of the statement of cash flows and classify cash flows as operating, investing or financing',
+    'Prepare operating cash flow using the direct method',
+    'Reconcile profit to operating cash flow using the indirect method',
+    'Calculate free cash flow and cash conversion ratios',
+    'Interpret cash-flow patterns across a company’s life cycle',
+    'Identify red flags such as profit growth with weak operating cash flow',
+  ],
+  body: [
+    ['h', 'Why a separate cash statement?'],
+    ['p', R`Accrual accounting is essential for measuring performance, but it relies on judgements about timing and estimates. Cash is harder to manipulate: either it is in the bank or it is not. The **statement of cash flows** explains how the cash balance changed during the period by grouping every cash receipt and payment into three activities. It answers questions that neither the income statement nor the balance sheet can: Does the business generate cash from its operations? How much is it investing for the future? How is it funding itself, and how much is it returning to owners?`],
+    ['table', {
+      caption: 'The three categories (AASB 107)',
+      head: ['Activity', 'What it covers', 'Examples'],
+      rows: [
+        ['Operating', 'The principal revenue-producing activities', 'Receipts from customers; payments to suppliers and employees; income tax paid; (usually) interest paid and received'],
+        ['Investing', 'Acquisition and disposal of long-term assets and investments', 'Purchases and sales of PPE; buying businesses; buying and selling investments'],
+        ['Financing', 'Changes in the size and composition of equity and borrowings', 'Issuing shares; borrowing and repaying loans; lease principal payments; dividends paid; share buybacks'],
+      ],
+    }],
+    ['p', R`Some items can be classified in more than one way: interest paid can be operating or financing, and dividends paid financing or operating, as long as the choice is consistent. Non-cash transactions, such as acquiring equipment through a lease or converting debt into shares, are excluded from the statement but disclosed in the notes. Australian companies commonly present operating cash flows using the **direct method**, with a note reconciling profit to operating cash flow (the **indirect method**). You need to understand both.`],
+
+    ['h', 'The direct method: Mekong Roasters in July'],
+    ['p', R`The direct method lists actual cash receipts and payments. From the July transactions in lectures 2 and 3:`],
+    ['table', {
+      caption: 'Mekong Roasters Pty Ltd: statement of cash flows for July 2026 (direct method)',
+      head: ['', '$', '$'],
+      rows: [
+        ['**Cash flows from operating activities**', '', ''],
+        ['Receipts from customers (cash sales 8,000 + collections 18,000)', '26,000', ''],
+        ['Payments to suppliers (beans 15,000 + rent 9,000)', '(24,000)', ''],
+        ['Payments to employees', '(7,500)', ''],
+        ['**Net cash used in operating activities**', '', '**(5,500)**'],
+        ['**Cash flows from investing activities**', '', ''],
+        ['Purchase of equipment', '(60,000)', ''],
+        ['**Net cash used in investing activities**', '', '**(60,000)**'],
+        ['**Cash flows from financing activities**', '', ''],
+        ['Proceeds from issue of shares', '80,000', ''],
+        ['Proceeds from bank loan', '50,000', ''],
+        ['Dividends paid', '(1,000)', ''],
+        ['**Net cash from financing activities**', '', '**129,000**'],
+        ['**Net increase in cash**', '', '**63,500**'],
+        ['Cash at 1 July', '', '0'],
+        ['**Cash at 31 July**', '', '**63,500**'],
+      ],
+    }],
+    ['p', R`Mekong Roasters made a profit of $7,663 in July but **used** $5,500 of cash in operations. That is normal for a new business: it built inventory, extended credit to cafés and prepaid rent. The equipment purchase and the founders’ and bank’s money dominate the month. The closing cash agrees with the balance sheet, as it must.`],
+
+    ['h', 'The indirect method: from profit to operating cash'],
+    ['p', R`The indirect method starts with profit and removes everything that is not operating cash: non-cash expenses, gains and losses on investing or financing items, and the changes in working-capital balances that separate accrual revenue and expenses from cash receipts and payments.`],
+    ['math', R`\text{CFO} = \text{Profit} + \text{Non-cash expenses} - \text{Non-cash gains} - \Delta\text{Operating current assets} + \Delta\text{Operating current liabilities}`, 'Operating cash flow equals profit plus non-cash expenses, minus non-cash gains, minus increases in operating current assets, plus increases in operating current liabilities.'],
+    ['p', R`The logic of the working-capital adjustments: an **increase in receivables** means revenue was recorded that has not yet been collected, so cash is lower than profit (subtract). An **increase in inventory** or **prepayments** means cash was spent on things not yet expensed (subtract). An **increase in payables** or **accruals** means expenses were recorded but not yet paid (add).`],
+    ['table', {
+      caption: 'Reconciliation of profit to net operating cash flow, July 2026',
+      head: ['Item', '$', 'Why'],
+      rows: [
+        ['Profit after tax', '7,663', 'Starting point'],
+        ['Add depreciation', '900', 'Non-cash expense'],
+        ['Increase in receivables', '(13,500)', 'Revenue not yet collected'],
+        ['Increase in inventory', '(7,950)', 'Cash spent on unsold stock'],
+        ['Increase in prepaid rent', '(6,000)', 'Rent paid for future months'],
+        ['Increase in accounts payable', '9,000', 'Beans bought but not yet paid for'],
+        ['Increase in utilities, wages and interest payable', '1,833', 'Expenses accrued, not paid (900 + 600 + 333)'],
+        ['Increase in income tax payable', '2,554', 'Tax expense not yet paid'],
+        ['**Net cash used in operating activities**', '**(5,500)**', 'Matches the direct method'],
+      ],
+    }],
+    ['key', R`Both methods give the same operating cash flow. The direct method shows where cash came from and went; the indirect method shows **why profit and cash differ**, which is usually the more useful question for an analyst.`],
+    ['warn', R`Gains and losses on selling assets must be removed from profit in the indirect method, because the full sale proceeds appear in investing activities. If a company sells equipment with a carrying amount of $50,000 for $80,000, the $30,000 gain is subtracted from profit in operating activities, and the $80,000 of proceeds appears as an investing inflow. Otherwise the gain would be counted twice.`],
+
+    ['h', 'Free cash flow'],
+    ['p', R`Operating cash flow does not tell you how much cash is truly available to investors, because the business must keep investing to stay competitive. **Free cash flow (FCF)** subtracts that investment:`],
+    ['math', R`FCF \approx \text{CFO} - \text{Capital expenditure} \qquad FCFF = EBIT(1 - t) + D\&A - \text{Capex} - \Delta NWC`, 'Free cash flow is approximately operating cash flow minus capital expenditure. Free cash flow to the firm equals EBIT times one minus the tax rate, plus depreciation and amortisation, minus capex, minus the change in net working capital.'],
+    ['p', R`**Free cash flow to the firm (FCFF)** is the cash available to all capital providers, debt and equity, and is the input to a discounted cash flow valuation discounted at the WACC. **Free cash flow to equity (FCFE)** subtracts net payments to lenders and is discounted at the cost of equity. You will build both in Fundamentals of Business Finance and Investment Analysis. Two useful quality measures:`],
+    ['list', [
+      R`**Cash conversion** \(= \text{CFO}/\text{Profit}\). Persistently below 1 means profit is not turning into cash; above 1 is typical for businesses with large depreciation and customer prepayments.`,
+      R`**Accruals ratio**: (profit − CFO) scaled by average total assets. Research, beginning with Richard Sloan (1996), found that firms with high accruals tend to have lower future earnings and returns: markets often over-weight the accrual part of earnings.`,
+    ]],
+
+    ['h', 'Cash-flow patterns across the life cycle'],
+    ['table', {
+      caption: 'Typical signs of the three cash flows',
+      head: ['Stage', 'Operating', 'Investing', 'Financing', 'Example'],
+      rows: [
+        ['Start-up', '−', '− (heavy)', '+ (raising capital)', 'Mekong Roasters in July; biotech developers'],
+        ['Growth', '+ or −', '− (heavy)', '+', 'Fast-growing tech and renewable-energy developers'],
+        ['Mature', '+ (strong)', '− (maintenance)', '− (dividends, buybacks, debt repayment)', 'Supermarkets, banks, telecoms'],
+        ['Decline or restructuring', '+ falling', '+ (selling assets)', '− (repaying debt)', 'Companies shrinking or exiting businesses'],
+      ],
+    }],
+
+    ['h', 'Red flags'],
+    ['list', [
+      R`**Profit rising, operating cash flow flat or falling** for several periods, especially with receivables or inventory growing faster than sales.`,
+      R`**Capitalising operating costs**: recording expenses as assets (software development, customer acquisition costs) moves the outflow from operating to investing, flattering CFO. WorldCom’s fraud involved capitalising billions of dollars of line costs.`,
+      R`**Supply-chain finance and factoring**: stretching supplier payments through a bank program, or selling receivables, can boost CFO temporarily. The collapse of Greensill Capital in 2021 exposed how such arrangements can hide borrowing.`,
+      R`**Classification choices**: moving interest or lease payments between categories changes CFO without changing the business.`,
+      R`**One-off working-capital releases** that cannot be repeated, such as collecting overdue receivables or running down inventory.`,
+    ]],
+    ['note', R`A useful habit: before reading the income statement of any company, read its cash flow statement for the last three to five years. If you can explain every major line and the trend, you understand the business. If you cannot, you do not yet understand it, however good the earnings look.`],
+
+    ['case', {
+      title: 'Profit up, cash down',
+      text: R`A listed building-products distributor reports net profit up 22% to $54 million. Its cash flow statement shows operating cash flow down from $61 million to $23 million. The notes reveal: receivables up $38 million after the company offered 90-day terms (previously 45 days) to win large builder customers; inventory up $25 million ahead of an expected price rise; a new supply-chain finance program that extended payment to suppliers from 60 to 120 days, lifting payables by $30 million; and $12 million of IT project costs capitalised as intangible assets.`,
+      questions: [
+        'Reconcile the main differences between profit and operating cash flow.',
+        'What would operating cash flow have been without the supply-chain finance program?',
+        'How does capitalising the IT costs change operating cash flow and free cash flow?',
+        'What risks do the new customer terms create, and what would you want to know about the builders’ credit quality?',
+      ],
+    }],
+
+    ['h', 'Summary'],
+    ['list', [
+      R`The statement of cash flows explains the change in cash through operating, investing and financing activities.`,
+      R`Direct method: list receipts and payments. Indirect method: profit + non-cash items − gains ± working-capital changes.`,
+      R`Increases in operating assets reduce CFO; increases in operating liabilities raise it.`,
+      R`Free cash flow ≈ CFO − capex; FCFF and FCFE drive valuation.`,
+      R`Compare profit and cash over several years; watch for capitalised costs, supply-chain finance and working-capital games.`,
+    ]],
+  ],
+  exercises: [
+    { type: 'num', level: 'Core', q: R`Profit is $540,000. Depreciation is $120,000 and there was a $30,000 gain on sale of equipment. Receivables rose $45,000, inventory fell $20,000, payables rose $15,000 and accrued expenses rose $10,000. What is operating cash flow?`, answer: 630000, tol: 1, solution: R`\(540 + 120 - 30 - 45 + 20 + 15 + 10 = 630\), so **$630,000**.` },
+    { type: 'num', level: 'Core', q: R`A company’s operating cash flow is $610 million and capital expenditure $260 million. What is its free cash flow, in $ million?`, answer: 350, tol: 0.01, solution: R`\(610 - 260 = \$350\) million.` },
+    { type: 'num', level: 'Core', q: R`With operating cash flow of $610 million and profit of $540 million, what is the cash conversion ratio? (Two decimals.)`, answer: 1.13, tol: 0.01, solution: R`\(610/540 = 1.13\): profit is well backed by cash.` },
+    { type: 'num', level: 'Core', q: R`Equipment with a carrying amount of $50,000 is sold for a gain of $30,000. What amount appears as an investing inflow?`, answer: 80000, tol: 0.5, solution: R`Proceeds \(= 50{,}000 + 30{,}000 = \$80{,}000\). The \$30,000 gain is removed from profit in the operating section.` },
+    { type: 'mcq', level: 'Core', q: 'Where does a payment to repay the principal of a bank loan appear?', options: ['Operating activities', 'Investing activities', 'Financing activities', 'It is not a cash flow'], answer: 2, solution: R`Repaying borrowings changes the size of the entity’s debt: **financing**.` },
+    { type: 'mcq', level: 'Core', q: 'In the indirect method, an increase in accounts receivable is…', options: ['Added to profit', 'Subtracted from profit', 'Shown in investing activities', 'Ignored'], answer: 1, solution: R`Revenue was recognised but cash not yet collected, so cash is below profit: **subtract**.` },
+    { type: 'mcq', level: 'Core', q: 'Which pattern is most typical of a mature, stable company?', options: ['Operating −, investing −, financing +', 'Operating +, investing −, financing −', 'Operating −, investing +, financing +', 'Operating +, investing +, financing +'], answer: 1, solution: R`Mature firms generate operating cash, spend some on maintenance capex, and return the rest through dividends, buybacks and debt repayment.` },
+    { type: 'mcq', level: 'Stretch', q: 'A company starts capitalising $20 million a year of software development costs that it previously expensed. What happens to operating cash flow and free cash flow (CFO − capex)?', options: ['Both rise by $20 million', 'CFO rises by $20 million; free cash flow is unchanged', 'Both are unchanged', 'CFO falls; free cash flow rises'], answer: 1, solution: R`The outflow moves from operating to investing, so **CFO rises**, but capex rises by the same amount, leaving **free cash flow unchanged**. That is why analysts prefer FCF to CFO alone.` },
+    { type: 'long', level: 'Core', q: 'Explain why depreciation is added back in the indirect method, and why this does not mean depreciation "generates" cash.', answer: R`In the indirect method we start from profit, which was reduced by depreciation expense. But depreciation is an allocation of the cost of an asset bought in an earlier period; no cash leaves the business when depreciation is recorded. To convert profit to operating cash flow we must therefore reverse this non-cash deduction, which we do by adding it back.
+
+This does not mean depreciation creates cash. The cash outflow happened when the asset was bought and appears in investing activities in that period. Adding depreciation back simply undoes an accounting entry. If depreciation were doubled, profit would fall and the add-back would rise by the same amount, leaving operating cash flow unchanged (ignoring tax). The only way depreciation affects cash is through tax: tax depreciation is deductible, reducing tax payments, which is a real cash benefit.`, solution: 'Look for the non-cash nature of depreciation, where the actual outflow appears, the offsetting effect on profit, and the tax-shield exception.' },
+  ],
+  glossary: [
+    ['Operating activities', 'Cash flows from the entity’s principal revenue-producing activities.'],
+    ['Investing activities', 'Cash flows from acquiring and disposing of long-term assets and investments.'],
+    ['Financing activities', 'Cash flows that change the entity’s equity and borrowings.'],
+    ['Direct method', 'Presenting operating cash flows as gross receipts and payments.'],
+    ['Indirect method', 'Reconciling profit to operating cash flow by adjusting for non-cash items and working capital.'],
+    ['Free cash flow', 'Operating cash flow less capital expenditure: cash available to capital providers.'],
+    ['Cash conversion', 'Operating cash flow divided by profit.'],
+    ['Supply-chain finance', 'Bank programs that let buyers pay suppliers later, which can flatter operating cash flow.'],
+  ],
+  resources: ['AASB', 'IFRS', 'ASIC_FR', 'OS_ACC', 'MIT535', 'DAMO', 'book:KOLLER'],
+};

@@ -1,0 +1,132 @@
+const R = String.raw;
+export default {
+  id: '22108-05', subject: '22108', title: 'The balance sheet: assets, liabilities and equity', mins: 80, level: 'Intermediate',
+  summary: 'A tour of the statement of financial position through an analyst’s eyes: classification and measurement, receivables and expected credit losses, inventories, property, plant and equipment and revaluation, intangibles and goodwill, leases, financial assets, provisions and contingent liabilities, borrowings and covenants, equity and buybacks, and why book value differs from market value.',
+  objectives: [
+    'Classify assets and liabilities as current or non-current and explain the main measurement bases',
+    'Calculate an expected credit loss allowance with a provision matrix',
+    'Explain the cost and revaluation models for property, plant and equipment, and the treatment of intangibles and goodwill',
+    'Measure a long-term provision at present value and distinguish provisions from contingent liabilities',
+    'Describe the components of equity and the accounting for dividends and share buybacks',
+    'Explain why book value and market value differ and interpret the price-to-book ratio',
+  ],
+  body: [
+    ['h', 'What the balance sheet tells you, and what it does not'],
+    ['p', R`The **statement of financial position** is a snapshot at one date of what the entity controls (assets), what it owes (liabilities) and the owners’ residual claim (equity). For a lender it shows what might be available to repay debt and how much other debt ranks alongside; for an investor it shows the capital employed to generate profit; for a regulator of banks and insurers it shows solvency. But it is not a statement of what the business is worth. Many of the most valuable resources (brands built internally, customer relationships, talent, data) do not appear at all, and many that do are measured at historical cost.`],
+    ['table', {
+      caption: 'Measurement bases used on the balance sheet',
+      head: ['Basis', 'Meaning', 'Typical items'],
+      rows: [
+        ['Historical cost', 'The price paid, less depreciation or impairment', 'Most property, plant and equipment; inventory (subject to NRV)'],
+        ['Amortised cost', 'Initial amount adjusted using the effective interest method, less expected credit losses', 'Loans and receivables, most borrowings'],
+        ['Fair value', 'The price that would be received to sell an asset (or paid to transfer a liability) in an orderly transaction', 'Traded investments, derivatives, investment property (option), revalued land'],
+        ['Present value of future cash flows', 'Discounted expected outflows', 'Long-term provisions such as mine rehabilitation, lease liabilities'],
+        ['Net realisable value', 'Expected selling price less costs to complete and sell', 'Inventory when below cost'],
+      ],
+    }],
+    ['p', R`Items are **current** if they are expected to be realised or settled within 12 months (or the normal operating cycle), or are held for trading; everything else is **non-current**. A liability is also current if the entity does not have the right to defer settlement for at least 12 months, which is why a breach of a loan covenant can suddenly turn long-term debt into a current liability.`],
+
+    ['h', 'Assets'],
+    ['h3', 'Cash and receivables'],
+    ['p', R`**Cash and cash equivalents** include bank deposits and highly liquid investments with maturities of about three months or less. **Trade receivables** are amounts owed by customers. Under **AASB 9 Financial Instruments**, receivables are shown net of an allowance for **expected credit losses (ECL)**: a forward-looking estimate of amounts that will not be collected, rather than waiting for a customer to default. For trade receivables, companies usually apply a **provision matrix** based on how overdue each balance is.`],
+    ['example', {
+      title: 'A provision matrix',
+      setup: R`A wholesaler has $1,050,000 of receivables at year end. Based on history adjusted for current conditions, it estimates loss rates by age.`,
+      steps: [
+        R`Current (not yet due): \$800,000 × 0.5% = \$4,000.`,
+        R`1–30 days overdue: \$150,000 × 2% = \$3,000.`,
+        R`31–60 days: \$60,000 × 8% = \$4,800.`,
+        R`61–90 days: \$25,000 × 20% = \$5,000.`,
+        R`More than 90 days: \$15,000 × 50% = \$7,500.`,
+      ],
+      answer: R`The ECL allowance is **$24,300**, and receivables are shown at \$1,050,000 − \$24,300 = \$1,025,700. An increase in the allowance is an expense (impairment loss on receivables). For banks, whose main assets are loans, ECL accounting is one of the most important and judgemental numbers in the accounts, as you will see in Commercial Bank Management.`,
+    }],
+    ['h3', 'Inventories'],
+    ['p', R`Measured at the lower of cost (FIFO or weighted average) and net realisable value, as lecture 4 explained. For a retailer or manufacturer, inventory can be a large share of assets, and rising inventory relative to sales can signal weakening demand or obsolete stock.`],
+    ['h3', 'Property, plant and equipment'],
+    ['p', R`PPE is recognised at cost (purchase price plus costs to bring it into working condition, such as installation) and then measured under either the **cost model** (cost less accumulated depreciation and impairment) or the **revaluation model** (fair value less subsequent depreciation). Revaluation increases go to a revaluation surplus in equity through OCI, not to profit: land bought for $2.0 million and revalued to $2.6 million creates a $0.6 million surplus. Most Australian listed companies use the cost model, but some property-heavy entities and many public-sector bodies revalue. Land is not depreciated.`],
+    ['h3', 'Intangible assets and goodwill'],
+    ['p', R`**Intangible assets** are identifiable non-monetary assets without physical substance: software, patents, licences, acquired brands, customer lists, and in Vietnam, land use rights. Purchased intangibles are recognised at cost; most **internally generated** intangibles (brands, customer lists, research) are **not** recognised, which is a major reason book values understate the worth of companies such as technology firms and consumer brands.`],
+    ['p', R`**Goodwill** arises only in an acquisition: it is the excess of the price paid over the fair value of the identifiable net assets acquired, representing synergies, workforce and other unrecognisable benefits. If a company pays $500 million for a business whose identifiable assets less liabilities have a fair value of $380 million, it records **$120 million of goodwill**. Goodwill is not amortised under Australian standards; it is tested for **impairment** at least annually. Large goodwill write-downs, common after over-priced acquisitions, are an admission that the buyer overpaid.`],
+    ['h3', 'Right-of-use assets and financial assets'],
+    ['p', R`Under **AASB 16 Leases**, a lessee recognises a right-of-use asset and a lease liability for almost all leases, bringing airlines’ aircraft, retailers’ stores and telcos’ towers onto the balance sheet. **Financial assets** such as investments in shares and bonds are measured at amortised cost, fair value through profit or loss, or fair value through OCI, depending on their cash-flow characteristics and the business model for holding them.`],
+
+    ['h', 'Liabilities'],
+    ['h3', 'Payables, accruals and contract liabilities'],
+    ['p', R`Trade payables, accrued expenses, employee entitlements (annual leave, long service leave) and contract liabilities (unearned revenue) are the everyday liabilities of operating a business. Some, such as supplier credit, are effectively free financing that reduces a company’s need for capital.`],
+    ['h3', 'Borrowings and covenants'],
+    ['p', R`Bank loans and bonds are usually measured at amortised cost. Loan agreements contain **covenants**, promises such as keeping net debt below three times EBITDA or interest cover above a minimum. A breach can make the debt immediately repayable. Analysts therefore read the borrowings note for maturity profiles, interest rates, security and covenant headroom.`],
+    ['h3', 'Provisions and contingent liabilities'],
+    ['p', R`A **provision** is a liability of uncertain timing or amount: warranties, restructuring, legal claims, and obligations to restore mine sites or remove oil platforms. It is recognised when there is a present obligation from a past event, an outflow is probable and the amount can be reliably estimated. Long-term provisions are measured at **present value**.`],
+    ['example', {
+      title: 'Mine rehabilitation',
+      setup: R`A miner must rehabilitate a site in 10 years at an expected cost of $20 million. The discount rate is 5% a year.`,
+      steps: [
+        R`Present value: \(20/1.05^{10} = \$12.28\) million, recognised as a provision (and added to the cost of the mine asset).`,
+        R`Each year the discount **unwinds**: year 1 interest \(= 12.28 \times 0.05 = \$0.61\) million, recorded as a finance cost, lifting the provision to \$12.89 million.`,
+      ],
+      answer: R`The provision grows to $20 million by the time the work is done. Changes in the estimated cost or the discount rate change the provision, sometimes by large amounts. Rehabilitation provisions are among the biggest liabilities of Australian miners and energy companies.`,
+    }],
+    ['p', R`A **contingent liability** is a possible obligation whose existence depends on uncertain future events, or a present obligation where an outflow is not probable or cannot be measured reliably, such as a lawsuit the company expects to win or a guarantee of another entity’s debt. It is **disclosed** in the notes, not recognised. Analysts must read those notes: class actions, tax disputes and guarantees have bankrupted companies whose balance sheets looked strong.`],
+
+    ['h', 'Equity'],
+    ['list', [
+      R`**Share (contributed) capital**: amounts contributed by shareholders. Australian companies’ shares have no par value.`,
+      R`**Reserves**: revaluation surplus, foreign currency translation reserve, cash-flow hedge reserve, share-based payments reserve.`,
+      R`**Retained earnings**: accumulated profits not distributed as dividends.`,
+      R`**Non-controlling interests**: the share of subsidiaries’ equity owned by outside shareholders in consolidated accounts.`,
+    ]],
+    ['p', R`A **dividend** reduces retained earnings (and cash) when declared. A **share buyback** returns cash to shareholders by repurchasing shares, reducing share capital (and sometimes retained earnings) and the number of shares on issue. In Australia, off-market buybacks can include a franked dividend component, a feature you will study in the payout-policy lecture of Applied Corporate Finance.`],
+
+    ['h', 'Book value versus market value'],
+    ['math', R`\text{Price-to-book ratio} = \frac{\text{Market capitalisation}}{\text{Book value of equity}} = \frac{\text{Share price}}{\text{Book value per share}}`, 'The price to book ratio equals market capitalisation over book value of equity, or share price over book value per share.'],
+    ['p', R`A company with a market capitalisation of $3.6 billion and book equity of $1.2 billion trades at 3.0 times book. Market value exceeds book value when the company earns returns above its cost of capital, owns unrecognised intangibles or has assets recorded at old historical costs. A price-to-book below 1 can signal that the market expects the assets to earn less than their cost of capital, or doubts the carrying amounts (for example, loans that will not be repaid). Banks and insurers, whose assets are mostly financial and measured closer to fair value, typically trade nearer to book value than technology or consumer-brand companies.`],
+    ['key', R`The balance sheet records resources that pass accounting recognition tests at mostly historical amounts. Valuation is about the future cash flows those resources, recognised or not, will generate. Use the balance sheet to understand capital, risk and quality, not as a price list.`],
+
+    ['case', {
+      title: 'The acquisition that went wrong',
+      text: R`An ASX-listed childcare operator bought a competitor for $900 million, recognising $520 million of goodwill. Two years later, occupancy fell after new centres opened nearby and wage costs rose. The company’s loan covenants require net debt to EBITDA below 3.0 times; it is currently 2.8 times. Its auditor has asked management to test goodwill for impairment using lower growth assumptions. A class action by former parents over fee practices has been filed, which management says has "no merit".`,
+      questions: [
+        'Why was so much of the purchase price recorded as goodwill? What does a large goodwill balance tell an analyst?',
+        'Explain how a goodwill impairment would affect the income statement, the balance sheet and cash flow. Would it breach the covenant?',
+        'How should the class action be reflected in the financial report?',
+        'Which notes would you read first, and what would you look for?',
+      ],
+    }],
+
+    ['h', 'Summary'],
+    ['list', [
+      R`The balance sheet mixes historical cost, amortised cost, fair value and present value; classify items as current or non-current.`,
+      R`Receivables are shown net of forward-looking expected credit losses (provision matrix).`,
+      R`PPE uses the cost or revaluation model; purchased intangibles are recognised, most internal ones are not; goodwill = price − fair value of identifiable net assets, tested for impairment.`,
+      R`Long-term provisions are measured at present value and unwind over time; contingent liabilities are disclosed, not recognised.`,
+      R`Equity comprises capital, reserves, retained earnings and non-controlling interests; dividends and buybacks reduce it.`,
+      R`Book value is not market value; the price-to-book ratio reflects expected returns and unrecognised assets.`,
+    ]],
+  ],
+  exercises: [
+    { type: 'num', level: 'Core', q: R`A company pays $850 million for a business whose identifiable assets have a fair value of $1,020 million and whose liabilities have a fair value of $340 million. How much goodwill (in $ million) is recognised?`, answer: 170, tol: 0.01, solution: R`Net identifiable assets \(= 1{,}020 - 340 = 680\). Goodwill \(= 850 - 680 = \$170\) million.` },
+    { type: 'num', level: 'Core', q: R`Receivables: $400,000 current (1% loss rate), $90,000 1–30 days overdue (4%), $30,000 31–90 days (15%) and $10,000 over 90 days (60%). What is the expected credit loss allowance?`, answer: 18100, tol: 0.5, solution: R`\(4{,}000 + 3{,}600 + 4{,}500 + 6{,}000 = \$18{,}100\).` },
+    { type: 'num', level: 'Core', q: R`A company must dismantle a facility in 15 years at an expected cost of $8 million. At a 6% discount rate, what provision is recognised today, in $ million? (Two decimals.)`, answer: 3.34, tol: 0.01, solution: R`\(8/1.06^{15} = 8/2.3966 = \$3.34\) million.` },
+    { type: 'num', level: 'Core', q: R`Current assets: cash $45m, receivables $120m, inventory $90m, prepayments $10m. Current liabilities: payables $85m, short-term debt $30m, provisions $25m. What is net working capital, in $ million?`, answer: 125, tol: 0.01, solution: R`Current assets \(= 265\); current liabilities \(= 140\); working capital \(= \$125\) million. Current ratio \(= 1.89\).` },
+    { type: 'num', level: 'Core', q: R`A company has book equity of $2.4 billion and 400 million shares, trading at $9.60. What is its price-to-book ratio?`, answer: 1.6, tol: 0.001, solution: R`Book value per share \(= \$6.00\). P/B \(= 9.60/6.00 = 1.6\).` },
+    { type: 'mcq', level: 'Core', q: 'A company is being sued, but its lawyers believe it is unlikely to lose. How should this be reported?', options: ['Recognise a provision for the full claim', 'Disclose a contingent liability in the notes', 'Ignore it completely', 'Record an expense and a receivable'], answer: 1, solution: R`An outflow is not probable, so no provision is recognised, but the possible obligation is **disclosed** as a contingent liability.` },
+    { type: 'mcq', level: 'Core', q: 'Which of the following would normally be recognised as an intangible asset?', options: ['An internally developed brand', 'A customer list acquired in a business combination', 'Spending on research to discover new materials', 'Staff training costs'], answer: 1, solution: R`**Acquired** customer lists are identifiable and measurable at fair value in a business combination. Internally generated brands, research and training are expensed.` },
+    { type: 'mcq', level: 'Core', q: 'Land bought for $2 million is revalued to $2.6 million under the revaluation model. Where does the $0.6 million increase go?', options: ['Revenue in profit or loss', 'A revaluation surplus in equity, through other comprehensive income', 'A reduction in depreciation', 'Retained earnings directly as a dividend'], answer: 1, solution: R`Revaluation increases go to OCI and accumulate in a **revaluation surplus** in equity (except to reverse a previous decrease recognised in profit).` },
+    { type: 'mcq', level: 'Stretch', q: 'Why can a covenant breach cause a large loan to become a current liability?', options: ['Because interest rates rise', 'Because the lender may demand repayment and the borrower no longer has the right to defer settlement for 12 months', 'Because the loan is revalued to fair value', 'Because the loan is reclassified as equity'], answer: 1, solution: R`A liability is current if the entity lacks the right to defer settlement for at least 12 months. A breach typically gives lenders the right to demand repayment, so the loan becomes current unless a waiver is obtained before the reporting date.` },
+    { type: 'long', level: 'Stretch', q: 'Explain why a software company might trade at eight times book value while a regional bank trades at 0.9 times book value, and what each ratio suggests.', answer: R`Price-to-book compares the market’s valuation of equity with its accounting carrying amount. For the software company, most of its value comes from assets that accounting does not recognise: internally developed software (development costs often expensed), its brand, customer relationships, data and engineering talent. Its book equity is small relative to its earning power, and investors expect it to earn returns on capital far above its cost of capital for years, so the market value is many times book. A ratio of eight implies high expected profitability and growth, and correspondingly high sensitivity to any disappointment.
+
+A bank’s assets are mostly loans and securities measured at or near amortised cost or fair value, so book value is a reasonable estimate of the value of its assets less liabilities. A price-to-book below 1 suggests the market expects the bank to earn a return on equity below its cost of equity, or doubts the carrying amounts, for example because it expects loan losses greater than the expected credit loss allowance, or because of funding, regulatory or technology challenges. It could also reflect a buying opportunity if the market is too pessimistic. In both cases, the ratio should be analysed together with return on equity: a company that earns ROE equal to its cost of equity should trade near book value.`, solution: 'Look for unrecognised intangibles and expected returns for the software firm, fair-value-like assets and ROE versus cost of equity for the bank.' },
+  ],
+  glossary: [
+    ['Expected credit loss', 'A forward-looking estimate of amounts that will not be collected on financial assets.'],
+    ['Revaluation model', 'Measuring PPE at fair value, with increases recognised in a revaluation surplus.'],
+    ['Goodwill', 'The excess of acquisition price over the fair value of identifiable net assets acquired.'],
+    ['Impairment', 'A write-down when an asset’s recoverable amount falls below its carrying amount.'],
+    ['Provision', 'A liability of uncertain timing or amount.'],
+    ['Contingent liability', 'A possible obligation disclosed but not recognised.'],
+    ['Covenant', 'A condition in a loan agreement that the borrower must meet.'],
+    ['Price-to-book ratio', 'Market value of equity divided by its book value.'],
+  ],
+  resources: ['AASB', 'IFRS9', 'IFRS', 'ASIC_FR', 'OS_ACC', 'MIT535', 'DAMO_DATA', 'book:KOLLER'],
+};

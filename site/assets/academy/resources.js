@@ -166,6 +166,12 @@ export const RES = {
   ABS_BOP: { t: 'Balance of Payments and International Investment Position, Australia', src: 'Australian Bureau of Statistics', u: 'https://www.abs.gov.au/statistics/economy/international-trade/balance-payments-and-international-investment-position-australia', kind: 'Data' },
   BUDGET_BP1: { t: 'Budget 2026–27, Budget Paper No. 1, Statement 1: Overview (PDF)', src: 'Australian Government', u: 'https://budget.gov.au/content/bp1/download/bp1_bs-1.pdf', kind: 'Official' },
   RBA_CHARTS: { t: 'Chart pack: the Australian economy and financial markets', src: 'Reserve Bank of Australia', u: 'https://www.rba.gov.au/chart-pack/', kind: 'Data' },
+  FRC: { t: 'Financial Reporting Council', src: 'Australian Government', u: 'https://frc.gov.au/', kind: 'Official' },
+  AUASB: { t: 'Auditing and Assurance Standards Board', src: 'AUASB', u: 'https://www.auasb.gov.au/', kind: 'Official' },
+  IFRS_CF: { t: 'Conceptual Framework for Financial Reporting', src: 'IFRS Foundation', u: 'https://www.ifrs.org/issued-standards/list-of-standards/conceptual-framework/', kind: 'Official' },
+  ASIC_FR: { t: 'Financial reporting and audit', src: 'ASIC', u: 'https://asic.gov.au/regulatory-resources/financial-reporting-and-audit/', kind: 'Official' },
+  CAANZ: { t: 'Chartered Accountants Australia and New Zealand', src: 'CA ANZ', u: 'https://www.charteredaccountantsanz.com/', kind: 'Official' },
+  ASX_RULES: { t: 'ASX Listing Rules, guidance notes and waivers', src: 'ASX', u: 'https://www.asx.com.au/about/regulation/rules-guidance-notes-and-waivers/asx-listing-rules-guidance-notes-and-waivers', kind: 'Official' },
   IFRS: { t: 'List of IFRS Accounting Standards', src: 'IFRS Foundation', u: 'https://www.ifrs.org/issued-standards/list-of-standards/', kind: 'Official' },
 };
 export const BOOKS = {

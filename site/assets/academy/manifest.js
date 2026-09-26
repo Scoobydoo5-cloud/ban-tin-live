@@ -482,13 +482,152 @@ export const MANIFEST = {
     "CORE",
     "book:WOOL"
    ]
+  },
+  "22108-01": {
+   "title": "What accounting is for: users, the conceptual framework and accruals",
+   "summary": "Why a finance professional must read accounts fluently: the users of financial information and what they need, accountability and agency, Australia’s reporting framework (Corporations Act, AASB, ASIC, auditors), the Conceptual Framework’s qualitative characteristics and element definitions, and the difference between accrual and cash accounting.",
+   "mins": 65,
+   "level": "Foundation",
+   "words": 2558,
+   "ex": 9,
+   "res": [
+    "IFRS_CF",
+    "AASB",
+    "FRC",
+    "AUASB",
+    "ASIC_FR",
+    "ASX_RULES",
+    "OS_ACC",
+    "MIT501",
+    "book:KOLLER"
+   ]
+  },
+  "22108-02": {
+   "title": "Recording transactions: the accounting equation and double entry",
+   "summary": "How every transaction flows into the accounts: the accounting equation, the dual effect of transactions, debits and credits, journals, ledgers and T-accounts, and the trial balance, worked through a full first month of a coffee-roasting start-up.",
+   "mins": 75,
+   "level": "Foundation",
+   "words": 2146,
+   "ex": 8,
+   "res": [
+    "OS_ACC",
+    "MIT501",
+    "AASB",
+    "IFRS_CF",
+    "KHAN"
+   ]
+  },
+  "22108-03": {
+   "title": "Adjusting entries, closing and preparing the statements",
+   "summary": "Turning a trial balance into financial statements: the four types of adjusting entries (prepayments, unearned revenue, accrued expenses and accrued revenue), depreciation, inventory shrinkage and income tax; the adjusted trial balance; the income statement, statement of changes in equity and balance sheet; and closing entries, completing Mekong Roasters’ first month.",
+   "mins": 75,
+   "level": "Foundation",
+   "words": 2081,
+   "ex": 9,
+   "res": [
+    "OS_ACC",
+    "MIT501",
+    "AASB",
+    "IFRS_CF",
+    "ATO_RATES"
+   ]
+  },
+  "22108-04": {
+   "title": "The income statement and revenue recognition",
+   "summary": "Reading and building the statement of profit or loss: its structure from revenue to total comprehensive income and EPS, the AASB 15 five-step model for revenue (bundles, over-time recognition, principal versus agent, variable consideration, gift cards), inventory costing, depreciation methods, other key expenses, and the gap between statutory and \"underlying\" profit.",
+   "mins": 80,
+   "level": "Intermediate",
+   "words": 2607,
+   "ex": 10,
+   "res": [
+    "AASB",
+    "IFRS",
+    "IFRS_CF",
+    "ASIC_FR",
+    "OS_ACC",
+    "MIT535",
+    "book:KOLLER"
+   ]
+  },
+  "22108-05": {
+   "title": "The balance sheet: assets, liabilities and equity",
+   "summary": "A tour of the statement of financial position through an analyst’s eyes: classification and measurement, receivables and expected credit losses, inventories, property, plant and equipment and revaluation, intangibles and goodwill, leases, financial assets, provisions and contingent liabilities, borrowings and covenants, equity and buybacks, and why book value differs from market value.",
+   "mins": 80,
+   "level": "Intermediate",
+   "words": 2533,
+   "ex": 10,
+   "res": [
+    "AASB",
+    "IFRS9",
+    "IFRS",
+    "ASIC_FR",
+    "OS_ACC",
+    "MIT535",
+    "DAMO_DATA",
+    "book:KOLLER"
+   ]
+  },
+  "22108-06": {
+   "title": "The statement of cash flows",
+   "summary": "Where the cash actually went: operating, investing and financing activities, the direct and indirect methods (both worked for Mekong Roasters), the reconciliation of profit to operating cash flow, free cash flow, cash conversion and the life-cycle pattern of cash flows, and the red flags analysts look for when profit and cash diverge.",
+   "mins": 75,
+   "level": "Intermediate",
+   "words": 1961,
+   "ex": 9,
+   "res": [
+    "AASB",
+    "IFRS",
+    "ASIC_FR",
+    "OS_ACC",
+    "MIT535",
+    "DAMO",
+    "book:KOLLER"
+   ]
+  },
+  "22108-07": {
+   "title": "Financial statement analysis",
+   "summary": "Turning statements into insight: horizontal and vertical analysis, the full ratio toolkit (profitability, efficiency, liquidity, solvency and market ratios), DuPont decomposition of ROE, ROIC, the cash conversion cycle, and a complete two-year analysis of a retailer whose profits grow while its free cash flow disappears.",
+   "mins": 85,
+   "level": "Intermediate",
+   "words": 2180,
+   "ex": 10,
+   "res": [
+    "MIT535",
+    "DAMO",
+    "DAMO_DATA",
+    "OS_ACC",
+    "ASX",
+    "HOSE",
+    "book:KOLLER",
+    "book:DAMOB"
+   ]
+  },
+  "22108-08": {
+   "title": "Reporting quality, ethics and sustainability reporting",
+   "summary": "When accounts can be trusted and when they cannot: earnings quality, the techniques and motives of earnings management, famous frauds and what they teach, detecting red flags with accruals, the role and limits of audit, professional ethics and whistleblowing, corporate governance, and Australia’s new mandatory climate-related sustainability reporting.",
+   "mins": 75,
+   "level": "Intermediate",
+   "words": 2440,
+   "ex": 8,
+   "res": [
+    "ASIC_FR",
+    "AUASB",
+    "FRC",
+    "AASB",
+    "ISSB",
+    "TREASURY_CLIMATE",
+    "ASIC_GREEN",
+    "CAANZ",
+    "CFA_ETH",
+    "OS_ACC"
+   ]
   }
  },
  "totals": {
   "subjects": 19,
   "planned": 152,
-  "ready": 26,
-  "words": 78169,
-  "exercises": 269
+  "ready": 34,
+  "words": 96675,
+  "exercises": 342
  }
 };
