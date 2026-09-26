@@ -61,6 +61,7 @@ jobs:
             --prev "https://${OWNER,,}.github.io/${REPO}/data/latest.json" \
             --sync config/from_claude.json --sync /tmp/sync_branch.json \
             --snapshot data/daily
+          if [ -f config/content.json ]; then cp config/content.json site/data/content.json; fi
 
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
 

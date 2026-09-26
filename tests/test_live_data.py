@@ -293,3 +293,11 @@ def test_price_action_rsi_balanced_and_short_history():
     pa = ld.price_action(_bars(closes[:-1]), closes[-1], closes[-1], closes[-1])
     assert 45 <= pa["rsi14"] <= 55 and pa["trend"] == "mixed"
     assert ld.price_action(_bars([100] * 10), 100, 100, 100) is None
+
+
+def test_hist_dates_align_with_hist():
+    now = utc(2026, 9, 25, 16, 0, VN)
+    cfg = {"key": "VN-FPT", "label": "FPT", "market": "VN", "symbol": "FPT", "exchange": "HOSE"}
+    it = ld.build_item(cfg, daily_series(date(2026, 9, 25), 80, 100.0, 0.1), [], now)
+    assert len(it["histD"]) == len(it["hist"]) == 60
+    assert it["histD"][-1] == it["day"] and it["histD"] == sorted(it["histD"])

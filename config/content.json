@@ -1,0 +1,303 @@
+{
+ "version": 1,
+ "updatedAt": "2026-09-26",
+ "brief": {
+  "updated": "Thứ Bảy 26/09/2026, 08h05 giờ Sydney",
+  "headline": "VN-Index phục hồi, tăng 10,02 điểm (+0,56%) lên 1.785,11 trong phiên 25/09, chấm dứt hai phiên giảm liên tiếp, nhờ dòng tiền đổ mạnh vào nhóm bất động sản họ Vingroup (VHM tăng 5,7%, đóng góp 6,33 điểm) trong khi khối ngoại giảm mạnh quy mô bán ròng.",
+  "paragraphs": [
+   "Chứng khoán Mỹ đóng cửa tăng ở cả ba chỉ số (Dow +0,93% lên 51.828,62; S&P 500 +0,51% lên 7.743,41; Nasdaq +0,48% lên 27.068,72) để kết thúc một tuần biến động mạnh, khi giá dầu hạ nhiệt và lợi suất 10 năm gần như đi ngang sau khi lập đỉnh 19 năm giữa tuần — thị trường phản ứng tích cực với việc Iran đưa ra lộ trình mở lại eo biển Hormuz trong 7 ngày nếu Mỹ gỡ phong tỏa hải quân.",
+   "ASX 200 đi ngược xu hướng, giảm 0,43% (−37,00 điểm) xuống 8.665,00 — mức thấp nhất kể từ tháng 6 và là tuần giảm thứ tư liên tiếp — do nhóm công nghệ (−1,66%), lithium và nền tảng quản lý tài sản (Netwealth, sau vụ kiện tập thể First Guardian) bị bán tháo, trong khi nhà đầu tư thận trọng chờ quyết định RBA ngày 29/09.",
+   "Thượng đỉnh Trump–Tập kết thúc đúng như kịch bản dự báo hôm qua: không có đột phá về kiểm soát xuất khẩu chip AI hay vấn đề Đài Loan (một số nguồn cho biết Đài Loan thậm chí không được đưa ra thảo luận), chỉ dừng ở đề xuất cơ chế thông báo sự cố AI; việc gia hạn đình chiến thương mại thêm 2 tháng (thay vì 6 tháng như một số bên kỳ vọng) bị đánh giá là \"thiếu chi tiết\" — xem chấm điểm ở sổ dự báo bên dưới."
+  ],
+  "chain": [
+   "Iran đưa lộ trình mở lại Hormuz (7 ngày)",
+   "Giá dầu hạ nhiệt",
+   "Cổ phiếu Mỹ tăng, lợi suất đi ngang",
+   "VN-Index bật lại nhờ nhóm Vingroup",
+   "ASX vẫn giảm vì lý do riêng (tech, lithium)"
+  ],
+  "forecasts": [
+   {
+    "made": "24/09",
+    "text": "RBA tăng lãi suất lên 4,60% ngày 29/09",
+    "prob": "75%",
+    "due": "29/09",
+    "result": "wait"
+   },
+   {
+    "made": "24/09",
+    "text": "VN-Index đóng cửa 08/10: dưới 1.790 (25%) · 1.790–1.830 (55%) · trên 1.830 (20%)",
+    "prob": "55%",
+    "due": "08/10",
+    "result": "wait"
+   },
+   {
+    "made": "24/09",
+    "text": "Fed tăng lãi suất thêm ít nhất một lần trước 31/12/2026",
+    "prob": "80%",
+    "due": "31/12",
+    "result": "wait"
+   },
+   {
+    "made": "24/09",
+    "text": "Thượng đỉnh Trump–Tập (24-25/09) đạt thỏa thuận gia hạn đình chiến thương mại đến 10/01/2027 mà không có nhượng bộ lớn mới về đất hiếm/thuế quan — Thực tế: đúng. Bộ trưởng Tài chính Mỹ Bessent xác nhận ngày 24/09 gia hạn đình chiến thêm 2 tháng đến 10/01/2027…",
+    "prob": "60%",
+    "due": "26/09",
+    "result": "ok"
+   },
+   {
+    "made": "24/09",
+    "text": "Vàng (XAU/USD) đóng cửa 01/10 vẫn dưới 4.290 USD/oz hiện tại (tiếp tục xu hướng giảm do kỳ vọng Fed diều hâu)",
+    "prob": "50%",
+    "due": "01/10",
+    "result": "wait"
+   },
+   {
+    "made": "25/09",
+    "text": "Lợi suất trái phiếu Mỹ 10 năm đóng cửa 01/10 vẫn trên 5,00% (xu hướng lãi suất cao tiếp diễn)",
+    "prob": "85%",
+    "due": "01/10",
+    "result": "wait"
+   },
+   {
+    "made": "25/09",
+    "text": "VN-Index đóng cửa 01/10 giữ trên vùng hỗ trợ 1.750 (không giảm sâu thêm dù khối ngoại tiếp tục bán ròng)",
+    "prob": "65%",
+    "due": "01/10",
+    "result": "wait"
+   },
+   {
+    "made": "25/09",
+    "text": "Ngày 2 thượng đỉnh Trump–Tập (25/09) không đạt đột phá về kiểm soát xuất khẩu chip AI hay vấn đề Đài Loan, chỉ dừng ở cơ chế thông báo/\"đường dây nóng AI\" — Thực tế: đúng. Kết quả xác nhận không có đột phá về kiểm soát chip AI hay vấn đề Đài Loan — theo một s…",
+    "prob": "70%",
+    "due": "26/09",
+    "result": "ok"
+   },
+   {
+    "made": "26/09",
+    "text": "Mỹ và Iran đạt được ít nhất một phần thỏa thuận mở lại eo biển Hormuz trong vòng 7 ngày tới (trước 02/10), theo lộ trình Iran đưa ra ngày 25/09",
+    "prob": "25%",
+    "due": "02/10",
+    "result": "wait"
+   },
+   {
+    "made": "26/09",
+    "text": "ASX 200 nối dài chuỗi giảm, đóng cửa tuần kết thúc 02/10 thấp hơn mức 8.665,00 hiện tại (tuần giảm thứ năm liên tiếp)",
+    "prob": "55%",
+    "due": "02/10",
+    "result": "wait"
+   },
+   {
+    "made": "26/09",
+    "text": "VN-Index đóng cửa 02/10 lấy lại mốc 1.800 (phục hồi từ 1.785,11 hiện tại)",
+    "prob": "35%",
+    "due": "02/10",
+    "result": "wait"
+   }
+  ],
+  "lesson": "Bài học: Đường cong kỳ hạn — vì sao \"dầu giảm 8,6% trong một phiên\" hôm nay không có thật"
+ },
+ "report": {
+  "issue": "Báo cáo tuần · số 1 · 21–25/09/2026",
+  "title": "Lãi suất cao quay lại: ai chịu thiệt, ai còn đứng vững",
+  "keys": [
+   {
+    "lead": "Chi phí vốn toàn cầu tăng lại vì giá dầu.",
+    "text": "Fed tăng lãi suất lên 3,75–4,00% ngày 16/09, lần đầu kể từ 2023. Lợi suất trái phiếu Mỹ 10 năm lên 5,21%, cao nhất kể từ 2007, tăng 105 điểm cơ bản từ đầu năm. Gốc của chuỗi này là xung đột Mỹ–Iran quanh eo Hormuz: dầu Brent +62% từ đầu năm."
+   },
+   {
+    "lead": "Người chịu thiệt là tài sản có dòng tiền ở xa.",
+    "text": "Cổ phiếu công nghệ Úc giảm mạnh dù kết quả kinh doanh vẫn tăng (Xero −50%, HUB24 −33%, Pro Medicus −27% từ đầu năm). Vàng giảm 18,9% so với giá đóng cửa cao nhất 52 tuần. S&P 500 vẫn chỉ cách đỉnh 0,7% nhờ lợi nhuận từ AI."
+   },
+   {
+    "lead": "Việt Nam: tin tốt đã đến, dòng tiền chưa theo.",
+    "text": "FTSE Russell nâng hạng Việt Nam từ 21/09, nhưng trong tuần VN-Index giảm 1,7%, còn 1.785,11 điểm. Khối ngoại bán ròng khoảng 2,8–2,9 nghìn tỷ đồng cả tuần trên HOSE và HNX (tổng hợp Vietstock, Nhân Dân), dù giảm mạnh về cuối tuần."
+   }
+  ],
+  "scenarios": [
+   {
+    "name": "Cơ sở: lãi suất cao kéo dài",
+    "prob": "55%",
+    "when": "Đàm phán Mỹ–Iran kéo dài, chưa có thỏa thuận; RBA tăng lên 4,60%; PCE lõi quanh 3,3%.",
+    "then": "Lợi suất giữ quanh 5%. Cổ phiếu tăng trưởng định giá cao tiếp tục chịu áp lực; ngân hàng và năng lượng ổn định hơn. Việt Nam đi ngang, khối ngoại chưa mua ròng rõ rệt. ANZ và CBA đã cảnh báo RBA có thể cần tăng thêm một lần nữa vào tháng 11 lên 4,85% nếu CPI quý 3 nóng.",
+    "wrong": "Lợi suất Mỹ 10 năm đóng cửa dưới 4,8% hai tuần liền, hoặc Brent về dưới 90 USD."
+   },
+   {
+    "name": "Tích cực: eo Hormuz mở lại",
+    "prob": "25%",
+    "when": "Mỹ và Iran công bố thỏa thuận theo lộ trình mở lại eo biển, tàu chở dầu qua lại trở lại.",
+    "then": "Dầu giảm mạnh, kỳ vọng lạm phát hạ, lợi suất giảm. Cổ phiếu tăng trưởng Úc và vàng hồi phục; USD yếu hơn giảm áp lực lên VND.",
+    "wrong": "Thỏa thuận được công bố nhưng giá dầu không giảm, hoặc lợi suất vẫn tăng vì lo ngại nợ công Mỹ."
+   },
+   {
+    "name": "Tiêu cực: cú sốc lạm phát thứ hai",
+    "prob": "20%",
+    "when": "Đàm phán đổ vỡ, dầu quay lại đỉnh 52 tuần; PCE lõi tháng 8 tăng từ 0,4% trở lên so với tháng trước; việc làm tháng 9 mạnh.",
+    "then": "Fed tăng tiếp ngày 28/10, lợi suất vượt đỉnh mới. Cổ phiếu giảm trên diện rộng; USD mạnh gây áp lực lên VND, Ngân hàng Nhà nước khó nới lỏng.",
+    "wrong": "PCE lõi tháng 8 chỉ tăng 0,2% hoặc thấp hơn."
+   }
+  ],
+  "calendar": [
+   {
+    "when": "T3 29/09, 14:30",
+    "what": "RBA quyết định lãi suất",
+    "ref": "4,35%; thị trường định giá 92–94% khả năng tăng lên 4,60%, cả 7 ngân hàng lớn cùng dự báo tăng",
+    "why": "Không tăng sẽ là bất ngờ lớn với AUD, ngân hàng và công nghệ Úc; ANZ và CBA đã cảnh báo khả năng cần thêm một đợt tăng nữa vào tháng 11 lên 4,85% nếu CPI quý 3 nóng"
+   },
+   {
+    "when": "T4 30/09, 11:30",
+    "what": "CPI Úc tháng 8 (ABS)",
+    "ref": "T7: 3,5%, lõi 3,6%",
+    "why": "Quyết định RBA có tăng tiếp trong tháng 11 hay không"
+   },
+   {
+    "when": "T4 30/09, 22:30",
+    "what": "PCE Mỹ tháng 8 (BEA)",
+    "ref": "T7: 3,7%, lõi 3,3%",
+    "why": "Thước đo lạm phát chính của Fed trước cuộc họp 27–28/10"
+   },
+   {
+    "when": "~30/09–01/10",
+    "what": "Micron công bố kết quả",
+    "ref": "Chi phí, nhu cầu bộ nhớ",
+    "why": "Biên lợi nhuận NVIDIA và nhóm lưu trữ"
+   },
+   {
+    "when": "T5 01/10",
+    "what": "PMI Việt Nam; ISM sản xuất Mỹ (0:00 rạng sáng T6)",
+    "ref": "Trên 50 là mở rộng",
+    "why": "Sức khỏe sản xuất khi năng lượng đắt"
+   },
+   {
+    "when": "T6 02/10, 22:30",
+    "what": "Việc làm Mỹ tháng 9 (BLS)",
+    "ref": "Thất nghiệp tháng 8",
+    "why": "Việc làm mạnh cộng lạm phát cao làm tăng khả năng Fed tăng tiếp"
+   },
+   {
+    "when": "Đầu tháng 10",
+    "what": "GDP quý 3, CPI tháng 9 Việt Nam; mùa báo cáo quý 3",
+    "ref": "Quý 2: +8,39%",
+    "why": "Kiểm chứng tăng trưởng khi lãi huy động tăng"
+   },
+   {
+    "when": "Liên tục",
+    "what": "Đàm phán Mỹ–Iran về eo Hormuz",
+    "ref": "Lộ trình 7 ngày (25/09)",
+    "why": "Biến số lớn nhất cho dầu, lạm phát, lợi suất"
+   }
+  ],
+  "journal": [
+   {
+    "made": "26/09",
+    "text": "RBA tăng 0,25 điểm % lên 4,60%",
+    "prob": "85%",
+    "due": "29/09",
+    "result": "wait"
+   },
+   {
+    "made": "26/09",
+    "text": "Lạm phát lõi Úc tháng 8 từ 3,6% trở lên",
+    "prob": "55%",
+    "due": "30/09",
+    "result": "wait"
+   },
+   {
+    "made": "26/09",
+    "text": "PCE lõi Mỹ tháng 8 so cùng kỳ từ 3,3% trở lên",
+    "prob": "60%",
+    "due": "30/09",
+    "result": "wait"
+   },
+   {
+    "made": "26/09",
+    "text": "Lợi suất Mỹ 10 năm đóng cửa 02/10 trên 5,00%",
+    "prob": "70%",
+    "due": "02/10",
+    "result": "wait"
+   },
+   {
+    "made": "26/09",
+    "text": "Mỹ và Iran công bố thỏa thuận mở lại eo Hormuz",
+    "prob": "20%",
+    "due": "02/10",
+    "result": "wait"
+   },
+   {
+    "made": "26/09",
+    "text": "Khối ngoại mua ròng trên HOSE cả tuần 28/09–02/10",
+    "prob": "40%",
+    "due": "02/10",
+    "result": "wait"
+   }
+  ],
+  "lesson": "Vì sao lãi suất tăng 1 điểm % mà có cổ phiếu giảm 50%?"
+ },
+ "watch": [
+  {
+   "id": "VN-MWG",
+   "growth": "6T/2026: doanh thu +29%, lãi sau thuế +91%; 8T/2026: doanh thu 129.431 tỷ (+29%), ~70% kế hoạch năm",
+   "risk": "Tiêu dùng, chi phí sinh hoạt, khối ngoại bán ròng"
+  },
+  {
+   "id": "VN-FPT",
+   "growth": "6T/2026: doanh thu +12,6%, lãi trước thuế +18,1%",
+   "risk": "Phụ thuộc thị trường Nhật/Mỹ, cạnh tranh AI, dòng vốn ngoại"
+  },
+  {
+   "id": "AU-PME",
+   "growth": "FY26: doanh thu +22,9% (+28% theo tỷ giá không đổi)",
+   "risk": "Định giá rất cao, nhạy cảm với lợi suất"
+  },
+  {
+   "id": "AU-NXT",
+   "growth": "FY26: doanh thu thuần +16%; FY27 dự kiến +50%; đã trở lại có lãi (NPAT 82,1tr AUD)",
+   "risk": "Vốn đầu tư lớn, nợ, nhạy cảm với lãi suất; công suất đã ký hợp đồng (740,1MW) vượt xa công suất đang tính phí (175MW) — rủi ro thời điểm chuyển hóa thành doanh thu"
+  },
+  {
+   "id": "AU-XRO",
+   "growth": "FY26: doanh thu +31% (hữu cơ +21%)",
+   "risk": "Chi phí mua Melio làm lợi nhuận giảm; một dịch vụ kỹ thuật xếp hạng \"Sell candidate\""
+  },
+  {
+   "id": "US-NVDA",
+   "growth": "Q2 FY27: doanh thu +106%, trung tâm dữ liệu +117%",
+   "risk": "Kiểm soát xuất khẩu, chi phí bộ nhớ, đối thủ; Seaport (25/09) thận trọng về năng lực sản xuất TSMC"
+  },
+  {
+   "id": "VN-GMD",
+   "growth": "Q2/2026: doanh thu cảng +13–18%; LNST +153% (phần lớn từ thoái vốn một lần)",
+   "risk": "Tăng trưởng lợi nhuận phụ thuộc khoản thu nhập bất thường, không lặp lại; kế hoạch phát hành cổ phiếu thưởng 50% (9–10/2026) sẽ pha loãng số liệu trên mỗi cổ phần"
+  },
+  {
+   "id": "US-STX",
+   "growth": "Q4 FY26: doanh thu +48% YoY; biên gộp mở rộng quý thứ 13 liên tiếp lên 52,7%",
+   "risk": "Đã tăng rất mạnh trong năm; rủi ro chu kỳ nhớ/lưu trữ đảo chiều; CFO vừa bán ~38,1 triệu USD cổ phiếu (Form 4)"
+  },
+  {
+   "id": "AU-HUB24",
+   "growth": "1H FY26: doanh thu +26%, NPAT cơ sở +60%, dòng vốn ròng kỷ lục 10,7 tỷ AUD; FY26 đầy đủ: doanh thu +23%, EBITDA cơ sở +30%, NPAT cơ sở +40%",
+   "risk": "Định giá cao sau đà tăng; nhạy cảm với dòng vốn nền tảng và lãi suất; dòng vốn ròng có dấu hiệu chậm lại bước vào FY27"
+  },
+  {
+   "id": "VN-HPG",
+   "growth": "6T/2026: doanh thu +47%, LNST +103% (Dung Quất 2 vận hành); FY2025 (kiểm chứng): doanh thu +12,4%, ROE 12,7%",
+   "risk": "Đòn bẩy tài chính (nợ/VCSH ~0,70), chu kỳ giá thép/nguyên liệu, vốn đầu tư lớn cho Dung Quất 2"
+  },
+  {
+   "id": "US-ALAB",
+   "growth": "Q2/2026: doanh thu +104% YoY; FY2025 (kiểm chứng): doanh thu +115%, biên gộp 75,7%, ROE 16,1%",
+   "risk": "Định giá cực cao, biến động mạnh theo tâm lý AI, phụ thuộc chi tiêu vốn của số ít khách hàng lớn"
+  },
+  {
+   "id": "VN-HDB",
+   "growth": "6T/2026: lãi trước thuế 13.202 tỷ đồng, +31% so cùng kỳ; ROE 24,29%; mục tiêu cả năm +41%",
+   "risk": "Nợ xấu nhóm 3–5 ~2,60% (Q1/2026); tăng trưởng tín dụng cao đi kèm rủi ro chất lượng tài sản; phụ thuộc tiến độ tăng sở hữu HD Saison và IPO HDS"
+  },
+  {
+   "id": "AU-TNE",
+   "growth": "FY26 mục tiêu: ARR +16–18%, LNTT +18–20% (nhanh hơn doanh thu); FY2025 (kiểm chứng): doanh thu +18,2%, ROE 30,5%",
+   "risk": "Định giá cao (P/E hơn 70 lần theo báo cáo gần nhất); tăng trưởng có thể chậm lại nếu khu vực công/giáo dục bão hòa; nhạy cảm với lãi suất"
+  }
+ ]
+}

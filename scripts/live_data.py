@@ -261,6 +261,7 @@ def build_item(cfg: dict, daily: list[dict], intr: list[dict], now_utc: datetime
         "chg1m": _r100(_pct(last, back(21))), "chg3m": _r100(_pct(last, back(63))), "chgYtd": _r100(_pct(last, ytd_base)),
         "spark": [round(b["c"], 6) for b in same_day][-40:],
         "hist": [round(c, 6) for c in closes[-60:]],
+        "histD": ([b["d"].isoformat() for b in before] + [day.isoformat()])[-60:],
         "dupRemoved": dup,
     }
     item["pa"] = price_action(before, last, day_hi, day_lo)

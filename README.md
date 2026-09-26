@@ -4,6 +4,13 @@ Trang web tự cập nhật giá chỉ số, cổ phiếu theo dõi, tỷ giá v
 
 Phần phân tích (bản tin hằng ngày, hồ sơ công ty, quỹ Buffett mô phỏng) vẫn nằm ở trang Claude: https://claude.ai/artifact/1ivWHfw7vfybPnV2a4QpZV
 
+## Hai trang
+
+- **Trang chủ (`site/index.html`)**: thế giới 3D cuộn liên tục (three.js r169, lưu sẵn ở `site/vendor/`). Cuộn trang là dòng thời gian: tua lại 60 phiên của ba chỉ số, quả địa cầu ba sàn, tĩnh vật vĩ mô, thành phố cổ phiếu, báo cáo tuần, vòng phân bổ quỹ Buffett, bảng tổng hợp. Mã: `site/assets/app.js` (lớp chữ, đường bay camera), `site/assets/world.js` (hình 3D dựng bằng mã), `site/assets/live.js` (giá trực tiếp KBS, CNBC).
+- **Bảng giá chi tiết (`site/bang-gia/`)**: bảng đầy đủ với đồng hồ sàn, bản đồ nhiệt, bộ lọc, quy đổi tiền, mục kiểm tra dữ liệu.
+
+Nội dung chữ của bản tin, báo cáo tuần và gợi ý được routine Claude trích từ trang Claude bằng `scripts/extract_content.py` rồi ghi vào `config/content.json` (chỉ chữ thuần); quy trình đăng chép file này vào `site/data/`.
+
 > Chỉ để tham khảo và học tập, không phải lời khuyên đầu tư. Nguồn miễn phí có thể trễ 15–20 phút hoặc sai; mỗi con số đều ghi nguồn và kết quả kiểm tra.
 
 ## Cách hoạt động
