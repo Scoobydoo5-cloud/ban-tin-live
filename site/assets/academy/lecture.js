@@ -100,6 +100,7 @@ export function speechFor(b) {
       return `Look at the table${v.caption ? ': ' + T(v.caption) : ''}. ` + rows.map((r) => `${T(r[0])}: ` + r.slice(1).map((c, j) => `${T(v.head[j + 1])}, ${T(c)}`).join('; ')).join('. ') + (v.rows.length > 8 ? '. And so on, down the table.' : '.');
     }
     case 'code': return `On screen is some ${v.lang === 'excel' ? 'Excel' : v.lang || 'code'}${v.say ? '. ' + T(v.say) : ''}. Pause the lecture and try it yourself.`;
+    case 'chart': return `Look at the chart${v.caption ? ': ' + T(v.caption) : ''}.${v.series.some((q) => q.label) ? ' It shows ' + v.series.filter((q) => q.label).map((q) => T(q.label)).join(', ') + '.' : ''}${v.note ? ' ' + T(v.note) : ''}`;
     case 'lab': return 'Now is a good moment to open the interactive lab linked here and experiment with the numbers.';
     case 'case': return `Case study: ${T(v.title)}. ${T(v.text)}${v.questions && v.questions.length ? ' Questions to think about. ' + v.questions.map((q, j) => `${j + 1}. ${T(q)}`).join(' ') : ''}`;
     default: return '';

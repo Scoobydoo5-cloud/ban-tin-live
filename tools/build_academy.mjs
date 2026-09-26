@@ -12,7 +12,7 @@ const { SUBJECTS, lessonId } = await imp(path.join(AC, 'program.js'));
 const { RES, BOOKS } = await imp(path.join(AC, 'resources.js'));
 const { LABS } = await imp(path.join(AC, 'labs-meta.js'));
 
-const KINDS = new Set(['p', 'h', 'h3', 'math', 'list', 'olist', 'note', 'key', 'warn', 'example', 'table', 'code', 'lab', 'case', 'defs', 'steps']);
+const KINDS = new Set(['p', 'h', 'h3', 'math', 'list', 'olist', 'note', 'key', 'warn', 'example', 'table', 'code', 'lab', 'case', 'defs', 'steps', 'chart']);
 const errors = [];
 const err = (id, m) => errors.push(`${id}: ${m}`);
 const words = (s) => String(s || '').replace(/\\\(|\\\)|\\[a-zA-Z]+|[{}^_$]/g, ' ').split(/\s+/).filter(Boolean).length;
@@ -47,6 +47,7 @@ for (const s of SUBJECTS) {
       else if (k === 'defs') { if (!Array.isArray(v)) { err(id, 'defs sai'); } else { w += v.flat().map(words).reduce((a, b2) => a + b2, 0); } }
       else if (k === 'case') { if (!v.title || !v.text) { err(id, `case ${j} sai`); } w += words(v.title) + words(v.text) + (v.questions || []).map(words).reduce((a, b2) => a + b2, 0); }
       else if (k === 'code') { if (!v.src) { err(id, `code ${j} trống`); } }
+      else if (k === 'chart') { if (!Array.isArray(v.x) || !Array.isArray(v.y) || !Array.isArray(v.series) || v.series.some((q) => !Array.isArray(q.pts) || q.pts.some((p) => !Array.isArray(p) || p.length !== 2 || !p.every(Number.isFinite)))) { err(id, `chart ${j} sai`); } w += words(v.caption) + words(v.note); }
       else if (k === 'list' || k === 'olist' || k === 'steps') { if (!Array.isArray(v)) { err(id, `${k} ${j} không phải mảng`); } else { w += v.map(words).reduce((a, b2) => a + b2, 0); } }
       else if (k !== 'math' && k !== 'lab') { w += words(v); }
     });

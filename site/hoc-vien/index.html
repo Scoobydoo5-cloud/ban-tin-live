@@ -234,6 +234,11 @@
   .toc a.on { color: var(--ink); font-weight: 700; }
   .toc li.soon { color: var(--dim); opacity: 0.45; }
   .side-card { max-height: calc(100vh - var(--hdr) - 90px); overflow-y: auto; }
+  .rb figure.chartfig { margin: 14px 0 26px; }
+  .rb .chartbox { border-radius: 16px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.07); padding: 8px 6px 2px; overflow: hidden; }
+  .rb .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 13px; color: var(--dim); }
+  .rb .legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .rb .chartnote { font-size: 14.5px !important; color: var(--dim) !important; margin: 6px 0 0 !important; }
   /* Lecture mode */
   .speaking { background: rgba(233,184,92,0.09) !important; box-shadow: -14px 0 0 -8px var(--gold), 0 0 0 1px rgba(233,184,92,0.28); border-radius: 12px; transition: background 0.3s, box-shadow 0.3s; }
   .lecbar { position: fixed; z-index: 65; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); width: min(920px, calc(100vw - 24px)); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 14px; border-radius: 20px; background: rgba(14,12,34,0.92); border: 1px solid rgba(233,184,92,0.35); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); box-shadow: 0 18px 60px rgba(0,0,0,0.5); }

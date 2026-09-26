@@ -156,6 +156,16 @@ export const RES = {
   FAST: { t: 'The FAST Standard for financial modelling', src: 'FAST Standard Organisation', u: 'https://www.fast-standard.org/', kind: 'Guide' },
   XL_XIRR: { t: 'Excel XIRR function', src: 'Microsoft Support', u: 'https://support.microsoft.com/en-us/office/xirr-function-de1242ec-6477-445b-b11b-a303ad9adc9d', kind: 'Software' },
   XL_GOALSEEK: { t: 'Use Goal Seek to find the result you want', src: 'Microsoft Support', u: 'https://support.microsoft.com/en-us/office/use-goal-seek-to-find-the-result-you-want-by-adjusting-an-input-value-320cb99e-f4a4-417f-b1c3-4f369d6e66c7', kind: 'Software' },
+  SAFEGUARD: { t: 'The Safeguard Mechanism', src: 'Department of Climate Change, Energy, the Environment and Water', u: 'https://www.dcceew.gov.au/climate-change/emissions-reporting/national-greenhouse-energy-reporting-scheme/safeguard-mechanism', kind: 'Official' },
+  CER_SAFEGUARD: { t: 'Safeguard Mechanism scheme', src: 'Clean Energy Regulator', u: 'https://cer.gov.au/schemes/safeguard-mechanism', kind: 'Official' },
+  PC: { t: 'Productivity Commission', src: 'Australian Government', u: 'https://www.pc.gov.au/', kind: 'Research' },
+  FAIRWORK_MIN: { t: 'Minimum wages', src: 'Fair Work Ombudsman', u: 'https://www.fairwork.gov.au/pay-and-wages/minimum-wages', kind: 'Official' },
+  ABS_GDP: { t: 'Australian National Accounts: National Income, Expenditure and Product', src: 'Australian Bureau of Statistics', u: 'https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-national-income-expenditure-and-product', kind: 'Data' },
+  ABS_LF: { t: 'Labour Force, Australia', src: 'Australian Bureau of Statistics', u: 'https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia', kind: 'Data' },
+  ABS_WPI: { t: 'Wage Price Index, Australia', src: 'Australian Bureau of Statistics', u: 'https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/wage-price-index-australia', kind: 'Data' },
+  ABS_BOP: { t: 'Balance of Payments and International Investment Position, Australia', src: 'Australian Bureau of Statistics', u: 'https://www.abs.gov.au/statistics/economy/international-trade/balance-payments-and-international-investment-position-australia', kind: 'Data' },
+  BUDGET_BP1: { t: 'Budget 2026–27, Budget Paper No. 1, Statement 1: Overview (PDF)', src: 'Australian Government', u: 'https://budget.gov.au/content/bp1/download/bp1_bs-1.pdf', kind: 'Official' },
+  RBA_CHARTS: { t: 'Chart pack: the Australian economy and financial markets', src: 'Reserve Bank of Australia', u: 'https://www.rba.gov.au/chart-pack/', kind: 'Data' },
   IFRS: { t: 'List of IFRS Accounting Standards', src: 'IFRS Foundation', u: 'https://www.ifrs.org/issued-standards/list-of-standards/', kind: 'Official' },
 };
 export const BOOKS = {

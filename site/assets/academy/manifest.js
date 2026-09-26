@@ -6,7 +6,7 @@ export const MANIFEST = {
    "summary": "What finance is, why every household is a small financial firm, how savers meet borrowers through markets and intermediaries, the price of money, and who protects you in Australia, the US and Vietnam.",
    "mins": 55,
    "level": "Foundation",
-   "words": 5646,
+   "words": 5652,
    "ex": 12,
    "res": [
     "MS_BUDGET",
@@ -177,13 +177,172 @@ export const MANIFEST = {
     "ASFI",
     "MS_SCAMS"
    ]
+  },
+  "23115-01": {
+   "title": "Thinking like an economist",
+   "summary": "The core ideas that make economics a way of thinking: scarcity and opportunity cost, marginal decisions, incentives, sunk costs, the production possibility frontier, comparative advantage and the gains from trade, how economists use models, and the difference between positive and normative claims.",
+   "mins": 60,
+   "level": "Foundation",
+   "words": 3045,
+   "ex": 9,
+   "res": [
+    "CORE",
+    "OS_ECO",
+    "KHAN_MICRO",
+    "MIT1401",
+    "BOE_KB",
+    "RBA_EXPL",
+    "book:MANKIW"
+   ]
+  },
+  "23115-02": {
+   "title": "Demand, supply and market equilibrium",
+   "summary": "The workhorse model of economics: what drives demand and supply, how the market finds an equilibrium price and quantity, how shifts change the outcome, what price ceilings, floors and taxes do, and who really pays a tax, worked graphically and with algebra.",
+   "mins": 70,
+   "level": "Foundation",
+   "words": 2829,
+   "ex": 10,
+   "res": [
+    "CORE",
+    "OS_ECO",
+    "KHAN_MICRO",
+    "MIT1401",
+    "BOE_KB",
+    "book:MANKIW"
+   ]
+  },
+  "23115-03": {
+   "title": "Elasticity and its business uses",
+   "summary": "How strongly buyers and sellers respond to prices and incomes: price, income and cross-price elasticities, the arc and point formulas, the link between elasticity and total revenue, why farm and commodity prices are so volatile, how elasticity decides who bears a tax, and how firms use all of this to price.",
+   "mins": 65,
+   "level": "Foundation",
+   "words": 2595,
+   "ex": 11,
+   "res": [
+    "CORE",
+    "OS_ECO",
+    "KHAN_MICRO",
+    "MIT1401",
+    "STATSMODELS",
+    "book:MANKIW"
+   ]
+  },
+  "23115-04": {
+   "title": "Efficiency, surplus and market failure",
+   "summary": "When do markets serve society well, and when do they fail? Consumer and producer surplus, why competitive markets maximise total surplus, the deadweight loss of taxes and price controls, and the four classic market failures (externalities, public goods, common resources and information problems) with the policy tools used to fix them, including carbon pricing in Australia.",
+   "mins": 70,
+   "level": "Foundation",
+   "words": 2878,
+   "ex": 10,
+   "res": [
+    "CORE",
+    "OS_ECO",
+    "KHAN_MICRO",
+    "MIT1401",
+    "SAFEGUARD",
+    "PC",
+    "book:MANKIW"
+   ]
+  },
+  "23115-05": {
+   "title": "Costs, perfect competition and monopoly",
+   "summary": "What costs look like inside a firm and how market structure shapes prices and profits: fixed, variable, average and marginal cost; economies of scale; profit maximisation, shutdown and entry under perfect competition; monopoly pricing, deadweight loss and the Lerner index; price discrimination; and how competition law and investors think about market power.",
+   "mins": 75,
+   "level": "Foundation",
+   "words": 3048,
+   "ex": 10,
+   "res": [
+    "CORE",
+    "OS_ECO",
+    "KHAN_MICRO",
+    "MIT1401",
+    "PC",
+    "book:MANKIW"
+   ]
+  },
+  "23115-06": {
+   "title": "Oligopoly, game theory and pricing strategy",
+   "summary": "Most real markets sit between perfect competition and monopoly. Monopolistic competition, measuring concentration with the HHI, oligopoly and strategic interdependence, game theory (dominant strategies, Nash equilibrium, the prisoner’s dilemma, repeated games), Cournot and Bertrand competition, entry deterrence, cartels and the ACCC, and the pricing strategies firms actually use.",
+   "mins": 70,
+   "level": "Intermediate",
+   "words": 2620,
+   "ex": 9,
+   "res": [
+    "CORE",
+    "OS_ECO",
+    "KHAN_MICRO",
+    "MIT1401",
+    "PC",
+    "book:MANKIW"
+   ]
+  },
+  "23115-07": {
+   "title": "Measuring the macroeconomy: GDP, inflation, unemployment",
+   "summary": "The three numbers that move markets: how GDP is measured and what it misses, nominal versus real and the GDP deflator, how the CPI is built and why underlying inflation matters, how the ABS measures unemployment, participation and underemployment, and how to read the business cycle, using Australia’s latest official data.",
+   "mins": 70,
+   "level": "Foundation",
+   "words": 3139,
+   "ex": 11,
+   "res": [
+    "ABS_GDP",
+    "ABS_CPI",
+    "ABS_LF",
+    "ABS_WPI",
+    "RBA_INFL",
+    "RBA_CHARTS",
+    "BUDGET_BP1",
+    "KHAN_MACRO",
+    "MIT1402",
+    "CORE",
+    "FRED"
+   ]
+  },
+  "23115-08": {
+   "title": "Aggregate demand and supply, fiscal and monetary policy",
+   "summary": "How the whole economy fits together: aggregate demand and supply, demand and supply shocks, the output gap and the Phillips curve; how the Reserve Bank sets the cash rate and how it reaches households and firms; unconventional tools; fiscal policy, multipliers and public debt dynamics; and how investors read policy, with Australia’s 2026 rate rises and Budget as the running example.",
+   "mins": 80,
+   "level": "Intermediate",
+   "words": 3148,
+   "ex": 10,
+   "res": [
+    "RBA_CASH",
+    "RBA_TRANS",
+    "RBA_TARGET",
+    "RBA_SMP",
+    "BUDGET_BP1",
+    "TREASURY_AU",
+    "SBV_EN",
+    "KHAN_MACRO",
+    "MIT1402",
+    "CORE",
+    "FED_MP"
+   ]
+  },
+  "23115-09": {
+   "title": "The open economy: trade, exchange rates and the balance of payments",
+   "summary": "Australia and Vietnam are both deeply open economies. The terms of trade, the welfare effects of tariffs and trade agreements, the balance of payments and what a current account deficit really means, how exchange rates are quoted and determined, purchasing power and interest rate parity, exchange-rate regimes and the impossible trinity, and how currency moves hit firms and investors.",
+   "mins": 80,
+   "level": "Intermediate",
+   "words": 3305,
+   "ex": 10,
+   "res": [
+    "ABS_BOP",
+    "RBA_STATS",
+    "RBA_EXPL",
+    "SBV_EN",
+    "MIT1454",
+    "KHAN_MACRO",
+    "MIT1402",
+    "CORE",
+    "WB"
+   ]
   }
  },
  "totals": {
   "subjects": 19,
   "planned": 152,
-  "ready": 8,
-  "words": 30513,
-  "exercises": 90
+  "ready": 17,
+  "words": 57126,
+  "exercises": 180
  }
 };

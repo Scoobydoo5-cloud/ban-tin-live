@@ -5,7 +5,7 @@ import { initShell } from '../core/shell.js';
 import { href } from '../core/data.js';
 import { PROGRAM, SUBJECTS, subjectByCode, lessonsOf, allReady, loadLesson, MANIFEST, LABS, GAMES } from '../academy/catalog.js';
 import { RES, BOOKS } from '../academy/resources.js';
-import { mountLab } from '../academy/labs.js';
+import { mountLab, chart } from '../academy/labs.js';
 import { mountGame } from '../academy/games.js';
 import { createLecture, segmentsFor, canSpeak } from '../academy/lecture.js';
 
@@ -209,6 +209,12 @@ function block(b, i) {
     case 'example': return `<div class="ex"${a}><div class="h"><small>Worked example</small>${fmt(v.title)}</div>${v.setup ? `<div class="setup">${paras(v.setup)}</div>` : ''}<ol>${v.steps.map((x) => `<li>${fmt(x)}</li>`).join('')}</ol><div class="ans"><b>Answer.</b> ${fmt(v.answer)}</div></div>`;
     case 'table': return `<figure class="tw"${a}>${v.caption ? `<figcaption>${fmt(v.caption)}</figcaption>` : ''}<div class="tscroll"><table><thead><tr>${v.head.map((h) => `<th>${fmt(h)}</th>`).join('')}</tr></thead><tbody>${v.rows.map((r) => `<tr>${r.map((c) => `<td>${fmt(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></figure>`;
     case 'code': return `<div class="code"${a}><div class="h"><span>${esc(v.lang === 'excel' ? 'Excel' : v.lang === 'py' || v.lang === 'python' ? 'Python' : v.lang === 'r' ? 'R' : v.lang || 'code')}</span><button type="button" class="copy">Copy</button></div><pre><code>${esc(v.src)}</code></pre></div>`;
+    case 'chart': {
+      const af = (dp) => (t) => Number(t).toLocaleString('en', { minimumFractionDigits: dp || 0, maximumFractionDigits: dp || 0 });
+      const svg = chart({ w: 640, h: v.h || 320, x: v.x, y: v.y, xl: v.xl || '', yl: v.yl || '', xf: af(v.xdp), yf: af(v.ydp), series: v.series.map((q) => ({ ...q, color: q.color || '#9b8cff' })), marks: v.marks || [], areas: v.areas || [], hlines: v.hlines || [], vlines: v.vlines || [] });
+      const legend = v.series.filter((q) => q.label).map((q) => `<span><i style="background:${q.color || '#9b8cff'}${q.dash ? ';opacity:.6' : ''}"></i>${fmt(q.label)}</span>`).join('');
+      return `<figure class="chartfig"${a}>${v.caption ? `<figcaption>${fmt(v.caption)}</figcaption>` : ''}<div class="chartbox">${svg}</div>${legend ? `<div class="legend">${legend}</div>` : ''}${v.note ? `<p class="chartnote">${fmt(v.note)}</p>` : ''}</figure>`;
+    }
     case 'lab': { const x = LABS.find((l) => l.id === v); return x ? `<div class="labcall"${a}><span><b>🧪 Try it: ${esc(x.title)}</b><br><span class="muted" style="font-size:14px">${esc(x.blurb)}</span></span><a class="btn small" href="#/lab/${x.id}">Open the lab →</a></div>` : ''; }
     case 'case': return `<div class="case"${a}><div class="h"><small>Case study</small>${fmt(v.title)}</div><div class="t">${paras(v.text)}</div>${v.questions && v.questions.length ? `<div class="cq"><b>Questions to discuss</b><ol>${v.questions.map((q) => `<li>${fmt(q)}</li>`).join('')}</ol></div>` : ''}</div>`;
     default: return '';
