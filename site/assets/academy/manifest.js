@@ -336,13 +336,159 @@ export const MANIFEST = {
     "CORE",
     "WB"
    ]
+  },
+  "26134-01": {
+   "title": "Data, variables and describing data with pictures",
+   "summary": "Where evidence comes from and how to look at it honestly: the statistical problem-solving cycle, populations and samples, sampling methods and biases, types of variables and data, data ethics and privacy, frequency tables, histograms, bar charts, time-series charts and scatter plots, and how charts mislead.",
+   "mins": 60,
+   "level": "Foundation",
+   "words": 2573,
+   "ex": 9,
+   "res": [
+    "OS_STATS",
+    "KHAN_STATS",
+    "SEEING",
+    "MIT18650",
+    "ABS",
+    "PANDAS"
+   ]
+  },
+  "26134-02": {
+   "title": "Descriptive statistics: centre, spread, shape and relationships",
+   "summary": "Summarising data with numbers: mean, median, mode and weighted means; range, IQR, variance, standard deviation and the coefficient of variation; percentiles, the five-number summary and box plots; skewness, kurtosis and fat tails; z-scores, the empirical rule and Chebyshev; and covariance and correlation, with finance data throughout.",
+   "mins": 70,
+   "level": "Foundation",
+   "words": 2526,
+   "ex": 11,
+   "res": [
+    "OS_STATS",
+    "KHAN_STATS",
+    "SEEING",
+    "MIT18650",
+    "PANDAS",
+    "book:WOOL"
+   ]
+  },
+  "26134-03": {
+   "title": "Probability for decisions",
+   "summary": "The language of uncertainty: sample spaces and events, three ways to assign probabilities, the addition and multiplication rules, conditional probability and independence from contingency tables, Bayes’ theorem and the base-rate fallacy (with fraud detection), counting rules, and decision trees with expected monetary value and the value of information.",
+   "mins": 70,
+   "level": "Foundation",
+   "words": 2492,
+   "ex": 10,
+   "res": [
+    "OS_STATS",
+    "KHAN_STATS",
+    "SEEING",
+    "MIT18650",
+    "RBA_GFC",
+    "book:KAHNEMAN"
+   ]
+  },
+  "26134-04": {
+   "title": "Random variables and the key distributions",
+   "summary": "Turning uncertainty into models: discrete and continuous random variables, expected value and variance and their rules, the Bernoulli, binomial and Poisson distributions for counts, the normal distribution and z-scores, the normal approximation, and a first look at how finance uses these models for credit risk, operational events and Value at Risk.",
+   "mins": 75,
+   "level": "Foundation",
+   "words": 2174,
+   "ex": 10,
+   "res": [
+    "OS_STATS",
+    "KHAN_STATS",
+    "SEEING",
+    "MIT18650",
+    "MIT18S096",
+    "book:WOOL"
+   ]
+  },
+  "26134-05": {
+   "title": "Sampling distributions and the Central Limit Theorem",
+   "summary": "The bridge from data to inference: why sample statistics vary, the sampling distribution and standard error of the mean and of a proportion, the Central Limit Theorem demonstrated by simulation, the law of large numbers, the t distribution, and a sobering finance application: how hard it is to estimate expected returns.",
+   "mins": 70,
+   "level": "Intermediate",
+   "words": 2232,
+   "ex": 10,
+   "res": [
+    "OS_STATS",
+    "KHAN_STATS",
+    "SEEING",
+    "MIT18650",
+    "book:WOOL"
+   ]
+  },
+  "26134-06": {
+   "title": "Confidence intervals",
+   "summary": "Estimating with honest uncertainty: point versus interval estimates, what \"95% confidence\" really means, intervals for a mean (z and t), a proportion, a difference between two means and paired data, choosing a sample size, a bootstrap interval for a median, and what intervals reveal about expected returns.",
+   "mins": 70,
+   "level": "Intermediate",
+   "words": 2185,
+   "ex": 10,
+   "res": [
+    "OS_STATS",
+    "KHAN_STATS",
+    "SEEING",
+    "MIT18650",
+    "STATSMODELS",
+    "book:WOOL"
+   ]
+  },
+  "26134-07": {
+   "title": "Hypothesis testing",
+   "summary": "The logic and practice of testing claims with data: null and alternative hypotheses, test statistics, p-values and significance, Type I and II errors and power, the main tests (one-sample t, proportion z, two-sample and paired t, chi-square independence), the link with confidence intervals, and the traps (p-hacking, multiple testing, practical versus statistical significance) that plague business and finance research.",
+   "mins": 80,
+   "level": "Intermediate",
+   "words": 2412,
+   "ex": 10,
+   "res": [
+    "OS_STATS",
+    "KHAN_STATS",
+    "SEEING",
+    "MIT18650",
+    "STATSMODELS",
+    "NBER",
+    "book:WOOL"
+   ]
+  },
+  "26134-08": {
+   "title": "Simple linear regression",
+   "summary": "Fitting and interpreting a straight-line relationship: the regression model, ordinary least squares, slope and intercept, residuals and R², the standard error of the regression, t tests and confidence intervals for the slope, confidence versus prediction intervals, the assumptions and how to check them, and the classic finance application: estimating a share’s beta.",
+   "mins": 80,
+   "level": "Intermediate",
+   "words": 2093,
+   "ex": 10,
+   "res": [
+    "OS_STATS",
+    "KHAN_STATS",
+    "MIT18650",
+    "STATSMODELS",
+    "DAMO_DATA",
+    "FRENCH",
+    "book:WOOL"
+   ]
+  },
+  "26134-09": {
+   "title": "Multiple regression and responsible use of evidence",
+   "summary": "Regression with many explanatory variables: interpreting coefficients \"holding other things constant\", adjusted R², t and F tests, dummy variables, logs and interactions, multicollinearity, omitted-variable bias, Simpson’s paradox, correlation versus causation and how experiments and natural experiments identify causes, overfitting and out-of-sample validation, and a checklist for reporting evidence responsibly.",
+   "mins": 85,
+   "level": "Intermediate",
+   "words": 2356,
+   "ex": 9,
+   "res": [
+    "OS_STATS",
+    "MIT18650",
+    "STATSMODELS",
+    "SKLEARN",
+    "NBER",
+    "CORE",
+    "book:WOOL"
+   ]
   }
  },
  "totals": {
   "subjects": 19,
   "planned": 152,
-  "ready": 17,
-  "words": 57126,
-  "exercises": 180
+  "ready": 26,
+  "words": 78169,
+  "exercises": 269
  }
 };

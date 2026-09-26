@@ -20,13 +20,13 @@ function niceTicks(lo, hi, n = 5) {
   for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) { out.push(+v.toFixed(10)); }
   return out;
 }
-export function chart({ w = 640, h = 300, series = [], x, y, xl = '', yl = '', xf = (v) => fmtN(v, 0), yf = (v) => fmtN(v, 0), areas = [], marks = [], vlines = [], hlines = [] }) {
+export function chart({ w = 640, h = 300, series = [], x, y, xl = '', yl = '', xf = (v) => fmtN(v, 0), yf = (v) => fmtN(v, 0), areas = [], marks = [], vlines = [], hlines = [], xticks = null, yticks = null }) {
   const pl = 58, pr = 16, pt = 14, pb = 40;
   const X = (v) => pl + (v - x[0]) / (x[1] - x[0]) * (w - pl - pr);
   const Y = (v) => pt + (1 - (v - y[0]) / (y[1] - y[0])) * (h - pt - pb);
   let s = `<svg class="lab-chart" viewBox="0 0 ${w} ${h}" role="img">`;
-  niceTicks(y[0], y[1]).forEach((t) => { s += `<line x1="${pl}" x2="${w - pr}" y1="${Y(t)}" y2="${Y(t)}" class="grid"/><text x="${pl - 8}" y="${Y(t) + 4}" text-anchor="end" class="ax">${esc(yf(t))}</text>`; });
-  niceTicks(x[0], x[1], 6).forEach((t) => { s += `<text x="${X(t)}" y="${h - pb + 18}" text-anchor="middle" class="ax">${esc(xf(t))}</text>`; });
+  (yticks || niceTicks(y[0], y[1]).map((t) => [t, yf(t)])).forEach(([t, lab]) => { s += `<line x1="${pl}" x2="${w - pr}" y1="${Y(t)}" y2="${Y(t)}" class="grid"/><text x="${pl - 8}" y="${Y(t) + 4}" text-anchor="end" class="ax">${esc(lab)}</text>`; });
+  (xticks || niceTicks(x[0], x[1], 6).map((t) => [t, xf(t)])).forEach(([t, lab]) => { s += `<text x="${X(t)}" y="${h - pb + 18}" text-anchor="middle" class="ax">${esc(lab)}</text>`; });
   if (xl) { s += `<text x="${(pl + w - pr) / 2}" y="${h - 4}" text-anchor="middle" class="axl">${esc(xl)}</text>`; }
   if (yl) { s += `<text x="12" y="${pt + (h - pt - pb) / 2}" text-anchor="middle" class="axl" transform="rotate(-90 12 ${pt + (h - pt - pb) / 2})">${esc(yl)}</text>`; }
   areas.forEach((a) => {

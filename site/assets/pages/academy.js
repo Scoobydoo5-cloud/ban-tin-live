@@ -210,8 +210,8 @@ function block(b, i) {
     case 'table': return `<figure class="tw"${a}>${v.caption ? `<figcaption>${fmt(v.caption)}</figcaption>` : ''}<div class="tscroll"><table><thead><tr>${v.head.map((h) => `<th>${fmt(h)}</th>`).join('')}</tr></thead><tbody>${v.rows.map((r) => `<tr>${r.map((c) => `<td>${fmt(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></figure>`;
     case 'code': return `<div class="code"${a}><div class="h"><span>${esc(v.lang === 'excel' ? 'Excel' : v.lang === 'py' || v.lang === 'python' ? 'Python' : v.lang === 'r' ? 'R' : v.lang || 'code')}</span><button type="button" class="copy">Copy</button></div><pre><code>${esc(v.src)}</code></pre></div>`;
     case 'chart': {
-      const af = (dp) => (t) => Number(t).toLocaleString('en', { minimumFractionDigits: dp || 0, maximumFractionDigits: dp || 0 });
-      const svg = chart({ w: 640, h: v.h || 320, x: v.x, y: v.y, xl: v.xl || '', yl: v.yl || '', xf: af(v.xdp), yf: af(v.ydp), series: v.series.map((q) => ({ ...q, color: q.color || '#9b8cff' })), marks: v.marks || [], areas: v.areas || [], hlines: v.hlines || [], vlines: v.vlines || [] });
+      const af = (dp, plain, suf) => (t) => Number(t).toLocaleString('en', { minimumFractionDigits: dp || 0, maximumFractionDigits: dp || 0, useGrouping: !plain }) + (suf || '');
+      const svg = chart({ w: 640, h: v.h || 320, x: v.x, y: v.y, xl: v.xl || '', yl: v.yl || '', xf: af(v.xdp, v.xplain, v.xsuf), yf: af(v.ydp, v.yplain, v.ysuf), series: v.series.map((q) => ({ ...q, color: q.color || '#9b8cff' })), marks: v.marks || [], areas: v.areas || [], hlines: v.hlines || [], vlines: v.vlines || [], xticks: v.xticks || null, yticks: v.yticks || null });
       const legend = v.series.filter((q) => q.label).map((q) => `<span><i style="background:${q.color || '#9b8cff'}${q.dash ? ';opacity:.6' : ''}"></i>${fmt(q.label)}</span>`).join('');
       return `<figure class="chartfig"${a}>${v.caption ? `<figcaption>${fmt(v.caption)}</figcaption>` : ''}<div class="chartbox">${svg}</div>${legend ? `<div class="legend">${legend}</div>` : ''}${v.note ? `<p class="chartnote">${fmt(v.note)}</p>` : ''}</figure>`;
     }
