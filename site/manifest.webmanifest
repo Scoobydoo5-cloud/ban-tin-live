@@ -1,15 +1,25 @@
 {
-  "name": "Bảng giá trực tiếp",
-  "short_name": "Bảng giá",
-  "description": "Giá Việt Nam, Úc, Mỹ tự cập nhật 15 phút một lần, có kiểm tra dữ liệu.",
-  "lang": "vi",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#F4F4F1",
-  "theme_color": "#151716",
-  "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
-  ]
+ "name": "JayV Finance",
+ "short_name": "JayV",
+ "description": "JayV Finance: quỹ mô phỏng và phòng nghiên cứu Việt Nam, Úc, Mỹ trong một thế giới 3D, kèm học viện tài chính.",
+ "lang": "vi",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#05080d",
+ "theme_color": "#05080d",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any maskable"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
 }

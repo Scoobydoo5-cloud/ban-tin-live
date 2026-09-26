@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quỹ JayV · JayV Finance</title>
+<meta name="description" content="Quỹ JayV: danh mục mô phỏng bằng tiền ảo theo phong cách Buffett với quy tắc cố định. Phân bổ, giá trị quỹ so với chỉ số, ba kho Việt Nam, Úc, Mỹ và bảng nhận định.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05080d">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+<style>
+  .scrim-l::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; background: linear-gradient(100deg, rgba(8,7,4,0.9) 0%, rgba(8,7,4,0.55) 36%, transparent 62%); }
+  #f-hero { height: 210vh; }
+  .f-copy { position: absolute; z-index: 2; left: var(--pad); top: 50%; transform: translateY(-48%); width: min(520px, 46vw); display: grid; gap: 14px; }
+  .f-copy .eyebrow b { font-family: var(--f-num); color: var(--faint); font-weight: 600; margin-right: 10px; }
+  .f-copy h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(32px, 4.2vw, 64px); letter-spacing: -0.04em; line-height: 1.02; }
+  .navbox { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .navbox > div { padding: 12px 14px; border-radius: 16px; background: var(--glass); border: 1px solid var(--line); }
+  .navbox .k { font-size: 12px; color: var(--dim); }
+  .navbox .v { font-family: var(--f-num); font-size: clamp(20px, 2vw, 28px); font-weight: 600; }
+  .navbox > div:first-child { border-color: var(--line-2); }
+  .navbox > div:first-child .k { color: var(--gold); }
+  .hold { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .hold li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 14.5px; }
+  .hold i { width: 12px; height: 12px; border-radius: 3px; }
+  .hold small { color: var(--dim); font-size: 12.5px; }
+  .disc { font-size: 12.5px; color: var(--faint); margin: 0; }
+  .ring-label { position: absolute; z-index: 2; pointer-events: none; text-align: center; transform: translate(-50%, -50%); }
+  .ring-label b { display: block; font-family: var(--f-display); font-size: clamp(30px, 3.4vw, 50px); color: var(--gold-2); text-shadow: 0 0 30px rgba(233,184,92,0.4); }
+  .ring-label span { font-size: 12px; color: var(--dim); }
+  /* Hiệu suất */
+  #f-perf { height: 190vh; }
+  .p-copy { position: absolute; z-index: 2; left: var(--pad); top: calc(var(--hdr) + 30px); width: min(520px, 90vw); display: grid; gap: 12px; }
+  .legend2 { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
+  .legend2 i { display: inline-block; width: 22px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  /* Kho */
+  #f-vaults { height: 230vh; }
+  .v-copy { position: absolute; z-index: 2; left: var(--pad); right: var(--pad); bottom: clamp(20px, 5vh, 48px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .vault { display: grid; gap: 6px; transition: border-color 0.3s, transform 0.4s var(--ease); }
+  .vault.on { border-color: var(--line-2); transform: translateY(-6px); }
+  .vault h3 { font-family: var(--f-display); font-size: 22px; }
+  .vault .st { font-size: 12.5px; font-weight: 600; }
+  .vault p { margin: 0; font-size: 13.5px; color: var(--dim); }
+  .v-head { position: absolute; z-index: 2; left: var(--pad); top: calc(var(--hdr) + 30px); max-width: 560px; display: grid; gap: 10px; }
+  /* Quy tắc */
+  .rules { list-style: none; margin: 0; padding: 0; counter-reset: r; display: grid; gap: 14px; }
+  .rules li { counter-increment: r; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: start; }
+  .rules li::before { content: counter(r, decimal-leading-zero); font-family: var(--f-display); font-weight: 800; font-size: 22px; color: var(--gold); }
+  .rules b { display: block; }
+  .rules span { color: var(--dim); font-size: 14.5px; }
+  .crit { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; }
+  .crit div { padding: 14px 16px; border-radius: 16px; border: 1px solid var(--line); background: var(--glass); }
+  .crit b { display: block; margin-bottom: 4px; }
+  .crit span { font-size: 13.5px; color: var(--dim); }
+  .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .col { border-radius: 18px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); display: grid; gap: 8px; align-content: start; }
+  .col h4 { margin: 0 0 4px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .vc { display: grid; gap: 6px; padding: 10px 12px; border-radius: 12px; background: var(--glass); border: 1px solid var(--line); text-decoration: none; }
+  .vc .t { display: flex; justify-content: space-between; gap: 8px; font-weight: 700; }
+  .vc .m { display: flex; gap: 3px; }
+  .vc .m i { flex: 1; height: 5px; border-radius: 2px; background: rgba(255,255,255,0.1); }
+  .vc .m i.on { background: currentColor; }
+  .vc.in { border-color: var(--line-2); box-shadow: inset 0 0 0 1px rgba(233,184,92,0.3); }
+  .log { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 14px; }
+  .log li { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 10px; }
+  .log .d { font-family: var(--f-num); color: var(--dim); font-size: 13px; }
+  @media (max-width: 820px) {
+    .scrim-l::before { background: linear-gradient(to top, rgba(8,7,4,0.94) 45%, rgba(8,7,4,0.3) 72%, transparent); }
+    .f-copy { top: auto; bottom: 20px; transform: none; width: auto; right: var(--pad); }
+    .f-copy .hold, .f-copy .disc { display: none; }
+    .v-copy { grid-template-columns: 1fr; gap: 8px; }
+    .v-copy .vault p { display: none; }
+    .board { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<nav class="dots" aria-label="Các phần của trang">
+  <a href="#f-hero"><span>Phân bổ</span></a>
+  <a href="#f-perf"><span>Hiệu suất</span></a>
+  <a href="#f-vaults"><span>Ba kho</span></a>
+  <a href="#f-rules"><span>Quy tắc và nhận định</span></a>
+</nav>
+<main>
+  <section class="scene" id="f-hero" aria-labelledby="f-title">
+    <div class="stage scrim-l">
+      <div class="f-copy">
+        <div class="eyebrow"><b>06</b>Danh mục mô phỏng · tiền ảo</div>
+        <h1 class="lines in" id="f-title"><span class="ln"><span>Quỹ JayV</span></span><span class="ln"><span class="grad">Việt Nam</span></span></h1>
+        <div class="navbox" id="navbox"></div>
+        <ul class="hold" id="hold"></ul>
+        <p class="disc">Quỹ ảo theo quy tắc cố định, chạy bằng mã: chỉ mua mã được chấm Tích cực, tối đa 25% mỗi mã, còn lại giữ tiền mặt. Không nhận vốn, không phải lời khuyên đầu tư.</p>
+      </div>
+      <div class="ring-label" id="ring-label"><b class="num" id="ring-nav">–</b><span>giá trị quỹ · 100 = ngày khởi tạo</span></div>
+    </div>
+  </section>
+
+  <section class="scene" id="f-perf" aria-labelledby="perf-h">
+    <div class="stage">
+      <div class="p-copy">
+        <div class="eyebrow">Hiệu suất</div>
+        <h2 class="big lines" id="perf-h"><span class="ln"><span>Quỹ so với</span></span><span class="ln"><span>chỉ số</span></span></h2>
+        <div class="legend2"><span><i style="background:var(--gold)"></i>Quỹ JayV</span><span><i style="background:var(--teal)"></i>VN-Index, cùng mốc 100</span></div>
+        <p class="lead-p" id="perf-note"></p>
+      </div>
+      <div id="tags-perf" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
+    </div>
+  </section>
+
+  <section class="scene" id="f-vaults" aria-labelledby="vault-h">
+    <div class="stage">
+      <div class="v-head">
+        <div class="eyebrow">Ba kho · ba đồng tiền</div>
+        <h2 class="big lines" id="vault-h"><span class="ln"><span>Một kho đã mở,</span></span><span class="ln"><span>hai kho đang chờ</span></span></h2>
+      </div>
+      <div class="v-copy" id="v-copy"></div>
+    </div>
+  </section>
+
+  <section class="flow" id="f-rules" aria-labelledby="rules-h">
+    <div class="wrap">
+      <div class="grid2" style="align-items:start">
+        <div style="display:grid;gap:18px">
+          <div class="eyebrow">Quy tắc cố định</div>
+          <h2 class="big lines" id="rules-h"><span class="ln"><span>Kỷ luật</span></span><span class="ln"><span>viết bằng mã</span></span></h2>
+          <ol class="rules rise">
+            <li><div><b>Ba quỹ, ba đồng tiền</b><span>Việt Nam so với VN-Index, Úc so với S&amp;P/ASX 200, Mỹ so với S&amp;P 500. Giá trị quỹ tính theo chỉ số, 100 là ngày bắt đầu.</span></div></li>
+            <li><div><b>Chỉ mua mã Tích cực</b><span>Tỷ trọng theo độ tin cậy của nhận định, tối đa 25% mỗi mã; phần còn lại giữ tiền mặt. Không bán khống, không đòn bẩy.</span></div></li>
+            <li><div><b>Cân lại mỗi tháng</b><span>Lần chạy đầu tiên của tháng mới cân lại. Giữa tháng chỉ bán mã không còn Tích cực; mã mới đạt chuẩn chờ kỳ cân lại.</span></div></li>
+            <li><div><b>Chỉ dùng giá đáng tin</b><span>Giá đóng cửa có ngày rõ ràng; mã thiếu giá đáng tin chưa được đưa vào quỹ. Chưa tính phí, thuế và cổ tức.</span></div></li>
+          </ol>
+        </div>
+        <div style="display:grid;gap:18px">
+          <div class="eyebrow">Sáu tiêu chí mô phỏng phong cách Buffett</div>
+          <div class="crit rise">
+            <div><b>Lợi thế bền vững</b><span>Biên lợi nhuận và ROE cao, ổn định qua nhiều năm.</span></div>
+            <div><b>Sức khỏe tài chính</b><span>Nợ vừa phải, khả năng thanh toán tốt.</span></div>
+            <div><b>Chất lượng lợi nhuận</b><span>Lợi nhuận đi cùng dòng tiền, không dựa vào khoản một lần.</span></div>
+            <div><b>Ban lãnh đạo</b><span>Phân bổ vốn hợp lý, mua lại cổ phiếu hay trả cổ tức có kỷ luật.</span></div>
+            <div><b>Tăng trưởng giá trị sổ sách</b><span>Vốn chủ sở hữu tăng đều qua thời gian.</span></div>
+            <div><b>Biên an toàn</b><span>Giá thấp hơn giá trị nội tại ước tính.</span></div>
+          </div>
+          <p class="muted" style="margin:0;font-size:13px">Mô phỏng phong cách bằng mô hình AI trong hệ thống, không phải ý kiến thật của Warren Buffett.</p>
+        </div>
+      </div>
+      <div class="eyebrow" style="margin-top:20px">Bảng nhận định mọi mã đang theo dõi</div>
+      <div class="board rise" id="board"></div>
+      <div class="grid2" style="align-items:start">
+        <div class="panel rise"><div class="eyebrow">Nhật ký giao dịch</div><ul class="log" id="log" style="margin-top:10px"></ul></div>
+        <div class="panel rise" style="display:grid;gap:10px;border-color:var(--line-2)"><div class="eyebrow" style="color:var(--gold)">Lưu ý quan trọng</div><p style="margin:0" id="disc2"></p><div class="row-btns"><a class="btn gold" href="../co-phieu/" data-nav>Xem các mã trong thành phố</a><a class="btn" href="https://claude.ai/artifact/1ivWHfw7vfybPnV2a4QpZV#quy-buffett" target="_blank" rel="noopener">Tab Quỹ trên trang Claude ↗</a></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="importmap">{ "imports": { "three": "../vendor/three.module.min.js" } }</script>
+<script type="module" src="../assets/pages/fund.js"></script>
+</body>
+</html>

@@ -4,12 +4,24 @@ Trang web tự cập nhật giá chỉ số, cổ phiếu theo dõi, tỷ giá v
 
 Phần phân tích (bản tin hằng ngày, hồ sơ công ty, quỹ Buffett mô phỏng) vẫn nằm ở trang Claude: https://claude.ai/artifact/1ivWHfw7vfybPnV2a4QpZV
 
-## Hai trang
+## JayV Finance: tám mục, mỗi mục một cảnh 3D
 
-- **Trang chủ (`site/index.html`)**: thế giới 3D cuộn liên tục (three.js r169, lưu sẵn ở `site/vendor/`). Cuộn trang là dòng thời gian: tua lại 60 phiên của ba chỉ số, quả địa cầu ba sàn, tĩnh vật vĩ mô, thành phố cổ phiếu, báo cáo tuần, vòng phân bổ quỹ Buffett, bảng tổng hợp. Mã: `site/assets/app.js` (lớp chữ, đường bay camera), `site/assets/world.js` (hình 3D dựng bằng mã), `site/assets/live.js` (giá trực tiếp KBS, CNBC).
-- **Bảng giá chi tiết (`site/bang-gia/`)**: bảng đầy đủ với đồng hồ sàn, bản đồ nhiệt, bộ lọc, quy đổi tiền, mục kiểm tra dữ liệu.
+Website là “quỹ mô phỏng và phòng nghiên cứu” JayV Finance, dựng bằng three.js r169 (lưu sẵn trong `site/vendor/`, kèm KaTeX cho công thức). Mỗi mục là một trang riêng, có cảnh 3D và đường bay camera theo cuộn:
 
-Nội dung chữ của bản tin, báo cáo tuần và gợi ý được routine Claude trích từ trang Claude bằng `scripts/extract_content.py` rồi ghi vào `config/content.json` (chỉ chữ thuần); quy trình đăng chép file này vào `site/data/`.
+| Mục | Đường dẫn | Cảnh 3D |
+|---|---|---|
+| Trang chủ | `site/index.html` | Biểu tượng JV bằng vàng giữa hai vòng giá chạy và vòng nến VN-Index; đường bay qua 7 cổng dẫn vào các mục |
+| Toàn cảnh thị trường | `site/thi-truong/` | Địa cầu ba sàn (kéo để xoay), dải lụa 7 chỉ số, phòng trưng bày vĩ mô (đồng xu A$ và ₫), bản đồ nhiệt 3D |
+| Bản tin | `site/ban-tin/` | Lốc giấy báo quanh tiêu đề, bay qua chuỗi nguyên nhân, rừng cột xác suất của sổ dự báo |
+| Báo cáo tuần | `site/bao-cao/` | Nền giấy: ba khối đá 01–02–03, cây kịch bản có quả to nhỏ theo xác suất |
+| Cổ phiếu | `site/co-phieu/` | Thành phố cổ phiếu: đổi thước đo, lọc thị trường, bấm tòa để xem hồ sơ nhanh |
+| Quỹ JayV | `site/quy/` | Vòng phân bổ quanh đồng xu JV, hiệu suất quỹ so với chỉ số, ba kho VN/AU/US |
+| Học viện (tiếng Anh) | `site/hoc-vien/` | Thiên hà 8 lộ trình, 43 bài có ví dụ và bài tập tự chấm, 9 phòng thí nghiệm, 2 trò chơi |
+| Bảng giá | `site/bang-gia/` | Bảng giá chi tiết (2D) cập nhật 15 phút/lần |
+
+Mã dùng chung ở `site/assets/core/` (`engine.js` động cơ 3D, `shell.js` menu, tìm nhanh Ctrl K, chuyển trang, chân trang; `props.js` đạo cụ 3D; `live.js` giá trực tiếp KBS, CNBC; `data.js` tải số liệu). Mỗi trang có tệp riêng trong `site/assets/pages/`. Nội dung Học viện nằm trong `site/assets/academy/` (bài học trong `tracks/`, nguồn tham khảo đã kiểm tra link trong `resources.js`). Thêm `?at=<id mục>:<0..1>` vào đường dẫn để mở thẳng một chặng cuộn.
+
+Nội dung chữ của bản tin, báo cáo tuần và gợi ý được routine Claude trích từ trang Claude bằng `scripts/extract_content.py` rồi ghi vào `config/content.json` (chỉ chữ thuần); quy trình đăng chép file này vào `site/data/`. Routine đồng bộ còn chép lịch sử giá trị quỹ, giá vào lệnh và nhật ký giao dịch vào `config/from_claude.json` để trang Quỹ JayV vẽ hiệu suất.
 
 > Chỉ để tham khảo và học tập, không phải lời khuyên đầu tư. Nguồn miễn phí có thể trễ 15–20 phút hoặc sai; mỗi con số đều ghi nguồn và kết quả kiểm tra.
 

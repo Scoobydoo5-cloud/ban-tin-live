@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="vi" class="theme-paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Báo cáo tuần · JayV Finance</title>
+<meta name="description" content="Báo cáo tuần của JayV Finance: ba ý chính, cây kịch bản có xác suất, lịch sự kiện tuần tới và sổ kịch bản để chấm điểm.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ece5d6">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+<style>
+  .scrim-p::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; background: linear-gradient(100deg, rgba(236,229,214,0.94) 0%, rgba(236,229,214,0.7) 36%, transparent 62%); }
+  #r-hero { height: 180vh; }
+  .r-copy { position: absolute; z-index: 2; left: var(--pad); top: 50%; transform: translateY(-48%); width: min(660px, 54vw); display: grid; gap: 16px; }
+  .r-copy .eyebrow b { font-family: var(--f-num); color: var(--faint); font-weight: 600; margin-right: 10px; }
+  .r-copy h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(30px, 4vw, 60px); letter-spacing: -0.04em; line-height: 1.04; }
+  .r-copy .dek { font-family: var(--f-serif); font-size: clamp(16px, 1.3vw, 19px); color: var(--dim); max-width: 52ch; margin: 0; }
+  /* Ý chính */
+  #r-keys { height: 330vh; }
+  .k-copy { position: absolute; z-index: 2; left: var(--pad); top: 50%; transform: translateY(-50%); width: min(560px, 48vw); display: grid; gap: 14px; }
+  .k-copy .n { font-family: var(--f-display); font-weight: 800; font-size: clamp(64px, 8vw, 120px); line-height: 0.85; color: transparent; -webkit-text-stroke: 1.5px #b8862e; }
+  .k-copy h2 { font-family: var(--f-display); font-weight: 700; font-size: clamp(24px, 2.6vw, 38px); letter-spacing: -0.03em; line-height: 1.15; }
+  .k-copy p { font-family: var(--f-serif); font-size: clamp(16px, 1.25vw, 19px); color: var(--dim); margin: 0; max-width: 52ch; line-height: 1.6; }
+  .swap { transition: opacity 0.35s, transform 0.5s var(--ease); }
+  .out .swap { opacity: 0; transform: translateY(12px); }
+  /* Kịch bản */
+  #r-scen { height: 330vh; }
+  .s-card { position: absolute; z-index: 2; left: var(--pad); top: 50%; transform: translateY(-50%); width: min(520px, 48vw); display: grid; gap: 12px; }
+  .s-card .hd { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .s-card h2 { font-family: var(--f-display); font-weight: 700; font-size: clamp(22px, 2.4vw, 34px); letter-spacing: -0.03em; line-height: 1.15; }
+  .s-card .p { font-family: var(--f-display); font-weight: 800; font-size: clamp(40px, 4.4vw, 64px); line-height: 1; }
+  .s-card dl { margin: 0; display: grid; gap: 10px; }
+  .s-card dt { font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+  .s-card dd { margin: 2px 0 0; font-family: var(--f-serif); font-size: 16px; line-height: 1.5; }
+  .s-tabs { display: flex; gap: 6px; }
+  .s-tabs button { flex: 1; border: 1px solid var(--line); background: var(--glass); border-radius: 999px; padding: 7px 10px; cursor: pointer; font-weight: 600; font-size: 13px; color: var(--dim); }
+  .s-tabs button.on { background: var(--ink); color: #f4efe4; border-color: var(--ink); }
+  /* Lịch, sổ */
+  .cal { list-style: none; margin: 0; padding: 0 0 0 26px; position: relative; display: grid; gap: 18px; }
+  .cal::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(#b8862e, rgba(184,134,46,0.1)); }
+  .cal li { position: relative; display: grid; gap: 4px; }
+  .cal li::before { content: ""; position: absolute; left: -26px; top: 5px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid #b8862e; }
+  .cal .w { font-family: var(--f-num); font-size: 13px; color: #8a6420; }
+  .cal b { font-size: 17px; }
+  .cal .r { font-size: 14px; color: var(--dim); }
+  .cal .y { font-family: var(--f-serif); font-size: 15px; }
+  .jr td { white-space: normal; vertical-align: top; }
+  .lessonp { font-family: var(--f-serif); font-size: 17px; line-height: 1.6; }
+  @media (max-width: 820px) {
+    .scrim-p::before { background: linear-gradient(to top, rgba(236,229,214,0.96) 42%, rgba(236,229,214,0.4) 72%, transparent); }
+    .r-copy, .k-copy, .s-card { top: auto; bottom: 26px; transform: none; width: auto; right: var(--pad); }
+    .k-copy .n { font-size: 54px; }
+    .s-card dl div:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<nav class="dots" aria-label="Các phần của trang">
+  <a href="#r-hero"><span>Trang bìa</span></a>
+  <a href="#r-keys"><span>Ba ý chính</span></a>
+  <a href="#r-scen"><span>Cây kịch bản</span></a>
+  <a href="#r-cal"><span>Lịch và sổ kịch bản</span></a>
+</nav>
+<main>
+  <section class="scene" id="r-hero" aria-labelledby="r-title">
+    <div class="stage scrim-p">
+      <div class="r-copy">
+        <div class="eyebrow"><b>04</b><span id="r-issue">Báo cáo tuần</span></div>
+        <h1 class="lines in" id="r-title"><span class="ln"><span id="r-title-t">Đang tải báo cáo…</span></span></h1>
+        <p class="dek" id="r-dek">Việt Nam · Úc · Mỹ. Số trước lời sau: mỗi con số có nguồn, mỗi kịch bản có xác suất và dấu hiệu cho biết mình sai.</p>
+        <div class="row-btns"><a class="btn solid" href="#r-keys">Ba ý chính <span class="arr">↓</span></a><a class="btn" href="https://claude.ai/artifact/1ivWHfw7vfybPnV2a4QpZV#bao-cao" target="_blank" rel="noopener">Bản đầy đủ có bảng số ↗</a></div>
+      </div>
+      <div class="scroll-cue" aria-hidden="true">Cuộn<i></i></div>
+    </div>
+  </section>
+
+  <section class="scene" id="r-keys" aria-label="Ba ý chính">
+    <div class="stage scrim-p">
+      <div class="k-copy" id="k-copy"><div class="swap"><div class="n" id="k-n">01</div><h2 id="k-h"></h2><p id="k-p"></p></div></div>
+    </div>
+  </section>
+
+  <section class="scene" id="r-scen" aria-label="Cây kịch bản">
+    <div class="stage scrim-p">
+      <div class="s-card panel" id="s-card">
+        <div class="eyebrow">Kịch bản 2–6 tuần · xác suất chủ quan</div>
+        <div class="s-tabs" role="tablist"><button type="button" data-i="0" class="on">Cơ sở</button><button type="button" data-i="1">Tích cực</button><button type="button" data-i="2">Tiêu cực</button></div>
+        <div class="swap">
+          <div class="hd"><h2 id="s-name"></h2><span class="p num" id="s-prob"></span></div>
+          <dl><div><dt>Điều kiện</dt><dd id="s-when"></dd></div><div><dt>Điều có thể xảy ra</dt><dd id="s-then"></dd></div><div><dt>Dấu hiệu tôi sai</dt><dd id="s-wrong"></dd></div></dl>
+        </div>
+      </div>
+      <div id="tags-scen" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
+    </div>
+  </section>
+
+  <section class="flow" id="r-cal" aria-labelledby="cal-h">
+    <div class="wrap">
+      <div class="grid2" style="align-items:start">
+        <div style="display:grid;gap:18px">
+          <div class="eyebrow">Lịch tuần tới · giờ Sydney</div>
+          <h2 class="big lines" id="cal-h"><span class="ln"><span>Những ngày</span></span><span class="ln"><span>cần để mắt</span></span></h2>
+          <ol class="cal rise" id="r-calendar"></ol>
+        </div>
+        <div style="display:grid;gap:18px">
+          <div class="eyebrow">Sổ kịch bản · chấm vào báo cáo tuần sau</div>
+          <div class="tw rise"><table class="jr"><thead><tr><th>Lập</th><th>Kịch bản</th><th class="r">Tự tin</th><th>Hạn</th><th>Kết quả</th></tr></thead><tbody id="r-journal"></tbody></table></div>
+          <div class="panel rise"><div class="eyebrow">Học từ tuần này</div><p class="lessonp" id="r-lesson" style="margin:8px 0 0"></p></div>
+          <div class="row-btns"><a class="btn solid" href="https://claude.ai/artifact/1ivWHfw7vfybPnV2a4QpZV#bao-cao" target="_blank" rel="noopener">Đọc báo cáo đầy đủ ↗</a><a class="btn" href="../ban-tin/" data-nav>Bản tin hằng ngày</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="importmap">{ "imports": { "three": "../vendor/three.module.min.js" } }</script>
+<script type="module" src="../assets/pages/report.js"></script>
+</body>
+</html>

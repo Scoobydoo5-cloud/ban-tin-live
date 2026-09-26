@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Toàn cảnh thị trường · JayV Finance</title>
+<meta name="description" content="Việt Nam, Úc, Mỹ trên quả địa cầu 3D: giờ mở cửa, bảy chỉ số, sáu con số vĩ mô, bản đồ nhiệt cổ phiếu và bảng tổng hợp đã kiểm tra hai nguồn.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05080d">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+<style>
+  .page-head { position: absolute; z-index: 2; left: var(--pad); top: calc(var(--hdr) + 28px); }
+  .page-head .eyebrow { display: flex; gap: 10px; align-items: center; }
+  .page-head .eyebrow b { font-family: var(--f-num); color: var(--faint); font-weight: 600; }
+  /* 1. Địa cầu */
+  #m-globe { height: 330vh; }
+  #m-globe .stage { touch-action: pan-y; cursor: grab; }
+  #m-globe .stage.dragging { cursor: grabbing; }
+  .globe-copy { position: absolute; z-index: 2; left: var(--pad); top: 54%; transform: translateY(-50%); width: min(440px, 92vw); display: grid; gap: 14px; }
+  .mk-tabs { display: flex; gap: 6px; }
+  .mk-tabs button { flex: 1; border: 1px solid var(--line); background: var(--glass); border-radius: 999px; padding: 8px 10px; cursor: pointer; font-weight: 600; font-size: 13.5px; color: var(--dim); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: all 0.25s; }
+  .mk-tabs button.on { color: var(--bg); background: var(--ink); border-color: var(--ink); }
+  .mk-panels { position: relative; }
+  .mkp { transition: opacity 0.45s ease, transform 0.5s var(--ease); }
+  .mkp:not(.on) { position: absolute; inset: 0 0 auto 0; opacity: 0; transform: translateY(14px); pointer-events: none; }
+  .mkp .head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .mkp h3 { font-family: var(--f-display); font-size: 26px; font-weight: 700; }
+  .st { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--dim); white-space: nowrap; }
+  .st.open { color: var(--up); border-color: color-mix(in srgb, var(--up) 45%, transparent); }
+  .mkp .clock { font-size: 13px; color: var(--dim); margin: 4px 0 10px; }
+  .mkp .main { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .mkp .main .v { font-size: clamp(30px, 4vw, 44px); font-weight: 600; }
+  .mkp .main .c { font-size: 16px; font-weight: 600; }
+  .kv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+  .kv div { font-size: 12.5px; color: var(--dim); }
+  .kv b { display: block; font-size: 15px; color: var(--ink); font-weight: 600; }
+  .mkp .others { margin-top: 12px; font-size: 13.5px; color: var(--dim); display: grid; gap: 4px; }
+  .mkp .others span.v { color: var(--ink); }
+  .drag-hint { position: absolute; z-index: 2; right: var(--pad); bottom: 26px; font-size: 12px; color: var(--dim); letter-spacing: 0.08em; }
+  /* 2. Chỉ số */
+  .idx-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; }
+  .idx { display: grid; gap: 6px; position: relative; overflow: hidden; }
+  .idx .top { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .idx .name { font-weight: 700; }
+  .idx .v { font-size: 26px; font-weight: 600; }
+  .idx .spark { width: 100%; height: 46px; display: block; }
+  .idx .mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; font-size: 12px; color: var(--dim); }
+  .idx .mini b { display: block; color: var(--ink); font-size: 13.5px; }
+  .idx::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--c); }
+  /* 3. Vĩ mô */
+  #m-macro { height: 430vh; }
+  .macro-head { position: absolute; z-index: 2; left: var(--pad); top: calc(var(--hdr) + 36px); max-width: 640px; }
+  .macro-head p { color: var(--dim); margin: 10px 0 0; max-width: 46ch; }
+  .rail { position: absolute; z-index: 2; left: 0; bottom: clamp(24px, 6vh, 60px); display: flex; gap: 18px; padding-inline: var(--pad); will-change: transform; }
+  .mc { width: min(320px, 78vw); flex: 0 0 auto; display: grid; gap: 6px; padding: 16px 18px !important; transition: border-color 0.3s, transform 0.4s var(--ease); }
+  .mc .k { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
+  .mc .v { font-size: clamp(28px, 3.2vw, 38px); font-weight: 600; line-height: 1.1; }
+  .mc .v small { font-size: 14px; color: var(--dim); font-weight: 500; margin-left: 6px; font-family: var(--f-body); }
+  .mc .chg { display: flex; gap: 14px; font-size: 13px; flex-wrap: wrap; }
+  .mc .chg span { color: var(--dim); }
+  .mc .spark { width: 100%; height: 36px; display: block; }
+  .mc p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--dim); }
+  .mc.act { border-color: color-mix(in srgb, var(--gold) 60%, transparent); transform: translateY(-6px); }
+  /* 4. Bản đồ nhiệt */
+  .heat-tools { display: flex; gap: 6px; flex-wrap: wrap; }
+  .heat-tools button { border: 1px solid var(--line); background: var(--glass); border-radius: 999px; padding: 7px 14px; cursor: pointer; font-weight: 600; font-size: 13px; color: var(--dim); }
+  .heat-tools button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  #m-indices { height: 240vh; }
+  #m-indices .stage::before, #m-heat .stage::before, #m-macro .stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; background: linear-gradient(100deg, rgba(5,8,13,0.86) 0%, rgba(5,8,13,0.5) 34%, transparent 58%); }
+  .idx-head { position: absolute; z-index: 2; left: var(--pad); top: calc(var(--hdr) + 30px); max-width: 560px; display: grid; gap: 12px; }
+  .idx-legend { position: absolute; z-index: 2; right: var(--pad); bottom: clamp(20px, 5vh, 50px); list-style: none; margin: 0; display: grid; gap: 4px; min-width: 300px; padding: 14px 16px !important; }
+  .idx-legend li { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; font-size: 13.5px; padding: 3px 0; }
+  .idx-legend i { width: 12px; height: 3px; border-radius: 2px; background: var(--c); box-shadow: 0 0 8px var(--c); }
+  .idx-legend .y { color: var(--dim); font-size: 12px; min-width: 64px; text-align: right; }
+  .tags-layer { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+  .tags-layer .tag3d.link { pointer-events: auto; cursor: pointer; text-decoration: none; }
+  .tags-layer .tag3d.link:hover { border-color: var(--accent); }
+  .tag3d .v { font-family: var(--f-num); margin-left: 6px; }
+  .tag3d.fund { border-color: var(--line-2); }
+  #m-heat { height: 220vh; }
+  .heat-head { position: absolute; z-index: 2; left: var(--pad); top: calc(var(--hdr) + 30px); max-width: 560px; display: grid; gap: 14px; }
+  .heat-legend { display: grid; gap: 4px; font-size: 12.5px; color: var(--dim); }
+  @media (max-width: 820px) {
+    .globe-copy { top: auto; bottom: 18px; transform: none; }
+    .globe-copy .kv, .mkp .others { display: none; }
+    .drag-hint { display: none; }
+    .macro-head p { display: none; }
+    .page-head { display: none; }
+    .idx-head .lead-p, .heat-legend { display: none; }
+    .idx-legend { left: var(--pad); right: var(--pad); min-width: 0; }
+  }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<nav class="dots" aria-label="Các phần của trang">
+  <a href="#m-globe"><span>Ba sàn</span></a>
+  <a href="#m-indices"><span>Bảy chỉ số</span></a>
+  <a href="#m-idxcards"><span>Số chính xác</span></a>
+  <a href="#m-macro"><span>Vĩ mô</span></a>
+  <a href="#m-heat"><span>Bản đồ nhiệt</span></a>
+  <a href="#m-table"><span>Bảng tổng hợp</span></a>
+</nav>
+<main>
+  <section class="scene" id="m-globe" aria-labelledby="globe-h">
+    <div class="stage" id="globe-stage">
+      <div class="page-head"><div class="eyebrow"><b>02</b> Toàn cảnh thị trường</div></div>
+      <div class="globe-copy">
+        <div class="eyebrow">Ba múi giờ · một dòng vốn</div>
+        <h1 class="big lines in" id="globe-h" style="font-family:var(--f-display);font-weight:800;font-size:clamp(30px,4vw,56px);letter-spacing:-0.035em"><span class="ln"><span>Vòng quanh</span></span><span class="ln"><span>ba sàn giao dịch</span></span></h1>
+        <div class="mk-tabs" role="tablist" aria-label="Chọn thị trường"><button type="button" data-m="0" class="on">Việt Nam</button><button type="button" data-m="1">Úc</button><button type="button" data-m="2">Mỹ</button></div>
+        <div class="mk-panels" id="mk-panels"></div>
+      </div>
+      <div class="drag-hint" aria-hidden="true">Kéo ngang để xoay địa cầu</div>
+    </div>
+  </section>
+
+  <section class="scene" id="m-indices" aria-labelledby="idx-h">
+    <div class="stage">
+      <div class="idx-head">
+        <div class="eyebrow">Bảy chỉ số · 60 phiên gần nhất</div>
+        <h2 class="big lines" id="idx-h"><span class="ln"><span>Mỗi dải sáng</span></span><span class="ln"><span>là một thị trường</span></span></h2>
+        <p class="lead-p">Mỗi dải là 60 phiên của một chỉ số, thang từ thấp nhất tới cao nhất của chính nó. Chấm sáng cuối dải là phiên mới nhất.</p>
+      </div>
+      <ol class="idx-legend panel" id="idx-legend" aria-label="Chú giải bảy chỉ số"></ol>
+      <div id="tags-rib" class="tags-layer"></div>
+    </div>
+  </section>
+
+  <section class="flow" id="m-idxcards" aria-label="Số liệu chi tiết bảy chỉ số">
+    <div class="wrap">
+      <div class="eyebrow">Số chính xác</div>
+      <div class="idx-grid" id="idx-grid"></div>
+    </div>
+  </section>
+
+  <section class="scene" id="m-macro" aria-labelledby="macro-h">
+    <div class="stage">
+      <div class="macro-head">
+        <div class="eyebrow" style="color:var(--gold)">Vĩ mô</div>
+        <h2 class="big lines" id="macro-h"><span class="ln"><span>Sáu con số</span></span><span class="ln"><span>chi phối mọi tài sản</span></span></h2>
+        <p>Lợi suất, năng lượng, vàng và tỷ giá. Mỗi vật thể là một con số; cuộn để lướt qua từng thẻ.</p>
+      </div>
+      <div class="rail" id="rail"></div>
+    </div>
+  </section>
+
+  <section class="scene" id="m-heat" aria-labelledby="heat-h">
+    <div class="stage">
+      <div class="heat-head">
+        <div class="eyebrow">Bản đồ nhiệt · danh sách theo dõi</div>
+        <h2 class="big lines" id="heat-h"><span class="ln"><span>Ai đang nóng,</span></span><span class="ln"><span>ai đang nguội</span></span></h2>
+        <div class="heat-tools" role="group" aria-label="Thước đo"><button type="button" data-k="changePct" class="on">Hôm nay</button><button type="button" data-k="chg1w">1 tuần</button><button type="button" data-k="chg1m">1 tháng</button><button type="button" data-k="chgYtd">Từ đầu năm</button></div>
+        <div class="heat-legend"><span>Cột xanh cao: tăng nhiều · cột đỏ cao: giảm nhiều</span><span>Vòng vàng: đang trong Quỹ JayV</span><span>Bấm nhãn một mã để mở trong thành phố cổ phiếu</span></div>
+      </div>
+      <div id="tags-heat" class="tags-layer"></div>
+    </div>
+  </section>
+
+  <section class="flow" id="m-table" aria-labelledby="term-h">
+    <div class="wrap">
+      <div class="eyebrow">Bảng tổng hợp</div>
+      <h2 class="big lines" id="term-h"><span class="ln"><span>Mọi con số,</span></span><span class="ln"><span>một bảng</span></span></h2>
+      <p class="muted" id="term-note"></p>
+      <div class="tw"><table><thead><tr><th>Mã</th><th class="r">Giá</th><th class="r">Hôm nay</th><th class="r">1 tuần</th><th class="r">Từ đầu năm</th><th>Trạng thái</th></tr></thead><tbody id="term-body"></tbody></table></div>
+      <div class="row-btns"><a class="btn gold" href="../bang-gia/" data-nav>Bảng giá chi tiết <span class="arr">→</span></a><a class="btn" href="../ban-tin/" data-nav>Đọc bản tin hôm nay</a></div>
+    </div>
+  </section>
+</main>
+<script type="importmap">{ "imports": { "three": "../vendor/three.module.min.js" } }</script>
+<script type="module" src="../assets/pages/market.js"></script>
+</body>
+</html>

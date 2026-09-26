@@ -52,6 +52,11 @@ def _num(v, lo, hi):
     return f if lo <= f <= hi else None
 
 
+def _date(v) -> str | None:
+    s = str(v or "")[:10]
+    return s if re.match(r"^\d{4}-\d{2}-\d{2}$", s) else None
+
+
 def build(export: Path, today: str) -> dict:
     portfolios = _load_dir(export / "portfolio")
     watch = _load_dir(export / "watchlist")
@@ -92,7 +97,16 @@ def build(export: Path, today: str) -> dict:
                 it["weight"] = round(w, 4)
                 if "fund" not in it["tags"]:
                     it["tags"].append("fund")
-                holdings.append({"id": it["id"], "weight": round(w, 4)})
+                h2 = {"id": it["id"], "weight": round(w, 4)}
+                for k, lo, hi in (("entryPrice", 0, 1e9), ("lastPrice", 0, 1e9), ("return", -1, 100)):
+                    v = _num(h.get(k), lo, hi)
+                    if v is not None:
+                        h2[k] = round(v, 6)
+                for k in ("entryDate", "lastDate"):
+                    d = _date(h.get(k))
+                    if d:
+                        h2[k] = d
+                holdings.append(h2)
         waiting = []
         for t in p.get("waiting") or []:
             it = item(f"{mkt}-{t}")
@@ -100,8 +114,20 @@ def build(export: Path, today: str) -> dict:
                 if "waiting" not in it["tags"]:
                     it["tags"].append("waiting")
                 waiting.append(it["id"])
+        history = []
+        for x in (p.get("history") or [])[-400:]:
+            d, nav, bench = _date(x.get("date")), _num(x.get("nav"), 0, 10000), _num(x.get("bench"), 0, 10000)
+            if d and nav is not None:
+                history.append({"d": d, "nav": round(nav, 4), "bench": round(bench, 4) if bench is not None else None})
+        log = []
+        for x in (p.get("log") or [])[:8]:
+            d, t = _date(x.get("date")), _clean_text(x.get("text"), 140)
+            if d and t:
+                log.append({"d": d, "text": t})
         funds[mkt] = {"asOf": _clean_text(p.get("asOf"), 10), "nav": _num(p.get("nav"), 0, 10000),
-                      "cashWeight": _num(p.get("cashWeight"), 0, 1), "holdings": holdings, "waiting": waiting}
+                      "cashWeight": _num(p.get("cashWeight"), 0, 1), "holdings": holdings, "waiting": waiting,
+                      "inception": _date(p.get("inception")), "lastRebalance": _date(p.get("lastRebalance")),
+                      "benchmark": _clean_text(p.get("benchmark"), 30), "history": history, "log": log}
     for doc_id, w in sorted(watch.items()):
         if w.get("status") in ("active", "pending"):
             it = item(doc_id)

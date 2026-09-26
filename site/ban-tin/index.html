@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bản tin · JayV Finance</title>
+<meta name="description" content="Bản tin hằng ngày của JayV Finance: chuyện gì vừa xảy ra ở Việt Nam, Úc, Mỹ, chuỗi nguyên nhân, sổ dự báo tự chấm điểm và bài học trong ngày.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05080d">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+<style>
+  .scrim-l::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; background: linear-gradient(100deg, rgba(5,8,13,0.88) 0%, rgba(5,8,13,0.55) 36%, transparent 62%); }
+  /* 1. Tiêu đề */
+  #b-hero { height: 190vh; }
+  .b-copy { position: absolute; z-index: 2; left: var(--pad); top: 50%; transform: translateY(-46%); width: min(700px, 58vw); display: grid; gap: 18px; }
+  .b-copy .eyebrow b { font-family: var(--f-num); color: var(--faint); font-weight: 600; margin-right: 10px; }
+  .b-copy h1 { font-family: var(--f-body); font-weight: 700; font-size: clamp(20px, 1.9vw, 30px); line-height: 1.32; letter-spacing: -0.01em; }
+  .b-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+  /* 2. Chuỗi nguyên nhân */
+  .chain-copy { position: absolute; z-index: 2; left: var(--pad); top: 50%; transform: translateY(-50%); width: min(560px, 50vw); display: grid; gap: 14px; }
+  .chain-copy .step { font-family: var(--f-num); font-size: 13px; color: var(--accent); letter-spacing: 0.1em; }
+  .chain-copy .node { font-family: var(--f-display); font-weight: 700; font-size: clamp(26px, 3.3vw, 48px); letter-spacing: -0.03em; line-height: 1.12; transition: opacity 0.35s, transform 0.5s var(--ease); }
+  .chain-copy.out .node { opacity: 0; transform: translateY(12px); }
+  .chain-copy .so { color: var(--dim); font-size: 15px; }
+  .chain-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; }
+  .chain-list button { width: 100%; text-align: left; display: grid; grid-template-columns: 26px 1fr; gap: 8px; border: 0; background: none; color: var(--faint); cursor: pointer; padding: 4px 6px; border-radius: 8px; font-size: 13.5px; }
+  .chain-list button b { font-family: var(--f-num); font-weight: 600; }
+  .chain-list button.on { color: var(--ink); background: rgba(255,255,255,0.05); }
+  .chain-list button.on b { color: var(--accent); }
+  .chain-list button.done { color: var(--dim); }
+  /* 3. Câu chuyện */
+  .story { columns: 2 340px; column-gap: 40px; }
+  .story p { margin: 0 0 16px; color: var(--dim); font-size: 16.5px; break-inside: avoid; }
+  .story p:first-child::first-letter { font-family: var(--f-display); font-weight: 800; font-size: 3.2em; float: left; line-height: 0.9; margin: 6px 10px 0 0; color: var(--accent); }
+  .lesson { border-color: color-mix(in srgb, var(--gold) 40%, transparent) !important; display: grid; gap: 10px; }
+  .lesson .eyebrow { color: var(--gold); }
+  .lesson h3 { font-size: clamp(18px, 1.8vw, 24px); line-height: 1.3; }
+  /* 4. Sổ dự báo 3D */
+  #b-fc { height: 230vh; }
+  .fc-copy { position: absolute; z-index: 2; left: var(--pad); top: calc(var(--hdr) + 30px); width: min(500px, 90vw); display: grid; gap: 14px; }
+  .score { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .score b { font-family: var(--f-display); font-size: clamp(44px, 5vw, 70px); line-height: 1; }
+  .fc-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
+  .fc-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .fc-detail { position: absolute; z-index: 3; right: var(--pad); bottom: clamp(20px, 5vh, 50px); width: min(420px, 90vw); display: grid; gap: 8px; transition: opacity 0.3s; }
+  .fc-detail .t { font-weight: 600; font-size: 16px; }
+  .fc-detail .m { font-size: 13px; color: var(--dim); }
+  #b-fc .stage { cursor: crosshair; }
+  /* 5. Bảng dự báo */
+  .fct td { white-space: normal; vertical-align: top; }
+  .fct td.t { min-width: 280px; }
+  .pbar { display: inline-block; width: 70px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); overflow: hidden; vertical-align: middle; margin-left: 8px; }
+  .pbar i { display: block; height: 100%; background: var(--accent); }
+  @media (max-width: 820px) {
+    .scrim-l::before { background: linear-gradient(to top, rgba(5,8,13,0.92) 38%, rgba(5,8,13,0.3) 70%, transparent); }
+    .b-copy, .chain-copy { top: auto; bottom: 28px; transform: none; width: auto; right: var(--pad); }
+    .chain-list { display: none; }
+    .fc-detail { left: var(--pad); right: var(--pad); width: auto; }
+  }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<nav class="dots" aria-label="Các phần của trang">
+  <a href="#b-hero"><span>Tiêu điểm</span></a>
+  <a href="#b-chain"><span>Chuỗi nguyên nhân</span></a>
+  <a href="#b-story"><span>Diễn biến</span></a>
+  <a href="#b-fc"><span>Sổ dự báo 3D</span></a>
+  <a href="#b-fclist"><span>Bảng dự báo</span></a>
+</nav>
+<main>
+  <section class="scene" id="b-hero" aria-labelledby="b-lead">
+    <div class="stage scrim-l">
+      <div class="b-copy">
+        <div class="eyebrow"><b>03</b><span id="b-when">Bản tin hôm nay</span></div>
+        <h1 id="b-lead">Đang tải bản tin…</h1>
+        <div class="b-meta" id="b-meta"></div>
+        <div class="row-btns"><a class="btn gold" href="#b-chain">Vì sao lại thế? <span class="arr">↓</span></a><a class="btn" href="https://claude.ai/artifact/1ivWHfw7vfybPnV2a4QpZV" target="_blank" rel="noopener">Bản đầy đủ có nguồn ↗</a></div>
+      </div>
+      <div class="scroll-cue" aria-hidden="true">Cuộn<i></i></div>
+    </div>
+  </section>
+
+  <section class="scene" id="b-chain" aria-labelledby="chain-h">
+    <div class="stage scrim-l">
+      <div class="chain-copy" id="chain-copy">
+        <div class="eyebrow" id="chain-h">Chuỗi nguyên nhân</div>
+        <div class="step" id="c-step">1 / 5</div>
+        <div class="node" id="c-node">…</div>
+        <div class="so" id="c-so"></div>
+        <ol class="chain-list" id="c-list"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="flow" id="b-story" aria-labelledby="story-h">
+    <div class="wrap">
+      <div class="eyebrow">Diễn biến ba thị trường</div>
+      <h2 class="big lines" id="story-h"><span class="ln"><span>Chuyện gì</span></span><span class="ln"><span>vừa xảy ra</span></span></h2>
+      <div class="story rise" id="b-paras"></div>
+      <div class="panel lesson rise"><div class="eyebrow">Bài học trong ngày</div><h3 id="b-lesson"></h3><p class="muted" style="margin:0">Bài học đầy đủ có công thức và ví dụ bằng số ở bản tin trên trang Claude; kiến thức nền nằm trong <a href="../hoc-vien/" data-nav>Học viện</a>.</p></div>
+    </div>
+  </section>
+
+  <section class="scene" id="b-fc" aria-labelledby="fc-h">
+    <div class="stage">
+      <div class="fc-copy">
+        <div class="eyebrow" id="fc-h">Sổ dự báo · tự chấm điểm</div>
+        <h2 class="big lines"><span class="ln"><span>Rừng xác suất</span></span></h2>
+        <div class="score" id="fc-score"></div>
+        <div class="fc-legend"><span><i style="background:var(--sky)"></i>Đang chờ</span><span><i style="background:var(--up)"></i>Đúng</span><span><i style="background:var(--down)"></i>Sai</span><span>Chiều cao phần sáng = xác suất lúc lập</span></div>
+      </div>
+      <div class="fc-detail panel" id="fc-detail"><div class="m">Rê chuột lên một cột để xem dự báo.</div></div>
+    </div>
+  </section>
+
+  <section class="flow" id="b-fclist" aria-labelledby="fcl-h">
+    <div class="wrap">
+      <div class="eyebrow">Toàn bộ sổ</div>
+      <h2 class="big lines" id="fcl-h"><span class="ln"><span>Mỗi dự báo</span></span><span class="ln"><span>có hạn chấm</span></span></h2>
+      <p class="lead-p rise">Xác suất là ước lượng chủ quan lúc lập, giữ nguyên để chấm công bằng. Khi đủ 5–10 dự báo đã chấm, có thể đo xem mình đang quá tự tin hay quá dè dặt.</p>
+      <div class="tw rise"><table class="fct"><thead><tr><th>Lập</th><th>Dự báo</th><th class="r">Xác suất</th><th>Hạn</th><th>Kết quả</th></tr></thead><tbody id="fc-body"></tbody></table></div>
+      <div class="row-btns"><a class="btn gold" href="../bao-cao/" data-nav>Báo cáo tuần <span class="arr">→</span></a><a class="btn" href="../thi-truong/" data-nav>Số liệu thị trường</a><a class="btn" href="https://claude.ai/artifact/1ivWHfw7vfybPnV2a4QpZV" target="_blank" rel="noopener">Bản tin đầy đủ ↗</a></div>
+    </div>
+  </section>
+</main>
+<script type="importmap">{ "imports": { "three": "../vendor/three.module.min.js" } }</script>
+<script type="module" src="../assets/pages/brief.js"></script>
+</body>
+</html>

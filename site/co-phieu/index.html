@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cổ phiếu · JayV Finance</title>
+<meta name="description" content="Thành phố cổ phiếu 3D của JayV Finance: mỗi tòa nhà là một mã đang theo dõi ở Việt Nam, Úc, Mỹ; đổi thước đo, lọc thị trường, bấm để xem hồ sơ nhanh.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05080d">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+<style>
+  #s-city { height: 100vh; height: 100svh; }
+  #s-city .stage { position: relative; touch-action: none; cursor: grab; }
+  #s-city .stage.dragging { cursor: grabbing; }
+  .c-head { position: absolute; z-index: 3; left: var(--pad); top: calc(var(--hdr) + 22px); display: grid; gap: 10px; max-width: 520px; }
+  .c-head .eyebrow b { font-family: var(--f-num); color: var(--faint); font-weight: 600; margin-right: 10px; }
+  .c-head h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(28px, 3.4vw, 50px); letter-spacing: -0.04em; }
+  .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 999px; background: var(--glass); border: 1px solid var(--line); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); width: fit-content; }
+  .seg button { border: 0; background: none; border-radius: 999px; padding: 6px 12px; cursor: pointer; font-weight: 600; font-size: 13px; color: var(--dim); }
+  .seg button.on { background: var(--ink); color: var(--bg); }
+  .c-list { position: absolute; z-index: 3; left: var(--pad); top: calc(var(--hdr) + 300px); bottom: 70px; width: 270px; overflow-y: auto; padding: 8px !important; display: grid; align-content: start; gap: 2px; }
+  .c-list button { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; gap: 10px; align-items: center; border: 0; background: none; text-align: left; padding: 7px 10px; border-radius: 10px; cursor: pointer; color: var(--ink); }
+  .c-list button:hover, .c-list button.on { background: rgba(255,255,255,0.07); }
+  .c-list button i { width: 8px; height: 8px; border-radius: 2px; }
+  .c-list .l b { font-weight: 700; font-size: 14px; }
+  .c-list .l small { display: block; font-size: 11.5px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-list .v { font-family: var(--f-num); font-size: 13px; }
+  .c-list .grp { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); padding: 8px 10px 2px; }
+  .drawer { position: absolute; z-index: 4; right: var(--pad); top: calc(var(--hdr) + 22px); bottom: 70px; width: min(380px, 92vw); overflow-y: auto; display: grid; align-content: start; gap: 12px; transform: translateX(calc(100% + 60px)); transition: transform 0.55s var(--ease); }
+  .drawer.on { transform: none; }
+  .drawer .x { position: absolute; right: 12px; top: 12px; }
+  .drawer h2 { font-family: var(--f-display); font-size: 34px; letter-spacing: -0.03em; }
+  .drawer .nm { color: var(--dim); font-size: 14px; }
+  .drawer .price { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .drawer .price .v { font-size: 30px; font-weight: 600; }
+  .drawer dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin: 0; }
+  .drawer dt { font-size: 12px; color: var(--dim); }
+  .drawer dd { margin: 2px 0 0; font-family: var(--f-num); font-size: 15px; font-weight: 600; }
+  .drawer .spark { width: 100%; height: 60px; display: block; }
+  .drawer .txt { font-size: 14px; color: var(--dim); margin: 0; }
+  .drawer .txt b { color: var(--ink); }
+  .verdict { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 3px 12px; border-radius: 999px; border: 1px solid var(--line); }
+  .verdict::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .verdict.bullish { color: var(--up); } .verdict.bearish { color: var(--down); } .verdict.neutral { color: var(--dim); }
+  .goldtag { color: var(--gold); font-weight: 600; font-size: 13px; }
+  .c-hint { position: absolute; z-index: 3; left: 50%; bottom: 22px; transform: translateX(-50%); font-size: 12px; color: var(--dim); letter-spacing: 0.06em; white-space: nowrap; }
+  .tags-layer { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+  .tags-layer .tag3d { pointer-events: auto; cursor: pointer; }
+  .tag3d .v { font-family: var(--f-num); margin-left: 6px; }
+  .tag3d.fund { border-color: var(--line-2); }
+  .tag3d.sel { background: var(--ink); color: var(--bg); }
+  .tag3d.dist { font-family: var(--f-display); letter-spacing: 0.2em; font-size: 11px; background: transparent; border-color: transparent; color: var(--dim); pointer-events: none; }
+  /* Thẻ */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+  .sc { display: grid; gap: 8px; align-content: start; }
+  .sc .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .sc h3 { font-family: var(--f-display); font-size: 20px; }
+  .sc .nm { font-size: 13px; color: var(--dim); }
+  .sc p { margin: 0; font-size: 14px; }
+  .sc .risk { color: var(--dim); font-size: 13px; }
+  .sc .row { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
+  .sc .row b { color: var(--ink); font-family: var(--f-num); }
+  .sc a.more { font-size: 13px; font-weight: 600; text-decoration: none; color: var(--accent); }
+  @media (max-width: 980px) {
+    .c-list { display: none; }
+    .drawer { top: auto; bottom: 12px; left: var(--pad); right: var(--pad); width: auto; max-height: 58vh; transform: translateY(calc(100% + 40px)); }
+    .c-hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<main>
+  <section class="scene" id="s-city" aria-labelledby="city-h">
+    <div class="stage" id="city-stage">
+      <div class="c-head">
+        <div class="eyebrow"><b>05</b>Danh sách theo dõi</div>
+        <h1 id="city-h">Thành phố cổ phiếu</h1>
+        <div class="seg no-drag" id="seg-metric" role="group" aria-label="Thước đo chiều cao"><button type="button" data-k="changePct">Hôm nay</button><button type="button" data-k="chg1w">1 tuần</button><button type="button" data-k="chg1m">1 tháng</button><button type="button" data-k="chgYtd" class="on">Từ đầu năm</button></div>
+        <div class="seg no-drag" id="seg-mkt" role="group" aria-label="Lọc thị trường"><button type="button" data-m="ALL" class="on">Tất cả</button><button type="button" data-m="VN">Việt Nam</button><button type="button" data-m="AU">Úc</button><button type="button" data-m="US">Mỹ</button></div>
+      </div>
+      <div class="c-list panel no-drag" id="c-list" aria-label="Danh sách mã"></div>
+      <aside class="drawer panel no-drag" id="drawer" aria-live="polite"></aside>
+      <div id="tags-city" class="tags-layer"></div>
+      <div class="c-hint" aria-hidden="true">Kéo để xoay · lăn chuột để thu phóng · bấm một tòa nhà để xem hồ sơ nhanh</div>
+    </div>
+  </section>
+
+  <section class="flow" id="s-cards" aria-labelledby="cards-h">
+    <div class="wrap">
+      <div class="eyebrow">Vì sao theo dõi</div>
+      <h2 class="big lines" id="cards-h"><span class="ln"><span>Luận điểm tăng trưởng</span></span><span class="ln"><span>và rủi ro chính</span></span></h2>
+      <p class="lead-p rise">Tóm tắt từ hồ sơ nghiên cứu: tăng trưởng gần nhất, rủi ro chính và nhận định mô phỏng phong cách Buffett. Đây là tài liệu học tập, không phải khuyến nghị mua bán.</p>
+      <div class="cards" id="cards"></div>
+    </div>
+  </section>
+</main>
+<script type="importmap">{ "imports": { "three": "../vendor/three.module.min.js" } }</script>
+<script type="module" src="../assets/pages/stocks.js"></script>
+</body>
+</html>
