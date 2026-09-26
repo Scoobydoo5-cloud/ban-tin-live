@@ -5,7 +5,7 @@ import { createFeed, href } from '../core/data.js';
 import { esc, fmt, pct, cls, countUp, clamp, dpOf, probOf } from '../core/fmt.js';
 import { makeEmblem, makeGlobe, makeCoin, makeAllocRing, unitBox } from '../core/props.js';
 import { RoundedBoxGeometry } from '../../vendor/jsm/geometries/RoundedBoxGeometry.js';
-import { META } from '../academy/meta.js';
+import { MANIFEST } from '../academy/manifest.js';
 
 const shell = initShell('home');
 const $ = (id) => document.getElementById(id);
@@ -329,7 +329,7 @@ function renderStats() {
     { v: fc.length, k: 'dự báo trong sổ', p: ok + miss ? `Đã chấm ${ok + miss}: đúng ${ok}, sai ${miss}.` : 'Chưa có dự báo nào đến hạn chấm.', c: 'var(--sky)' },
     { v: checks ? checks.ok : 0, k: 'con số qua kiểm tra', p: checks ? `trên ${checks.total} số của bảng giá lần gần nhất.` : 'Đang tải…', c: 'var(--rose)' },
     { v: f ? f.nav : 100, dp: 2, k: 'giá trị Quỹ JayV', p: '100 điểm vào ngày 24/09/2026; tiền ảo.', c: 'var(--gold)' },
-    { v: META.lessons, k: 'bài học ở Học viện', p: `${META.tracks} lộ trình, ${META.labs} phòng thí nghiệm, dạy bằng tiếng Anh.`, c: 'var(--violet)' },
+    { v: MANIFEST.totals.ready, k: 'bài giảng ở Học viện', p: `${MANIFEST.totals.subjects} môn của một chương trình Finance major, ${MANIFEST.totals.planned} bài theo kế hoạch, dạy bằng tiếng Anh.`, c: 'var(--violet)' },
   ];
   $('stats').innerHTML = cards.map((x, i) => `<div class="panel stat rise" data-tilt style="--c:${x.c}"><div class="v num" data-to="${x.v}" data-dp="${x.dp || 0}">0</div><div class="k">${esc(x.k)}</div><p>${esc(x.p)}</p></div>`).join('');
   shell.observe($('stats'));

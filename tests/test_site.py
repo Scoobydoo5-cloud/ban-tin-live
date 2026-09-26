@@ -44,38 +44,34 @@ def test_every_page_has_disclaimer_via_shell():
         assert "initShell(" in code, rel
 
 
-def test_academy_catalog_matches_meta_and_references():
-    tracks_dir = SITE / "assets/academy/tracks"
-    lessons, labs_used, res_used = 0, set(), set()
-    for f in tracks_dir.glob("*.js"):
-        src = f.read_text(encoding="utf-8")
-        lessons += len(re.findall(r"\bmins:\s*\d+", src))
-        labs_used |= set(re.findall(r"\['lab',\s*'([a-z]+)'\]", src))
-        for group in re.findall(r"resources:\s*\[([^\]]*)\]", src):
-            res_used |= set(re.findall(r"'([^']+)'", group))
-    meta = (SITE / "assets/academy/meta.js").read_text(encoding="utf-8")
-    assert f"lessons: {lessons}" in meta
-    assert len(list(tracks_dir.glob("*.js"))) == int(re.search(r"tracks:\s*(\d+)", meta).group(1))
-    catalog = (SITE / "assets/academy/catalog.js").read_text(encoding="utf-8")
-    lab_ids = set(re.findall(r"\{ id: '([a-z]+)', title: '[^']+', blurb: '[^']*', track:", catalog))
-    assert len(lab_ids) == int(re.search(r"labs:\s*(\d+)", meta).group(1))
-    assert labs_used <= lab_ids, labs_used - lab_ids
+def test_academy_manifest_is_current_and_lessons_validate():
+    """Kiểm tra toàn bộ bài giảng và manifest bằng chính công cụ build (cần Node)."""
+    import shutil
+    import subprocess
+    node = shutil.which("node")
+    if not node:
+        import pytest
+        pytest.skip("Không có Node trên máy này")
+    root = SITE.parent
+    r = subprocess.run([node, str(root / "tools" / "build_academy.mjs"), "--check"], capture_output=True, text=True, encoding="utf-8", cwd=root)
+    assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_academy_program_labs_and_resources_are_consistent():
+    program = (SITE / "assets/academy/program.js").read_text(encoding="utf-8")
+    codes = re.findall(r"\{ code: '([A-Z0-9-]+)', stage:", program)
+    assert len(codes) == len(set(codes)) >= 19
+    labs_meta = (SITE / "assets/academy/labs-meta.js").read_text(encoding="utf-8")
     labs_js = (SITE / "assets/academy/labs.js").read_text(encoding="utf-8")
-    for lab in lab_ids:
+    for lab, subject in re.findall(r"\{ id: '([a-z]+)', title: '[^']+', blurb: '[^']*', subject: '([A-Z0-9-]+)'", labs_meta):
         assert f"LAB.{lab} = " in labs_js, lab
+        assert subject in codes, subject
     resources = (SITE / "assets/academy/resources.js").read_text(encoding="utf-8")
-    keys = set(re.findall(r"^\s{2}([A-Z0-9_]+):", resources, flags=re.M))
-    for r in res_used:
-        k = r[5:] if r.startswith("book:") else r
-        assert k in keys, f"nguồn không tồn tại: {r}"
-
-
-def test_academy_numeric_answers_have_tolerance_and_mcq_index_in_range():
-    for f in (SITE / "assets/academy/tracks").glob("*.js"):
-        src = f.read_text(encoding="utf-8")
-        for m in re.finditer(r"type: 'num', answer: (-?[\d.]+)", src):
-            tail = src[m.end():m.end() + 40]
-            assert "tol:" in tail, f"{f.name}: thiếu tol sau {m.group(0)}"
-        for m in re.finditer(r"type: 'mcq', options: \[(.*?)\], answer: (\d+)", src):
-            n = len(re.findall(r"'(?:[^'\\]|\\.)*'", m.group(1)))
-            assert int(m.group(2)) < n, f"{f.name}: đáp án ngoài phạm vi"
+    urls = re.findall(r"u: '(https://[^']+)'", resources)
+    assert len(urls) == len(set(urls)), "URL trùng trong thư viện"
+    # Mỗi thư mục bài giảng phải thuộc một môn có thật, tên file dạng NN.js
+    for d in (SITE / "assets/academy/lessons").iterdir():
+        if d.is_dir():
+            assert d.name in codes, d.name
+            for f in d.glob("*.js"):
+                assert re.fullmatch(r"\d{2}\.js", f.name), f
