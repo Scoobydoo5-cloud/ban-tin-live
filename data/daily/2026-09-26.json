@@ -73,21 +73,21 @@
  },
  "US-ALAB": {
   "date": "2026-09-25",
-  "close": 364.459991,
+  "close": 364.619995,
   "prevClose": 360.51001,
-  "changePct": 1.096
+  "changePct": 1.14
  },
  "US-NVDA": {
   "date": "2026-09-25",
-  "close": 225.080002,
+  "close": 225.070007,
   "prevClose": 224.580002,
-  "changePct": 0.223
+  "changePct": 0.218
  },
  "US-STX": {
   "date": "2026-09-25",
-  "close": 916.299988,
+  "close": 916.830017,
   "prevClose": 905.919983,
-  "changePct": 1.146
+  "changePct": 1.204
  },
  "VN-FPT": {
   "date": "2026-09-25",
