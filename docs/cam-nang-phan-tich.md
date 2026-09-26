@@ -121,7 +121,7 @@ Mỗi con số trước khi dùng:
 4. Có hợp lý không (biên độ sàn: HOSE ±7%, HNX ±10%, UPCoM ±15%)?
 
 Công cụ sẵn có:
-- Bảng giá trực tiếp: https://scoobydoo5-cloud.github.io/ban-tin-live/ và dữ liệu `data/latest.json` (giá, kiểm tra, hành vi giá).
+- Bảng giá trực tiếp: https://scoobydoo5-cloud.github.io/ban-tin-live/bang-gia/ (trang gốc https://scoobydoo5-cloud.github.io/ban-tin-live/ là bản toàn cảnh 3D) và dữ liệu `data/latest.json` (giá, kiểm tra, hành vi giá).
 - `aihf-tools/market_data.py`: giá đóng cửa đã chốt, số liệu năm, ảnh chụp số liệu cho mô phỏng Buffett.
 - Vĩ mô chính thức: FRED (Mỹ), ABS và RBA (Úc), Cục Thống kê và Ngân hàng Nhà nước (Việt Nam).
 

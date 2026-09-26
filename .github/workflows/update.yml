@@ -51,6 +51,7 @@ jobs:
         run: |
           if git fetch -q origin claude/sync-data 2>/dev/null; then
             git show FETCH_HEAD:config/from_claude.json > /tmp/sync_branch.json 2>/dev/null || true
+            git show FETCH_HEAD:config/content.json > /tmp/content_branch.json 2>/dev/null || true
           fi
 
       - name: Lay gia va kiem tra du lieu
@@ -61,7 +62,21 @@ jobs:
             --prev "https://${OWNER,,}.github.io/${REPO}/data/latest.json" \
             --sync config/from_claude.json --sync /tmp/sync_branch.json \
             --snapshot data/daily
-          if [ -f config/content.json ]; then cp config/content.json site/data/content.json; fi
+          # Nội dung bản tin/báo cáo cho trang 3D: lấy bản mới hơn giữa main và nhánh riêng của routine
+          python - <<'PY'
+          import json, shutil
+          best, day = None, ""
+          for p in ("config/content.json", "/tmp/content_branch.json"):
+              try:
+                  d = json.load(open(p, encoding="utf-8"))
+              except Exception:
+                  continue
+              if d.get("version") == 1 and str(d.get("updatedAt", "")) > day:
+                  best, day = p, str(d.get("updatedAt", ""))
+          if best:
+              shutil.copy(best, "site/data/content.json")
+              print("content.json:", best, day)
+          PY
 
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
 
