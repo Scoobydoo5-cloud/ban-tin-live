@@ -1,17 +1,17 @@
 {
  "version": 1,
- "updatedAt": "2026-09-25",
- "generatedAt": "2026-09-25T08:44:27+00:00",
+ "updatedAt": "2026-09-26",
+ "generatedAt": "2026-09-26T00:06:20+00:00",
  "source": "routine Đồng bộ Bảng giá (kho dữ liệu trang Claude)",
  "funds": {
   "VN": {
-   "asOf": "2026-09-25",
-   "nav": 100.0,
-   "cashWeight": 0.75,
+   "asOf": "2026-09-26",
+   "nav": 99.7703,
+   "cashWeight": 0.7517,
    "holdings": [
     {
      "id": "VN-FPT",
-     "weight": 0.25
+     "weight": 0.2483
     }
    ],
    "waiting": [
@@ -30,10 +30,10 @@
     "fund",
     "suggest"
    ],
-   "weight": 0.25,
+   "weight": 0.2483,
    "verdict": "bullish",
    "confidence": 74,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "VN-GMD",
@@ -48,7 +48,7 @@
    "weight": null,
    "verdict": "bullish",
    "confidence": 62,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "AU-SHL",
@@ -62,7 +62,21 @@
    "weight": null,
    "verdict": "neutral",
    "confidence": 55,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
+  },
+  {
+   "id": "VN-STB",
+   "market": "VN",
+   "ticker": "STB",
+   "name": "Ngân hàng TMCP Sài Gòn Tài Lộc (thương hiệu Sacombank)",
+   "exchange": "HOSE",
+   "tags": [
+    "watch"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 35,
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "AU-HUB",
@@ -76,7 +90,7 @@
    "weight": null,
    "verdict": "neutral",
    "confidence": 60,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "AU-NXT",
@@ -90,7 +104,7 @@
    "weight": null,
    "verdict": "bearish",
    "confidence": 65,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "AU-PME",
@@ -104,7 +118,21 @@
    "weight": null,
    "verdict": "neutral",
    "confidence": 65,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
+  },
+  {
+   "id": "AU-TNE",
+   "market": "AU",
+   "ticker": "TNE",
+   "name": "Technology One Limited",
+   "exchange": null,
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 65,
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "AU-XRO",
@@ -118,7 +146,7 @@
    "weight": null,
    "verdict": "neutral",
    "confidence": 50,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "US-ALAB",
@@ -132,7 +160,7 @@
    "weight": null,
    "verdict": "bearish",
    "confidence": 58,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "US-NVDA",
@@ -146,7 +174,7 @@
    "weight": null,
    "verdict": "neutral",
    "confidence": 62,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "US-STX",
@@ -160,7 +188,21 @@
    "weight": null,
    "verdict": "bearish",
    "confidence": 58,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
+  },
+  {
+   "id": "VN-HDB",
+   "market": "VN",
+   "ticker": "HDB",
+   "name": "Ngân hàng TMCP Phát triển Thành phố Hồ Chí Minh (HDBank)",
+   "exchange": "HOSE",
+   "tags": [
+    "suggest"
+   ],
+   "weight": null,
+   "verdict": "neutral",
+   "confidence": 45,
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "VN-HPG",
@@ -174,7 +216,7 @@
    "weight": null,
    "verdict": "neutral",
    "confidence": 52,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   },
   {
    "id": "VN-MWG",
@@ -188,7 +230,7 @@
    "weight": null,
    "verdict": "neutral",
    "confidence": 55,
-   "verdictAsOf": "2026-09-25"
+   "verdictAsOf": "2026-09-26"
   }
  ]
 }
